@@ -6,12 +6,14 @@ import { getCurrentUser } from "@/lib/session-server";
 
 export const dynamic = "force-dynamic";
 
-export default async function EditProductPage({ params }: { params: { id: string } }) {
+export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const current = await getCurrentUser();
   if (!current) notFound();
 
+  const { id } = await params;
+
   const db = getDb();
-  const [product] = await db.select().from(products).where(eq(products.id, params.id)).limit(1);
+  const [product] = await db.select().from(products).where(eq(products.id, id)).limit(1);
   if (!product) notFound();
 
   return (

@@ -11,11 +11,13 @@ function stars(rating: number) {
   return "★★★★★".slice(0, rating) + "☆☆☆☆☆".slice(0, 5 - rating);
 }
 
-export default async function DashboardOrderDetailPage({ params }: { params: { id: string } }) {
+export default async function DashboardOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const current = await getCurrentUser();
   if (!current) notFound();
 
-  const detail = await getOrderDetailByNumber(params.id);
+  const { id } = await params;
+
+  const detail = await getOrderDetailByNumber(id);
   if (!detail) notFound();
 
   const items = await Promise.all(

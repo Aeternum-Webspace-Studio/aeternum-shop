@@ -6,11 +6,13 @@ export const dynamic = "force-dynamic";
 
 const formatMoney = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
 
-export default async function AdminOrderDetailPage({ params }: { params: { id: string } }) {
+export default async function AdminOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const current = await getCurrentUser();
   if (!current || current.session.role !== "admin") notFound();
 
-  const detail = await getOrderDetailByNumber(params.id);
+  const { id } = await params;
+
+  const detail = await getOrderDetailByNumber(id);
   if (!detail) notFound();
 
   return (

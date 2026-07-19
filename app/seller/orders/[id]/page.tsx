@@ -5,12 +5,14 @@ import { findSellerProfileByUserId } from "@/lib/sellers";
 
 export const dynamic = "force-dynamic";
 
-export default async function SellerOrderDetailPage({ params }: { params: { id: string } }) {
+export default async function SellerOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const current = await getCurrentUser();
   if (!current) notFound();
 
+  const { id } = await params;
+
   const sellerId = current.session.role === "seller" ? (await findSellerProfileByUserId(current.user.id))?.id ?? null : null;
-  const item = await getOrderItemForSeller(params.id, sellerId);
+  const item = await getOrderItemForSeller(id, sellerId);
   if (!item) notFound();
 
   return (
