@@ -13,6 +13,7 @@ export default async function SellerLayout({ children }: { children: React.React
         { href: "/seller/products", label: "Produk" },
         { href: "/seller/orders", label: "Pesanan" },
         { href: "/seller/stocks", label: "Stok" },
+        { href: "/seller/reviews", label: "Review" },
         { href: "/seller/tickets", label: "Ticket" }
       ]}
       footer={<p className="text-xs text-muted">Seller hanya melihat data miliknya.</p>}

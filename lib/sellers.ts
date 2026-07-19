@@ -25,3 +25,8 @@ export async function ensureSellerProfile(userId: string, storeName: string, sto
 
   return profile;
 }
+
+export async function listSellerProfiles() {
+  const db = getDb();
+  return db.select().from(sellerProfiles);
+}

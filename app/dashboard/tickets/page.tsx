@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getCurrentUser } from "@/lib/session-server";
 import { listTicketsByBuyerId } from "@/lib/tickets";
 
@@ -23,10 +24,10 @@ export default async function DashboardTicketsPage() {
           <div className="rounded-xl2 border border-border p-4 text-sm text-muted">Belum ada ticket.</div>
         ) : (
           tickets.map((ticket) => (
-            <article key={ticket.id} className="rounded-xl2 border border-border bg-white p-4 shadow-soft">
+            <Link key={ticket.id} href={`/dashboard/tickets/${ticket.id}`} className="block rounded-xl2 border border-border bg-white p-4 shadow-soft hover:bg-surfaceSoft">
               <p className="font-semibold">{ticket.subject}</p>
               <p className="mt-1 text-sm text-muted">{ticket.status}{ticket.orderNumber ? ` · ${ticket.orderNumber}` : ""}{ticket.sellerStoreName ? ` · ${ticket.sellerStoreName}` : ""}</p>
-            </article>
+            </Link>
           ))
         )}
       </div>

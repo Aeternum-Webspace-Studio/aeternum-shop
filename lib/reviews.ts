@@ -8,6 +8,50 @@ export async function getReviewByOrderItemId(orderItemId: string) {
   return review ?? null;
 }
 
+export async function listAdminReviews() {
+  const db = getDb();
+  return db
+    .select({
+      id: reviews.id,
+      rating: reviews.rating,
+      comment: reviews.comment,
+      isHidden: reviews.isHidden,
+      createdAt: reviews.createdAt,
+      buyerName: users.name,
+      productName: products.name,
+      productSlug: products.slug
+    })
+    .from(reviews)
+    .innerJoin(users, eq(reviews.buyerId, users.id))
+    .innerJoin(products, eq(reviews.productId, products.id))
+    .orderBy(desc(reviews.createdAt));
+}
+
+export async function listReviewsBySellerId(sellerId: string | null) {
+  const db = getDb();
+  const base = db
+    .select({
+      id: reviews.id,
+      rating: reviews.rating,
+      comment: reviews.comment,
+      isHidden: reviews.isHidden,
+      createdAt: reviews.createdAt,
+      buyerName: users.name,
+      productName: products.name,
+      productSlug: products.slug
+    })
+    .from(reviews)
+    .innerJoin(users, eq(reviews.buyerId, users.id))
+    .innerJoin(products, eq(reviews.productId, products.id));
+
+  return sellerId ? base.where(eq(products.sellerId, sellerId)).orderBy(desc(reviews.createdAt)) : base.orderBy(desc(reviews.createdAt));
+}
+
+export async function hideReview(reviewId: string, hidden: boolean) {
+  const db = getDb();
+  await db.update(reviews).set({ isHidden: hidden, updatedAt: new Date() }).where(eq(reviews.id, reviewId));
+}
+
 export async function listReviewsByProductId(productId: string, limit = 3) {
   const db = getDb();
 
