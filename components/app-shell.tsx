@@ -20,7 +20,7 @@ export function AppShell({
   footer?: React.ReactNode;
 }) {
   return (
-    <main className="aeternum-bg min-h-screen text-text">
+    <main className="aeternum-bg relative min-h-screen text-text">
       <div className="border-b-[3px] border-border bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div>
@@ -55,7 +55,7 @@ export function AppShell({
         <section className="rounded-xl2 border-[3px] border-border bg-white p-6 shadow-soft">{children}</section>
       </div>
 
-      <ChatbotLauncher />
+      <ChatbotLauncher docked />
     </main>
   );
 }

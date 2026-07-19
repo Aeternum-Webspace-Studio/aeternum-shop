@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { getSessionCookieName, verifySessionToken } from "@/lib/auth";
+import { resolveSessionRole } from "@/lib/session-role.js";
 import { findUserById } from "@/lib/users";
 
 export async function getCurrentUser() {
@@ -10,5 +11,5 @@ export async function getCurrentUser() {
   const user = await findUserById(session.userId);
   if (!user) return null;
 
-  return { session: { ...session, role: user.role }, user };
+  return { session: { ...session, role: resolveSessionRole(session.role, user.role) }, user };
 }

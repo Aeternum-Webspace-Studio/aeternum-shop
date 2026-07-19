@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:seed": "node db/seed.mjs",
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "check:auth-role": "node scripts/check-auth-role.mjs"
   },
   "dependencies": {
     "drizzle-orm": "^0.44.5",

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ChatbotClient } from "@/components/chatbot-client";
 
-export function ChatbotLauncher() {
+export function ChatbotLauncher({ docked = false }: { docked?: boolean } = {}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -11,7 +11,7 @@ export function ChatbotLauncher() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-[60] rounded-full border-[3px] border-border bg-primary px-4 py-3 text-sm font-black text-white shadow-[6px_6px_0_#111827]"
+        className={`z-[60] rounded-full border-[3px] border-border bg-primary px-4 py-3 text-sm font-black text-white shadow-[6px_6px_0_#111827] ${docked ? "absolute bottom-5 right-5 md:bottom-6 md:right-6" : "fixed bottom-5 right-5"}`}
       >
         Chatbot
       </button>
