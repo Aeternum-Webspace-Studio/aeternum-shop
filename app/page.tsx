@@ -20,10 +20,58 @@ const products = [
   }
 ];
 
+const services = [
+  {
+    title: "Auto Delivery",
+    text: "Produk dikirim otomatis setelah payment terverifikasi lewat webhook Pakasir.",
+    accent: "from-orange-500 to-amber-400"
+  },
+  {
+    title: "Manual Seller",
+    text: "Seller bisa input akun dan data akses secara manual jika produk butuh proses khusus.",
+    accent: "from-slate-900 to-slate-700"
+  },
+  {
+    title: "Reseller Price",
+    text: "Seller dan admin bisa menyiapkan harga khusus untuk user yang sudah approved reseller.",
+    accent: "from-sky-500 to-cyan-400"
+  },
+  {
+    title: "Ticket Support",
+    text: "Buyer bisa buka ticket setelah order untuk follow up masalah atau pertanyaan produk.",
+    accent: "from-amber-500 to-orange-500"
+  }
+];
+
+const stats = [
+  { label: "Produk aktif", value: "120+" },
+  { label: "Order selesai", value: "3.2K" },
+  { label: "Rating rata-rata", value: "4.9/5" },
+  { label: "Support respon", value: "< 1 jam" }
+];
+
+const testimonials = [
+  {
+    name: "Raka",
+    role: "Buyer produk AI",
+    text: "Tampilannya tegas, informasinya jelas, dan checkout-nya gampang. Enak dipakai buat beli cepat."
+  },
+  {
+    name: "Nadia",
+    role: "Seller reseller",
+    text: "Panel produk dan stoknya tinggal dipakai. Cocok buat jualan produk digital tanpa ribet."
+  },
+  {
+    name: "Fajar",
+    role: "Admin/owner",
+    text: "Flow order dan delivery-nya rapi. Buyer cepat paham, seller juga mudah kelola produk."
+  }
+];
+
 export default function HomePage() {
   return (
     <main className="aeternum-bg min-h-screen text-text">
-      <header className="border-b-[3px] border-border bg-white">
+      <header className="sticky top-0 z-50 border-b-[3px] border-border bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="rounded-lg border-[3px] border-border bg-primary px-3 py-2 text-sm font-black text-white shadow-soft">AS</div>
@@ -41,17 +89,18 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="mx-auto max-w-7xl px-6 py-14">
-        <div className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
-          <div className="rounded-xl2 border-[3px] border-border bg-white p-8 shadow-soft">
-            <p className="inline-flex rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-primary">
-              Orange neurabrutal marketplace
-            </p>
-            <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[0.95] tracking-tight md:text-7xl">
-              Marketplace produk digital yang berani, tajam, dan cepat jualan.
+      <section className="mx-auto max-w-7xl px-6 py-10 md:py-14">
+        <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-xl2 border-[3px] border-border bg-white p-6 shadow-soft md:p-8">
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-primary">Orange Neurabrutal</span>
+              <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-text">Auto & Manual Delivery</span>
+            </div>
+            <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[0.92] tracking-tight md:text-7xl">
+              Marketplace produk digital yang padat, tegas, dan siap jualan.
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-muted md:text-lg">
-              Beli akun digital, lisensi, dan bundle produk dengan payment Pakasir, dashboard seller/admin, serta delivery otomatis atau manual.
+              Beli akun digital, lisensi, dan bundle produk dengan payment Pakasir, dashboard seller/admin, dan delivery otomatis atau manual.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a className="rounded-xl border-[3px] border-border bg-primary px-5 py-3 text-sm font-black text-white shadow-soft" href="/marketplace">
@@ -60,6 +109,9 @@ export default function HomePage() {
               <a className="rounded-xl border-[3px] border-border bg-white px-5 py-3 text-sm font-black text-text shadow-soft" href="/seller">
                 Jadi Seller
               </a>
+              <a className="rounded-xl border-[3px] border-border bg-surfaceSoft px-5 py-3 text-sm font-black text-text shadow-soft" href="/dashboard">
+                Dashboard User
+              </a>
             </div>
           </div>
 
@@ -67,6 +119,7 @@ export default function HomePage() {
             <div className="rounded-xl2 border-[3px] border-border bg-primary p-5 text-white shadow-soft">
               <p className="text-xs font-black uppercase tracking-[0.2em] text-white/80">Fast lane</p>
               <p className="mt-3 text-2xl font-black leading-tight">Auto Kirim, Manual Seller, Reseller Price</p>
+              <p className="mt-3 text-sm text-white/85">Flow transaksi pendek, jelas, dan cocok untuk buyer yang mau cepat checkout.</p>
             </div>
             <div className="rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">
               <p className="text-sm font-black uppercase tracking-[0.18em] text-primary">Cari cepat</p>
@@ -82,6 +135,17 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-6">
+        <div className="grid gap-4 md:grid-cols-4">
+          {stats.map((stat) => (
+            <div key={stat.label} className="rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-muted">{stat.label}</p>
+              <p className="mt-3 text-3xl font-black text-primary">{stat.value}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -112,6 +176,60 @@ export default function HomePage() {
               </div>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-16">
+        <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr]">
+          <div className="rounded-xl2 border-[3px] border-border bg-white p-6 shadow-soft">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Layanan utama</p>
+            <h2 className="mt-2 text-2xl font-black md:text-3xl">Panel yang terasa seperti hosting console, tapi buat jualan produk digital.</h2>
+            <p className="mt-4 text-sm leading-7 text-muted">Buyer dapat jalur beli yang jelas. Seller dapat panel stok dan produk. Admin dapat kontrol penuh tanpa ribet.</p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {services.map((service) => (
+              <article key={service.title} className={`rounded-xl2 border-[3px] border-border bg-gradient-to-br ${service.accent} p-[3px] shadow-soft`}>
+                <div className="h-full rounded-[7px] bg-white p-5">
+                  <h3 className="text-lg font-black">{service.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-muted">{service.text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-16">
+        <div className="grid gap-4 md:grid-cols-3">
+          {testimonials.map((testimonial) => (
+            <article key={testimonial.name} className="rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">
+              <p className="text-sm leading-7 text-muted">“{testimonial.text}”</p>
+              <div className="mt-5 border-t-[2px] border-border pt-4">
+                <p className="text-sm font-black">{testimonial.name}</p>
+                <p className="text-xs uppercase tracking-[0.18em] text-muted">{testimonial.role}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-20">
+        <div className="rounded-xl2 border-[3px] border-border bg-primary p-6 text-white shadow-soft md:p-8">
+          <div className="grid gap-6 md:grid-cols-[1.2fr_0.8fr] md:items-center">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-white/75">Siap launch</p>
+              <h2 className="mt-2 text-3xl font-black md:text-5xl">Buka toko digital yang tegas, mudah dibaca, dan cepat dipercaya.</h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/85">Saat checkout, delivery, dan dashboard sudah hidup, tinggal hubungkan domain `aeternumshop.biz.id` dan mulai jualan.</p>
+            </div>
+            <div className="flex flex-col gap-3 md:items-end">
+              <a className="rounded-xl border-[3px] border-white bg-white px-5 py-3 text-sm font-black text-primary" href="/marketplace">
+                Lihat Marketplace
+              </a>
+              <a className="rounded-xl border-[3px] border-white bg-transparent px-5 py-3 text-sm font-black text-white" href="/seller">
+                Masuk Seller Panel
+              </a>
+            </div>
+          </div>
         </div>
       </section>
     </main>

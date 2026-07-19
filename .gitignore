@@ -8,3 +8,5 @@ dist
 coverage
 .vercel
 db/migrations/meta/_journal.json
+
+.vercel
