@@ -2,7 +2,7 @@
 
 ## 01. Ringkasan
 
-Frontend memakai tema light orange neurabrutalism digital marketplace. `aeternumwebspace.co.id`, repo TuneBoss, dan `kilat.shop` boleh dijadikan referensi struktur, ritme konten, dan rasa marketplace digital otomatis, tetapi visual tidak boleh meniru penuh.
+Frontend memakai tema light orange neurabrutalism digital marketplace. `aeternumwebspace.co.id`, repo TuneBoss, `kilat.shop`, dan `ramadanadipa.my.id` boleh dijadikan referensi struktur, ritme konten, monogram/header, dan rasa marketplace digital otomatis, tetapi visual tidak boleh meniru penuh.
 
 Identitas produk:
 
@@ -22,6 +22,7 @@ Gunakan `aeternumwebspace.co.id` sebagai referensi untuk:
 - Pola checkout dan instruksi.
 - Ekspektasi buyer produk digital.
 - Bahasa singkat: bayar, cek dashboard, produk dikirim.
+- Monogram/header tegas dan marquee kategori secukupnya.
 
 Jangan gunakan sebagai referensi untuk:
 

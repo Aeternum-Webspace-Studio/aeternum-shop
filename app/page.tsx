@@ -43,6 +43,12 @@ const services = [
   }
 ];
 
+const orderSteps = [
+  { title: "Pilih produk", text: "Buka katalog dan cek tipe delivery." },
+  { title: "Bayar", text: "Checkout diarahkan ke Pakasir." },
+  { title: "Cek dashboard", text: "Data produk atau status manual tampil di order." }
+];
+
 export default function HomePage() {
   return (
     <main className="aeternum-bg min-h-screen text-text">
@@ -52,17 +58,29 @@ export default function HomePage() {
             <div className="rounded-lg border-[3px] border-border bg-primary px-3 py-2 text-sm font-black text-white shadow-soft">AS</div>
             <div>
               <p className="text-sm font-black uppercase tracking-[0.2em] text-primary">Aeternum Shop</p>
-              <p className="text-xs text-muted">Produk digital serba otomatis</p>
+              <p className="text-xs text-muted">Digital goods marketplace</p>
             </div>
           </div>
           <nav className="hidden gap-6 text-sm font-medium md:flex">
             <a href="/marketplace">Marketplace</a>
-            <a href="/blog">Blog</a>
+            <a href="/dashboard/orders">Pesanan Saya</a>
             <a href="/dashboard">Dashboard</a>
             <a href="/seller">Seller</a>
           </nav>
         </div>
       </header>
+
+      <div className="border-b-[3px] border-border bg-primary py-3 text-white">
+        <div className="mx-auto flex max-w-7xl gap-8 overflow-hidden px-6 text-xs font-black uppercase tracking-[0.24em]">
+          <span className="whitespace-nowrap">AI Tools</span>
+          <span className="whitespace-nowrap">Streaming</span>
+          <span className="whitespace-nowrap">Lisensi</span>
+          <span className="whitespace-nowrap">Reseller</span>
+          <span className="whitespace-nowrap">Auto Delivery</span>
+          <span className="whitespace-nowrap">Manual Seller</span>
+          <span className="whitespace-nowrap">Ticket Support</span>
+        </div>
+      </div>
 
       <section className="mx-auto max-w-7xl px-6 py-10 md:py-14">
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
@@ -77,6 +95,15 @@ export default function HomePage() {
             <p className="mt-6 max-w-2xl text-base leading-7 text-muted md:text-lg">
               Cari akun AI, streaming, lisensi, dan tools premium. Bayar via Pakasir, lalu pantau produk dari dashboard order.
             </p>
+            <div className="mt-6 grid gap-3 md:grid-cols-3">
+              {orderSteps.map((step, index) => (
+                <div key={step.title} className="rounded-xl border-[3px] border-border bg-surfaceSoft p-4">
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">0{index + 1}</p>
+                  <p className="mt-2 text-sm font-black">{step.title}</p>
+                  <p className="mt-1 text-xs leading-5 text-muted">{step.text}</p>
+                </div>
+              ))}
+            </div>
             <div className="mt-8 flex flex-wrap gap-3">
               <a className="rounded-xl border-[3px] border-border bg-primary px-5 py-3 text-sm font-black text-white shadow-soft" href="/marketplace">
                 Mulai Belanja
