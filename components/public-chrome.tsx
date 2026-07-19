@@ -86,7 +86,7 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
       {children}
 
       <footer className="border-t-[3px] border-border bg-white px-6 py-10">
-        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.2fr_0.8fr_0.8fr] lg:items-start">
+        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
           <div className="hero-card rounded-xl2 border-[3px] border-border p-5 shadow-soft">
             <div className="flex items-center gap-3">
               <img className="h-10 w-10 rounded-lg shadow-soft" src="/icon.svg" alt="Aeternum Shop" />
@@ -116,12 +116,6 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
               <a className="lift rounded-full border-[2px] border-border bg-surfaceSoft px-4 py-2 text-sm font-black" href="/dashboard/tickets">Support</a>
             </div>
           </div>
-          <form className="rounded-xl2 border-[3px] border-border bg-primary p-5 text-white shadow-soft" action="/invoice-tracker">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-white/80">Lacak pesanan</p>
-            <p className="mt-2 text-sm text-white/90">Masukkan nomor invoice untuk cek status pembayaran dan proses produk.</p>
-            <input name="invoice" className="mt-4 h-11 w-full rounded-xl border-[2px] border-white bg-white px-3 text-sm font-black uppercase text-text outline-none" placeholder="INV..." required />
-            <button className="lift mt-3 w-full rounded-xl border-[2px] border-white bg-white px-4 py-2 text-sm font-black text-primary">Cek invoice</button>
-          </form>
         </div>
         <div className="mx-auto mt-6 flex max-w-7xl flex-col gap-2 border-t-[2px] border-border pt-5 text-xs font-black uppercase tracking-[0.16em] text-muted md:flex-row md:items-center md:justify-between">
           <p>Aeternum Webspace Studio</p>

@@ -2,15 +2,15 @@
 
 ## 01. Ringkasan
 
-Produk ini adalah marketplace jual beli produk digital seperti akun AI, Netflix, CapCut, lisensi, voucher, template, dan produk digital lain. Platform mendukung buyer, seller, reseller, dan admin utama.
+Produk ini adalah marketplace jual beli produk digital seperti akun AI, Canva, Gemini, ChatGPT Plus, streaming, lisensi, voucher, template, dan produk digital lain. Platform tetap mendukung buyer, seller, reseller, dan admin, tetapi halaman publik harus fokus membangun trust buyer.
 
-Fokus versi awal adalah transaksi aman, dashboard jelas, pembayaran Pakasir, dan pengiriman produk digital otomatis atau manual.
+Fokus versi awal adalah buyer bisa menemukan produk, melihat harga/ulasan, checkout Pakasir, melacak invoice, dan menerima akses produk dengan alur yang jelas.
 
 ## 02. Tujuan
 
-- Membuat marketplace produk digital yang bisa dipakai buyer untuk membeli produk dengan cepat.
+- Membuat marketplace produk digital yang bisa dipakai buyer untuk membeli produk dengan cepat dan percaya.
 - Memberi seller dashboard untuk mengelola produk, stok, order, dan delivery.
-- Memberi admin kontrol penuh atas user, seller, produk, transaksi, ticket, blog, dan paket custom.
+- Memberi admin kontrol penuh atas user, seller, produk, transaksi, ticket, artikel, dan paket custom.
 - Menggunakan stack murah/gratis untuk tahap awal.
 
 ## 03. Stack Yang Disarankan
@@ -29,15 +29,15 @@ Catatan: Astro tidak dipilih untuk MVP karena aplikasi butuh auth, checkout, das
 
 ## 03A. Arah Frontend
 
-Frontend memakai tema light premium digital marketplace. `appverse.id` digunakan sebagai referensi struktur dan flow UX, bukan untuk dicopy visualnya.
+Frontend memakai tema light orange neurabrutalism: tegas, buyer-first, compact, dan commerce-focused. Referensi seperti appverse/kilat/hosting-style dipakai untuk struktur dan ritme, bukan untuk clone visual.
 
 Ringkasan desain:
 
 ```txt
-Style: light premium, solid, editorial, compact, commerce-first
-Primary: #4F46E5
-Accent: #0891B2
-Background: #F8FAFC
+Style: light orange neurabrutalism, solid, editorial, compact, commerce-first
+Primary: #F97316
+Accent: #0EA5E9
+Background: #FFF7ED
 Surface: #FFFFFF
 Avoid: glassmorphism, dark-first, template SaaS generik
 ```
@@ -51,6 +51,7 @@ Detail desain ada di `docs/DESIGN.md`.
 - Melihat marketplace.
 - Membeli produk.
 - Melihat riwayat pesanan.
+- Melacak invoice dari navbar.
 - Mengakses data digital setelah pembayaran sukses.
 - Membuat rating dan komentar.
 - Membuka ticket support.
@@ -76,11 +77,12 @@ Detail desain ada di `docs/DESIGN.md`.
 
 ## 05. Fitur Utama
 
-- Landing page.
+- Landing page buyer-first.
 - Marketplace.
 - Detail produk.
-- Blog.
+- Artikel publik untuk edukasi buyer.
 - Login/register.
+- Invoice tracker publik dari nomor invoice.
 - Dashboard user.
 - Dashboard seller.
 - Dashboard admin.
@@ -91,6 +93,7 @@ Detail desain ada di `docs/DESIGN.md`.
 - Email notification.
 - Rating dan komentar.
 - Ticket support.
+- Statistik buyer di navbar: peringkat dan total transaksi sukses.
 - Harga reseller.
 - Paket custom dari admin.
 - FAQ chatbot sederhana.
@@ -179,7 +182,7 @@ Fitur:
 - Kelola order.
 - Kelola payment dan callback log.
 - Kelola ticket.
-- Kelola blog.
+- Kelola artikel.
 - Kelola paket custom.
 - Kelola pengajuan reseller.
 
@@ -279,19 +282,72 @@ AI chatbot ditunda sampai ada knowledge base cukup dan budget inference jelas.
 Landing page berisi:
 
 - Hero.
-- Produk populer.
-- Kategori.
+- Produk unggulan dari database.
+- Rating produk dari database.
 - Cara beli.
-- Benefit seller.
-- CTA daftar seller.
-- FAQ.
+- CTA marketplace dan pesanan buyer.
+- Artikel pembeli terbaru.
+- Footer studio dengan sosial media.
 
-Blog berisi:
+Landing page tidak boleh fokus ke seller. Bahasa publik harus bahasa bisnis yang mengenalkan produk dan membuat buyer percaya, bukan bahasa teknis/project.
+
+Navbar publik berisi:
+
+- Marketplace.
+- Artikel.
+- Pesanan saya.
+- Akun saya.
+- Invoice tracker compact.
+- Peringkat buyer dan total transaksi jika login.
+
+Footer publik berisi:
+
+- Brand Aeternum Shop.
+- Aeternum Webspace Studio by PT Aeternum Kreasikan Bersama.
+- Instagram `aeternum.webspace`.
+- Telegram `aettera_hunter`.
+- Link marketplace, artikel, invoice, dan support.
+
+Invoice tracker hanya dipertahankan di navbar/link footer. Form besar di hero/footer tidak dipakai agar halaman tidak ramai.
+
+Artikel berisi:
 
 - Edukasi produk digital.
 - Tutorial.
 - Update marketplace.
 - Artikel SEO kategori produk.
+
+Route artikel:
+
+```txt
+/blog
+/blog/[slug]
+/admin/blog
+/api/admin/articles
+```
+
+Produk seed awal:
+
+- ChatGPT Plus Private 1 Bulan: Rp35.000.
+- Gemini Pro 18 Bulan: Rp56.000.
+- Canva Pro Team 1 Bulan: Rp35.000.
+
+Produk seed wajib punya deskripsi, instruksi, stok contoh, dummy order/payment, dan dummy review agar rating muncul di landing/detail produk.
+
+## 15A. Invoice Tracker
+
+Route:
+
+```txt
+/invoice-tracker?invoice=INV...
+```
+
+Aturan:
+
+- Bisa diakses dari navbar publik.
+- Menampilkan nomor invoice, status order, status pembayaran, total, dan nama produk.
+- Tidak boleh menampilkan data akses produk atau `delivery_content`.
+- Jika buyer butuh data akses, arahkan ke dashboard order setelah login.
 
 ## 16. Paket Custom
 
@@ -352,6 +408,8 @@ refunded
 
 - Buyer bisa register/login.
 - Buyer bisa checkout produk.
+- Buyer bisa mencari produk di marketplace.
+- Buyer bisa melacak invoice dari navbar.
 - Payment Pakasir bisa mengubah order menjadi paid.
 - Produk auto delivery mengirim stok otomatis.
 - Produk manual delivery bisa diisi seller.
@@ -361,6 +419,8 @@ refunded
 - Admin dashboard bisa mengelola user, produk, order, dan payment.
 - Buyer bisa memberi rating.
 - Buyer bisa membuat ticket.
+- Artikel publik bisa dibaca dan dibuat admin.
+- Landing menampilkan produk dan rating dari database.
 
 ## 22. Non-MVP
 

@@ -64,10 +64,6 @@ export default async function HomePage() {
                 Cek Pesanan
               </a>
             </div>
-            <form className="mt-5 flex flex-col gap-3 rounded-xl border-[3px] border-border bg-white p-3 md:flex-row" action="/invoice-tracker">
-              <input name="invoice" className="min-h-11 flex-1 rounded-xl border-[2px] border-border bg-surfaceSoft px-4 text-sm font-black uppercase outline-none" placeholder="Masukkan invoice INV..." required />
-              <button className="lift rounded-xl border-[2px] border-border bg-primary px-4 py-2 text-sm font-black text-white">Lacak invoice</button>
-            </form>
           </div>
 
           <div className="grid gap-4">
