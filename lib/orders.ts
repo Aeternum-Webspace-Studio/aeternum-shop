@@ -1,0 +1,72 @@
+import { and, asc, desc, eq } from "drizzle-orm";
+import { getDb } from "@/db";
+import { orderItems, orders, productStocks, products, payments } from "@/db/schema";
+
+export function createOrderNumber() {
+  return `INV${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+}
+
+export async function getOrderByNumber(orderNumber: string) {
+  const db = getDb();
+  const [order] = await db.select().from(orders).where(eq(orders.orderNumber, orderNumber)).limit(1);
+  return order ?? null;
+}
+
+export async function getOrderDetailByNumber(orderNumber: string) {
+  const db = getDb();
+  const [order] = await db.select().from(orders).where(eq(orders.orderNumber, orderNumber)).limit(1);
+  if (!order) return null;
+
+  const items = await db.select().from(orderItems).where(eq(orderItems.orderId, order.id)).orderBy(asc(orderItems.createdAt));
+  const payment = await db.select().from(payments).where(eq(payments.orderId, order.id)).limit(1);
+
+  return {
+    order,
+    items,
+    payment: payment[0] ?? null
+  };
+}
+
+export async function listOrdersByBuyerId(buyerId: string) {
+  const db = getDb();
+  return db.select().from(orders).where(eq(orders.buyerId, buyerId)).orderBy(desc(orders.createdAt));
+}
+
+export async function fulfillAutoDelivery(orderId: string) {
+  const db = getDb();
+
+  await db.transaction(async (tx) => {
+    const [item] = await tx.select().from(orderItems).where(eq(orderItems.orderId, orderId)).limit(1);
+    if (!item) return;
+
+    const [product] = await tx.select().from(products).where(eq(products.id, item.productId)).limit(1);
+    if (!product || product.fulfillmentType !== "auto") {
+      await tx.update(orders).set({ status: "processing", paidAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, orderId));
+      return;
+    }
+
+    const [stock] = await tx
+      .select()
+      .from(productStocks)
+      .where(and(eq(productStocks.productId, product.id), eq(productStocks.status, "available")))
+      .orderBy(asc(productStocks.createdAt))
+      .limit(1);
+
+    if (!stock) {
+      await tx.update(orders).set({ status: "processing", paidAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, orderId));
+      await tx.update(orderItems).set({ deliveryStatus: "failed" }).where(eq(orderItems.id, item.id));
+      return;
+    }
+
+    const [updatedStock] = await tx
+      .update(productStocks)
+      .set({ status: "sold", soldOrderItemId: item.id, soldAt: new Date() })
+      .where(and(eq(productStocks.id, stock.id), eq(productStocks.status, "available")))
+      .returning();
+
+    if (!updatedStock) return;
+
+    await tx.update(orderItems).set({ deliveryContent: updatedStock.content, deliveryStatus: "delivered", deliveredAt: new Date() }).where(eq(orderItems.id, item.id));
+    await tx.update(orders).set({ status: "delivered", paidAt: new Date(), deliveredAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, orderId));
+  });
+}

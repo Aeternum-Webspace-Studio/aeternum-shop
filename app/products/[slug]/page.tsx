@@ -30,9 +30,11 @@ export default async function ProductDetailPage({
           {product.resellerPrice ? <p className="mt-1 text-sm text-muted">Harga reseller: {formatMoney.format(product.resellerPrice)}</p> : null}
           {product.instructions ? <p className="mt-4 whitespace-pre-line text-sm text-muted">{product.instructions}</p> : null}
         </div>
-        <div className="mt-6 rounded-xl2 border border-border p-5 text-sm text-muted">
-          Checkout dan delivery akan dihubungkan di tahap berikutnya.
-        </div>
+        <form className="mt-6 rounded-xl2 border border-border bg-white p-5 shadow-soft" method="post" action="/api/checkout">
+          <input type="hidden" name="productId" value={product.id} />
+          <input type="hidden" name="quantity" value={1} />
+          <button className="rounded-xl bg-primary px-4 py-3 text-sm font-medium text-white">Checkout Pakasir</button>
+        </form>
       </div>
     </main>
   );

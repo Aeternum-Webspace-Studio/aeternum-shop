@@ -75,6 +75,9 @@ Required env:
 ```env
 DATABASE_URL=
 AUTH_SECRET=
+NEXT_PUBLIC_APP_URL=
+PAKASIR_PROJECT_SLUG=
+PAKASIR_API_KEY=
 ```
 
 Run development server:
