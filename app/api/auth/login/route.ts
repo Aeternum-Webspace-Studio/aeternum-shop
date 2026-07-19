@@ -1,0 +1,32 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { getSessionCookieName, createSessionToken, verifyPassword } from "@/lib/auth";
+import { findUserByEmail } from "@/lib/users";
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1)
+});
+
+export async function POST(request: Request) {
+  const form = await request.formData();
+  const payload = loginSchema.parse({
+    email: form.get("email"),
+    password: form.get("password")
+  });
+
+  const user = await findUserByEmail(payload.email.toLowerCase());
+  if (!user || !verifyPassword(payload.password, user.passwordHash)) {
+    return NextResponse.redirect(new URL("/login?error=invalid", request.url));
+  }
+
+  const response = NextResponse.redirect(new URL("/dashboard", request.url));
+  response.cookies.set(getSessionCookieName(), createSessionToken({ userId: user.id, role: user.role }), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7
+  });
+  return response;
+}
