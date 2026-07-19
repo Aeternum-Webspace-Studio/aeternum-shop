@@ -299,6 +299,12 @@ MVP chatbot:
 
 AI chatbot ditunda sampai ada knowledge base cukup dan budget inference jelas.
 
+Status implementasi:
+
+- FAQ statis sudah tampil di landing.
+- FAQ disimpan di database dan bisa disesuaikan lewat seed.
+- Tombol buka ticket sudah tersedia dari area FAQ.
+
 ## 15. Blog Dan Landing Page
 
 Landing page berisi:
@@ -382,6 +388,12 @@ Contoh:
 - Paket bundling beberapa produk.
 
 MVP cukup dibuat sebagai produk biasa dengan flag `is_custom_package`.
+
+Status implementasi:
+
+- Admin bisa membuat paket custom dari `/admin/packages`.
+- Paket custom disimpan sebagai produk dengan `is_custom_package = true`.
+- Paket custom bisa tampil di marketplace dan detail produk seperti produk biasa.
 
 ## 17. Reseller Pricing
 

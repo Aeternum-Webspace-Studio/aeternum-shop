@@ -76,6 +76,36 @@ const articles = [
   }
 ];
 
+const faqs = [
+  {
+    question: "Bagaimana kalau akses belum muncul setelah bayar?",
+    answer: "Buka dashboard order atau kirim ticket dari halaman pesanan. Tim akan cek status payment dan delivery item kamu."
+  },
+  {
+    question: "Apakah invoice bisa dipakai untuk cek pesanan?",
+    answer: "Bisa. Masukkan nomor invoice di navbar atau halaman invoice tracker untuk melihat status payment dan order."
+  },
+  {
+    question: "Apa beda auto dan manual delivery?",
+    answer: "Auto delivery mengirim stok otomatis setelah payment sukses. Manual delivery diproses seller setelah order paid."
+  },
+  {
+    question: "Bisa ajukan reseller?",
+    answer: "Bisa. Ajukan dari dashboard akun lalu tunggu approval admin. Jika approved, harga reseller akan muncul pada produk yang mendukung."
+  }
+];
+
+const customPackages = [
+  {
+    name: "Paket Akun AI Bulanan",
+    slug: "paket-akun-ai-bulanan",
+    price: 99000,
+    description: "Paket custom untuk buyer yang ingin beberapa akses AI premium dalam satu penawaran. Cocok untuk kebutuhan kerja, konten, dan riset tim kecil.",
+    instructions: "Paket custom ini berisi akses gabungan sesuai pesanan buyer. Detail final akan dikirim setelah pembayaran dan konfirmasi admin.",
+    fulfillmentType: "manual"
+  }
+];
+
 const seededAccounts = {
   extraAdmin: {
     name: "Aeternum Support",
@@ -271,6 +301,29 @@ async function main() {
             content = excluded.content,
             status = 'published',
             published_at = coalesce(blog_posts.published_at, now()),
+            updated_at = now()
+      `;
+    }
+
+    await tx`delete from faq_items`;
+    for (const faq of faqs) {
+      await tx`
+        insert into faq_items (question, answer, is_active)
+        values (${faq.question}, ${faq.answer}, true)
+      `;
+    }
+
+    for (const pkg of customPackages) {
+      await tx`
+        insert into products (seller_id, category_id, name, slug, description, instructions, price, fulfillment_type, status, is_custom_package)
+        values (null, null, ${pkg.name}, ${pkg.slug}, ${pkg.description}, ${pkg.instructions}, ${pkg.price}, ${pkg.fulfillmentType}, 'active', true)
+        on conflict (slug) do update
+        set description = excluded.description,
+            instructions = excluded.instructions,
+            price = excluded.price,
+            fulfillment_type = excluded.fulfillment_type,
+            status = 'active',
+            is_custom_package = true,
             updated_at = now()
       `;
     }

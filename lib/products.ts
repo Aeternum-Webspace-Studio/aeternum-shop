@@ -72,6 +72,24 @@ export async function listProductsBySellerId(sellerId: string | null) {
   return sellerId ? base.where(eq(products.sellerId, sellerId)).orderBy(desc(products.createdAt)) : base.orderBy(desc(products.createdAt));
 }
 
+export async function listCustomPackages() {
+  const db = getDb();
+
+  return db
+    .select({
+      id: products.id,
+      name: products.name,
+      slug: products.slug,
+      price: products.price,
+      status: products.status,
+      fulfillmentType: products.fulfillmentType,
+      createdAt: products.createdAt
+    })
+    .from(products)
+    .where(eq(products.isCustomPackage, true))
+    .orderBy(desc(products.createdAt));
+}
+
 export async function countAvailableStock(productId: string) {
   const db = getDb();
   const rows = await db

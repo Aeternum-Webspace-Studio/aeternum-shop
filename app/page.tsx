@@ -1,4 +1,5 @@
 import { listPublishedArticles } from "@/lib/articles";
+import { listActiveFaqItems } from "@/lib/faq";
 import { listMarketplaceProducts } from "@/lib/products";
 import { getGlobalReviewSummary, listTopRatedProducts } from "@/lib/reviews";
 
@@ -24,6 +25,7 @@ export default async function HomePage() {
   const topRatedProducts = await listTopRatedProducts(3);
   const featuredProducts = (await listMarketplaceProducts()).slice(0, 3);
   const articles = (await listPublishedArticles()).slice(0, 3);
+  const faqs = await listActiveFaqItems(4);
 
   return (
     <main className="aeternum-bg min-h-screen text-text">
@@ -143,6 +145,9 @@ export default async function HomePage() {
               <a className="lift rounded-xl border-[3px] border-white bg-transparent px-5 py-3 text-sm font-black text-white" href="/dashboard/orders">
                 Pesanan Saya
               </a>
+              <a className="lift rounded-xl border-[3px] border-white bg-white/15 px-5 py-3 text-sm font-black text-white" href="/help">
+                Coba Chatbot
+              </a>
             </div>
           </div>
         </div>
@@ -170,6 +175,29 @@ export default async function HomePage() {
               </a>
             ))
           )}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-20">
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">FAQ cepat</p>
+            <h2 className="mt-2 text-2xl font-black md:text-3xl">Jawaban singkat sebelum kamu chat support.</h2>
+            <p className="mt-3 text-sm leading-6 text-muted">Kalau jawaban di bawah tidak cukup, buka ticket dari order atau halaman support.</p>
+            <a className="mt-5 inline-flex rounded-xl border-[2px] border-border bg-primary px-4 py-2 text-sm font-black text-white" href="/dashboard/tickets">Buka Ticket</a>
+          </div>
+          <div className="space-y-3">
+            {faqs.length === 0 ? (
+              <div className="rounded-xl2 border-[3px] border-border bg-white p-5 text-sm text-muted shadow-soft">FAQ akan muncul setelah seed aktif.</div>
+            ) : (
+              faqs.map((faq) => (
+                <details key={faq.id} className="rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">
+                  <summary className="cursor-pointer text-sm font-black">{faq.question}</summary>
+                  <p className="mt-3 text-sm leading-7 text-muted">{faq.answer}</p>
+                </details>
+              ))
+            )}
+          </div>
         </div>
       </section>
     </main>
