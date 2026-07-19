@@ -1,7 +1,13 @@
-import { marketplaceMemory } from "@/lib/marketplace-memory";
-
 function pickReply(message: string) {
   const text = message.toLowerCase();
+
+  if (text.includes("halo") || text.includes("hallo") || text.includes("hai") || text.includes("help")) {
+    return "Halo. Saya bisa bantu soal checkout, invoice, delivery, reseller, dan ticket support.";
+  }
+
+  if (text.includes("tutor beli") || text.includes("cara beli") || text.includes("cara checkout") || text.includes("cara order")) {
+    return "Cara beli singkat: pilih produk, klik checkout, bayar via Pakasir, lalu pantau status di invoice tracker atau dashboard order.";
+  }
 
   if (text.includes("checkout") || text.includes("bayar") || text.includes("pembayaran")) {
     return "Checkout dilakukan dari halaman produk. Sistem membuat order, redirect ke Pakasir, lalu status muncul di dashboard dan invoice tracker.";
@@ -31,5 +37,5 @@ function pickReply(message: string) {
 }
 
 export function buildFallbackChatReply(message: string) {
-  return `${pickReply(message)}\n\nRingkasan marketplace: ${marketplaceMemory.split("\n").slice(0, 6).join(" ")}`;
+  return pickReply(message);
 }
