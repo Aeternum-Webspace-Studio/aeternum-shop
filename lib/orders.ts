@@ -1,6 +1,6 @@
 import { and, asc, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
-import { orderItems, orders, productStocks, products, payments } from "@/db/schema";
+import { orderItems, orders, productStocks, products, payments, users } from "@/db/schema";
 
 export function createOrderNumber() {
   return `INV${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
@@ -17,7 +17,26 @@ export async function getOrderDetailByNumber(orderNumber: string) {
   const [order] = await db.select().from(orders).where(eq(orders.orderNumber, orderNumber)).limit(1);
   if (!order) return null;
 
-  const items = await db.select().from(orderItems).where(eq(orderItems.orderId, order.id)).orderBy(asc(orderItems.createdAt));
+  const items = await db
+    .select({
+      id: orderItems.id,
+      orderId: orderItems.orderId,
+      productId: orderItems.productId,
+      productName: products.name,
+      productSlug: products.slug,
+      sellerId: orderItems.sellerId,
+      quantity: orderItems.quantity,
+      unitPrice: orderItems.unitPrice,
+      fulfillmentType: orderItems.fulfillmentType,
+      deliveryContent: orderItems.deliveryContent,
+      deliveryStatus: orderItems.deliveryStatus,
+      createdAt: orderItems.createdAt,
+      deliveredAt: orderItems.deliveredAt
+    })
+    .from(orderItems)
+    .innerJoin(products, eq(orderItems.productId, products.id))
+    .where(eq(orderItems.orderId, order.id))
+    .orderBy(asc(orderItems.createdAt));
   const payment = await db.select().from(payments).where(eq(payments.orderId, order.id)).limit(1);
 
   return {
@@ -51,6 +70,26 @@ export async function listOrderItemsBySellerId(sellerId: string | null) {
     .innerJoin(products, eq(orderItems.productId, products.id));
 
   return sellerId ? base.where(eq(orderItems.sellerId, sellerId)).orderBy(desc(orderItems.createdAt)) : base.orderBy(desc(orderItems.createdAt));
+}
+
+export async function listAdminOrders() {
+  const db = getDb();
+  return db
+    .select({
+      id: orders.id,
+      orderNumber: orders.orderNumber,
+      status: orders.status,
+      totalAmount: orders.totalAmount,
+      createdAt: orders.createdAt,
+      buyerName: users.name,
+      buyerEmail: users.email,
+      paymentStatus: payments.status,
+      paymentUrl: payments.paymentUrl
+    })
+    .from(orders)
+    .innerJoin(users, eq(orders.buyerId, users.id))
+    .leftJoin(payments, eq(payments.orderId, orders.id))
+    .orderBy(desc(orders.createdAt));
 }
 
 export async function getOrderItemForSeller(itemId: string, sellerId: string | null) {

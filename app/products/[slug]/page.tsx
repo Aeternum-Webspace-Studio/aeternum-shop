@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getProductBySlug } from "@/lib/products";
+import { getReviewSummaryByProductId, listReviewsByProductId } from "@/lib/reviews";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,8 @@ export default async function ProductDetailPage({
 }) {
   const product = await getProductBySlug(params.slug);
   if (!product) notFound();
+  const reviewSummary = await getReviewSummaryByProductId(product.id);
+  const reviews = await listReviewsByProductId(product.id, 3);
 
   return (
     <main className="aeternum-bg min-h-screen px-6 py-10 text-text">
@@ -45,6 +48,25 @@ export default async function ProductDetailPage({
           {product.resellerPrice ? <p className="mt-1 text-sm text-muted">Harga reseller: {formatMoney.format(product.resellerPrice)}</p> : null}
           {product.instructions ? <p className="mt-4 whitespace-pre-line text-sm text-muted">{product.instructions}</p> : null}
         </div>
+
+        <div className="mt-6 rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">
+          <p className="text-sm font-black uppercase tracking-[0.18em] text-muted">Review</p>
+          <p className="mt-2 text-sm text-muted">
+            {reviewSummary.count === 0 ? "Belum ada review." : `${reviewSummary.average.toFixed(1)}/5 dari ${reviewSummary.count} review`}
+          </p>
+          {reviews.length > 0 ? (
+            <div className="mt-4 space-y-3">
+              {reviews.map((review) => (
+                <article key={review.id} className="rounded-xl border border-border bg-surfaceSoft p-3 text-sm text-muted">
+                  <p className="font-semibold text-text">{review.buyerName}</p>
+                  <p className="mt-1">Rating: {review.rating}/5</p>
+                  {review.comment ? <p className="mt-2 whitespace-pre-line">{review.comment}</p> : null}
+                </article>
+              ))}
+            </div>
+          ) : null}
+        </div>
+
         <form className="mt-6 rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft" method="post" action="/api/checkout">
           <input type="hidden" name="productId" value={product.id} />
           <input type="hidden" name="quantity" value={1} />

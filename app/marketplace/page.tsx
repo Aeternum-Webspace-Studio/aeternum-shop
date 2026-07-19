@@ -7,6 +7,7 @@ const formatMoney = new Intl.NumberFormat("id-ID", { style: "currency", currency
 
 export default async function MarketplacePage() {
   const products = await listMarketplaceProducts();
+  const categories = [...new Set(products.map((product) => product.categoryName).filter((category): category is string => Boolean(category)))];
 
   return (
     <main className="aeternum-bg min-h-screen px-6 py-10 text-text">
@@ -15,9 +16,17 @@ export default async function MarketplacePage() {
           <div>
             <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Marketplace</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight md:text-5xl">Produk digital yang tampil tegas.</h1>
-            <p className="mt-2 text-sm text-muted">Tempat jual beli produk digital dengan filter kategori dan badge delivery.</p>
+            <p className="mt-2 max-w-2xl text-sm text-muted">Katalog produk digital dengan struktur singkat: nama, status delivery, harga, dan detail penting.</p>
           </div>
-          <div className="rounded-xl2 border-[3px] border-border bg-white px-4 py-2 text-sm font-black shadow-soft">Search dan filter menyusul</div>
+          <div className="rounded-xl2 border-[3px] border-border bg-white px-4 py-2 text-sm font-black shadow-soft">Auto · Manual · Reseller</div>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          {categories.slice(0, 4).map((category) => (
+            <span key={category} className="rounded-full border-[2px] border-border bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-text shadow-soft">
+              {category}
+            </span>
+          ))}
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -34,7 +43,7 @@ export default async function MarketplacePage() {
                   <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">{product.status}</span>
                   {product.resellerPrice ? <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">Reseller</span> : null}
                 </div>
-                <div className="mt-5 flex items-center justify-between">
+                <div className="mt-5 flex items-center justify-between border-t-[2px] border-border pt-4">
                   <span className="text-lg font-black">{formatMoney.format(product.price)}</span>
                   <Link className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 text-sm font-black text-primary" href={`/products/${product.slug}`}>
                     Detail
