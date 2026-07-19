@@ -1,6 +1,10 @@
+<p align="center">
+  <img src="app/icon.svg" alt="Aeternum Shop logo" width="96" />
+</p>
+
 # Aeternum Shop
 
-Marketplace produk digital untuk akun AI, streaming, software, lisensi, voucher, template, dan produk digital lain. Aplikasi ini mendukung buyer, seller, reseller, dan admin dengan payment Pakasir, delivery otomatis/manual, ticket support, rating, dan dashboard multi-role.
+Marketplace produk digital untuk akun AI, streaming, software, lisensi, voucher, template, dan produk digital lain. Fokusnya buyer-first: checkout jelas, invoice mudah dilacak, delivery otomatis/manual, ticket support, rating, dan dashboard multi-role.
 
 ## Tech Stack
 
