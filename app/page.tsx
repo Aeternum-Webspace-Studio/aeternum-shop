@@ -1,26 +1,8 @@
 import { listPublishedArticles } from "@/lib/articles";
+import { listMarketplaceProducts } from "@/lib/products";
 import { getGlobalReviewSummary, listTopRatedProducts } from "@/lib/reviews";
 
-const products = [
-  {
-    name: "ChatGPT Pro Share",
-    tag: "Akses cepat",
-    price: "Rp 49.000",
-    meta: "Cocok buat kerja, riset, dan tugas harian."
-  },
-  {
-    name: "CapCut Premium",
-    tag: "Order jelas",
-    price: "Rp 35.000",
-    meta: "Proses pembelian transparan sampai akses diterima."
-  },
-  {
-    name: "Netflix Premium",
-    tag: "Support aktif",
-    price: "Rp 59.000",
-    meta: "Kalau ada kendala, buka ticket dari order."
-  }
-];
+const formatMoney = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
 
 const orderSteps = [
   { title: "Pilih produk", text: "Temukan akun, tools, lisensi, atau bundle sesuai kebutuhan." },
@@ -40,6 +22,7 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const reviewSummary = await getGlobalReviewSummary();
   const topRatedProducts = await listTopRatedProducts(3);
+  const featuredProducts = (await listMarketplaceProducts()).slice(0, 3);
   const articles = (await listPublishedArticles()).slice(0, 3);
 
   return (
@@ -128,17 +111,19 @@ export default async function HomePage() {
           </a>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
-          {products.map((product, index) => (
+          {featuredProducts.length === 0 ? (
+            <div className="rounded-xl2 border-[3px] border-border bg-white p-5 text-sm text-muted shadow-soft">Produk unggulan akan tampil setelah data produk tersedia.</div>
+          ) : featuredProducts.map((product, index) => (
             <article
-              key={product.name}
+              key={product.id}
               className={`lift rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft ${index === 1 ? "translate-y-2" : ""}`}
             >
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">{product.tag}</p>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">{product.fulfillmentType === "auto" ? "Akses cepat" : "Diproses sesuai pesanan"}</p>
               <h3 className="mt-3 text-lg font-black">{product.name}</h3>
-              <p className="mt-2 text-sm text-muted">{product.meta}</p>
+              <p className="mt-2 line-clamp-3 text-sm text-muted">{product.description}</p>
               <div className="mt-5 flex items-center justify-between border-t-[2px] border-border pt-4">
-                <span className="text-lg font-black">{product.price}</span>
-                <a className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 text-sm font-black" href="/marketplace">
+                <span className="text-lg font-black">{formatMoney.format(product.price)}</span>
+                <a className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 text-sm font-black" href={`/products/${product.slug}`}>
                   Cek produk
                 </a>
               </div>

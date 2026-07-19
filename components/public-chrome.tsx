@@ -92,10 +92,20 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
               <img className="h-10 w-10 rounded-lg shadow-soft" src="/icon.svg" alt="Aeternum Shop" />
               <div>
                 <p className="text-sm font-black uppercase tracking-[0.2em] text-primary">Aeternum Shop</p>
-                <p className="text-xs text-muted">Produk digital dengan proses pembelian yang jelas.</p>
+                <p className="text-xs text-muted">Aeternum Webspace Studio by PT Aeternum Kreasikan Bersama.</p>
               </div>
             </div>
             <p className="mt-4 max-w-xl text-sm leading-6 text-muted">Cari produk, bayar aman, pantau pesanan, dan hubungi support kalau butuh bantuan.</p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a className="lift inline-flex items-center gap-2 rounded-full border-[2px] border-border bg-white px-4 py-2 text-sm font-black" href="https://instagram.com/aeternum.webspace" target="_blank" rel="noreferrer">
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-primary text-xs text-white">IG</span>
+                aeternum.webspace
+              </a>
+              <a className="lift inline-flex items-center gap-2 rounded-full border-[2px] border-border bg-white px-4 py-2 text-sm font-black" href="https://t.me/aettera_hunter" target="_blank" rel="noreferrer">
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-accent text-xs text-white">TG</span>
+                aettera_hunter
+              </a>
+            </div>
           </div>
           <div className="rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Navigasi</p>
@@ -112,7 +122,11 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
             <input name="invoice" className="mt-4 h-11 w-full rounded-xl border-[2px] border-white bg-white px-3 text-sm font-black uppercase text-text outline-none" placeholder="INV..." required />
             <button className="lift mt-3 w-full rounded-xl border-[2px] border-white bg-white px-4 py-2 text-sm font-black text-primary">Cek invoice</button>
           </form>
-          </div>
+        </div>
+        <div className="mx-auto mt-6 flex max-w-7xl flex-col gap-2 border-t-[2px] border-border pt-5 text-xs font-black uppercase tracking-[0.16em] text-muted md:flex-row md:items-center md:justify-between">
+          <p>Aeternum Webspace Studio</p>
+          <p>PT Aeternum Kreasikan Bersama</p>
+        </div>
       </footer>
     </>
   );
