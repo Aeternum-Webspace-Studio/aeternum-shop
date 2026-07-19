@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PublicChrome } from "@/components/public-chrome";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body>{children}</body>
+      <body><PublicChrome>{children}</PublicChrome></body>
     </html>
   );
 }

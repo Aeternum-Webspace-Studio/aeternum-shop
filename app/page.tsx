@@ -42,35 +42,6 @@ export default async function HomePage() {
 
   return (
     <main className="aeternum-bg min-h-screen text-text">
-      <header className="sticky top-0 z-50 border-b-[3px] border-border bg-white/95 shadow-[0_5px_0_#111827] backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <img className="h-11 w-11 rounded-lg shadow-soft" src="/icon.svg" alt="Aeternum Shop" />
-            <div>
-              <p className="text-sm font-black uppercase tracking-[0.2em] text-primary">Aeternum Shop</p>
-              <p className="text-xs text-muted">Toko produk digital terpercaya</p>
-            </div>
-          </div>
-          <nav className="hidden gap-6 text-sm font-medium md:flex">
-            <a href="/marketplace">Marketplace</a>
-            <a href="/dashboard/orders">Pesanan Saya</a>
-            <a href="/dashboard">Dashboard</a>
-          </nav>
-        </div>
-      </header>
-
-      <div className="border-b-[3px] border-border bg-primary py-3 text-white">
-        <div className="ticker-track mx-auto flex max-w-7xl gap-8 overflow-hidden px-6 text-xs font-black uppercase tracking-[0.24em]">
-          <span className="whitespace-nowrap">AI Tools</span>
-          <span className="whitespace-nowrap">Streaming</span>
-          <span className="whitespace-nowrap">Lisensi</span>
-          <span className="whitespace-nowrap">Pantau Pesanan</span>
-          <span className="whitespace-nowrap">Akses Cepat</span>
-          <span className="whitespace-nowrap">Harga Jelas</span>
-          <span className="whitespace-nowrap">Ticket Support</span>
-        </div>
-      </div>
-
       <section className="mx-auto max-w-7xl px-6 py-10 md:py-14">
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="hero-card reveal-up rounded-xl2 border-[3px] border-border p-6 shadow-soft md:p-8">
@@ -189,26 +160,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      <footer className="border-t-[3px] border-border bg-white px-6 py-8">
-        <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-[1.2fr_0.8fr] md:items-end">
-          <div>
-            <div className="flex items-center gap-3">
-              <img className="h-10 w-10 rounded-lg shadow-soft" src="/icon.svg" alt="Aeternum Shop" />
-              <div>
-                <p className="text-sm font-black uppercase tracking-[0.2em] text-primary">Aeternum Shop</p>
-                <p className="text-xs text-muted">Produk digital dengan proses pembelian yang jelas.</p>
-              </div>
-            </div>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-muted">Cari produk, bayar aman, pantau pesanan, dan hubungi support kalau butuh bantuan.</p>
-          </div>
-          <div className="flex flex-wrap gap-3 md:justify-end">
-            <a className="lift rounded-full border-[2px] border-border bg-surfaceSoft px-4 py-2 text-sm font-black" href="/marketplace">Marketplace</a>
-            <a className="lift rounded-full border-[2px] border-border bg-surfaceSoft px-4 py-2 text-sm font-black" href="/dashboard/orders">Pesanan</a>
-            <a className="lift rounded-full border-[2px] border-border bg-surfaceSoft px-4 py-2 text-sm font-black" href="/dashboard/tickets">Support</a>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }
