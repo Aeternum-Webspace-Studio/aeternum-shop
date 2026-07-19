@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { buildFallbackChatReply } from "@/lib/chatbot";
 import { buildChatSystemPrompt } from "@/lib/marketplace-memory";
 
 type ChatMessage = { role: "user" | "assistant" | "system"; content: string };
@@ -13,10 +14,11 @@ export async function POST(request: Request) {
   }
 
   const apiKey = process.env.OPENROUTER_API_KEY;
+  const model = process.env.OPENROUTER_MODEL ?? "openai/gpt-4o-mini";
+  const siteUrl = process.env.OPENROUTER_SITE_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
   if (!apiKey) {
-    return NextResponse.json({
-      reply: "Chatbot belum aktif karena OPENROUTER_API_KEY belum diset. Tambahkan key itu di env lokal atau Vercel, lalu coba lagi."
-    });
+    return NextResponse.json({ reply: buildFallbackChatReply(message), source: "fallback" });
   }
 
   const conversation = history.slice(0, -1).filter((entry) => entry.role !== "system");
@@ -26,11 +28,11 @@ export async function POST(request: Request) {
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
+      "HTTP-Referer": siteUrl,
       "X-Title": "Aeternum Shop Chatbot"
     },
     body: JSON.stringify({
-      model: "openai/gpt-4o-mini",
+      model,
       messages: [
         { role: "system", content: buildChatSystemPrompt() },
         ...conversation,
@@ -41,13 +43,14 @@ export async function POST(request: Request) {
 
   if (!response.ok) {
     const text = await response.text();
-    return NextResponse.json({ error: "OpenRouter request failed", detail: text }, { status: 502 });
+    return NextResponse.json({ reply: buildFallbackChatReply(message), source: "fallback", error: "OpenRouter request failed", detail: text }, { status: 200 });
   }
 
   const data = (await response.json()) as { choices?: Array<{ message?: { content?: string } }> };
   const reply = data.choices?.[0]?.message?.content?.trim();
 
   return NextResponse.json({
-    reply: reply || "Saya belum punya jawaban untuk itu. Coba buka ticket support agar bisa dibantu tim."
+    reply: reply || buildFallbackChatReply(message),
+    source: reply ? "openrouter" : "fallback"
   });
 }

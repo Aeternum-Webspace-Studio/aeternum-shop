@@ -303,7 +303,9 @@ Status implementasi:
 
 - FAQ statis sudah tampil di landing.
 - FAQ disimpan di database dan bisa disesuaikan lewat seed.
+- Chatbot punya popup launcher global dan fallback reply lokal saat OpenRouter belum siap.
 - Tombol buka ticket sudah tersedia dari area FAQ.
+- `npm run check` memeriksa route utama dan endpoint chatbot.
 
 ## 15. Blog Dan Landing Page
 

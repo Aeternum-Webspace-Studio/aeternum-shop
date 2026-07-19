@@ -10,6 +10,25 @@ type BuyerStats = {
   totalSpent: number;
 };
 
+function InstagramIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current stroke-[2.2]">
+      <rect x="4" y="4" width="16" height="16" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17" cy="7" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function TelegramIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current stroke-[2.2]">
+      <path d="M21 4 3.8 11.2c-.9.4-.8 1.7.1 2l4.3 1.5 1.7 4.8c.3.8 1.3 1 1.9.4l2.5-2.5 4.6 3.3c.7.5 1.7.1 1.8-.8L22 5.2c.1-.9-.9-1.6-1.8-1.2Z" />
+      <path d="m9.3 14.5 10.2-7.2" />
+    </svg>
+  );
+}
+
 const hiddenPrefixes = ["/dashboard", "/admin", "/seller"];
 
 export function PublicChrome({ children }: { children: React.ReactNode }) {
@@ -105,8 +124,18 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
               <div className="grid gap-3 sm:grid-cols-2">
                 <a className="lift rounded-xl border-[2px] border-white bg-white px-4 py-3 text-sm font-black text-primary" href="/marketplace">Belanja produk</a>
                 <a className="lift rounded-xl border-[2px] border-white bg-[#111827] px-4 py-3 text-sm font-black text-white" href="/invoice-tracker">Cek invoice</a>
-                <a className="lift inline-flex items-center gap-2 rounded-xl border-[2px] border-white bg-white/10 px-4 py-3 text-sm font-black text-white" href="https://instagram.com/aeternum.webspace" target="_blank" rel="noreferrer">IG aeternum.webspace</a>
-                <a className="lift inline-flex items-center gap-2 rounded-xl border-[2px] border-white bg-white/10 px-4 py-3 text-sm font-black text-white" href="https://t.me/aettera_hunter" target="_blank" rel="noreferrer">TG aettera_hunter</a>
+                <a className="lift inline-flex items-center gap-3 rounded-xl border-[2px] border-white bg-white/10 px-4 py-3 text-sm font-black text-white" href="https://instagram.com/aeternum.webspace" target="_blank" rel="noreferrer">
+                  <span className="grid h-7 w-7 place-items-center rounded-lg border-[2px] border-white bg-[#F97316] text-white shadow-[3px_3px_0_#111827]">
+                    <InstagramIcon />
+                  </span>
+                  <span>IG aeternum.webspace</span>
+                </a>
+                <a className="lift inline-flex items-center gap-3 rounded-xl border-[2px] border-white bg-white/10 px-4 py-3 text-sm font-black text-white" href="https://t.me/aettera_hunter" target="_blank" rel="noreferrer">
+                  <span className="grid h-7 w-7 place-items-center rounded-lg border-[2px] border-white bg-[#38BDF8] text-white shadow-[3px_3px_0_#111827]">
+                    <TelegramIcon />
+                  </span>
+                  <span>TG aettera_hunter</span>
+                </a>
               </div>
             </div>
           </div>
