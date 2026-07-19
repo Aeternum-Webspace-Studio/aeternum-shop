@@ -12,6 +12,30 @@ export async function getOrderByNumber(orderNumber: string) {
   return order ?? null;
 }
 
+export async function getPublicInvoiceStatus(orderNumber: string) {
+  const db = getDb();
+  const [order] = await db.select().from(orders).where(eq(orders.orderNumber, orderNumber.trim())).limit(1);
+  if (!order) return null;
+
+  const items = await db
+    .select({ productName: products.name, deliveryStatus: orderItems.deliveryStatus })
+    .from(orderItems)
+    .innerJoin(products, eq(orderItems.productId, products.id))
+    .where(eq(orderItems.orderId, order.id));
+  const [payment] = await db.select({ status: payments.status }).from(payments).where(eq(payments.orderId, order.id)).limit(1);
+
+  return {
+    orderNumber: order.orderNumber,
+    status: order.status,
+    totalAmount: order.totalAmount,
+    createdAt: order.createdAt,
+    paidAt: order.paidAt,
+    deliveredAt: order.deliveredAt,
+    paymentStatus: payment?.status ?? "pending",
+    items
+  };
+}
+
 export async function getOrderDetailByNumber(orderNumber: string) {
   const db = getDb();
   const [order] = await db.select().from(orders).where(eq(orders.orderNumber, orderNumber)).limit(1);

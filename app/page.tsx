@@ -1,3 +1,4 @@
+import { listPublishedArticles } from "@/lib/articles";
 import { getGlobalReviewSummary, listTopRatedProducts } from "@/lib/reviews";
 
 const products = [
@@ -39,6 +40,7 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const reviewSummary = await getGlobalReviewSummary();
   const topRatedProducts = await listTopRatedProducts(3);
+  const articles = (await listPublishedArticles()).slice(0, 3);
 
   return (
     <main className="aeternum-bg min-h-screen text-text">
@@ -79,6 +81,10 @@ export default async function HomePage() {
                 Cek Pesanan
               </a>
             </div>
+            <form className="mt-5 flex flex-col gap-3 rounded-xl border-[3px] border-border bg-white p-3 md:flex-row" action="/invoice-tracker">
+              <input name="invoice" className="min-h-11 flex-1 rounded-xl border-[2px] border-border bg-surfaceSoft px-4 text-sm font-black uppercase outline-none" placeholder="Masukkan invoice INV..." required />
+              <button className="lift rounded-xl border-[2px] border-border bg-primary px-4 py-2 text-sm font-black text-white">Lacak invoice</button>
+            </form>
           </div>
 
           <div className="grid gap-4">
@@ -158,6 +164,31 @@ export default async function HomePage() {
               </a>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-20">
+        <div className="mb-4 flex items-end justify-between gap-4">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Artikel pembeli</p>
+            <h2 className="mt-2 text-2xl font-black md:text-3xl">Panduan singkat sebelum checkout.</h2>
+          </div>
+          <a className="hidden rounded-xl border-[3px] border-border bg-white px-4 py-2 text-sm font-black shadow-soft md:inline-flex" href="/blog">
+            Semua artikel
+          </a>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {articles.length === 0 ? (
+            <div className="rounded-xl2 border-[3px] border-border bg-white p-5 text-sm text-muted shadow-soft">Artikel pembeli akan tampil di sini.</div>
+          ) : (
+            articles.map((article) => (
+              <a key={article.id} href={`/blog/${article.slug}`} className="lift block rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Panduan</p>
+                <h3 className="mt-3 text-lg font-black">{article.title}</h3>
+                {article.excerpt ? <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted">{article.excerpt}</p> : null}
+              </a>
+            ))
+          )}
         </div>
       </section>
     </main>
