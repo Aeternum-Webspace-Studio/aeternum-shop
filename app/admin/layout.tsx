@@ -1,0 +1,27 @@
+import { AppShell } from "@/components/app-shell";
+import { getCurrentUser } from "@/lib/session-server";
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const current = await getCurrentUser();
+
+  return (
+    <AppShell
+      title="Admin Dashboard"
+      description={current ? `${current.user.name} • ${current.session.role}` : "Akun admin"}
+      nav={[
+        { href: "/admin", label: "Ringkasan" },
+        { href: "/admin/users", label: "User" },
+        { href: "/admin/sellers", label: "Seller" },
+        { href: "/admin/products", label: "Produk" },
+        { href: "/admin/orders", label: "Pesanan" },
+        { href: "/admin/payments", label: "Payment" },
+        { href: "/admin/tickets", label: "Ticket" },
+        { href: "/admin/blog", label: "Blog" },
+        { href: "/admin/packages", label: "Paket" }
+      ]}
+      footer={<p className="text-xs text-muted">Admin punya akses penuh.</p>}
+    >
+      {children}
+    </AppShell>
+  );
+}
