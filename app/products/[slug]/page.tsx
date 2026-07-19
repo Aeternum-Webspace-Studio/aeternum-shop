@@ -16,12 +16,27 @@ export default async function ProductDetailPage({
   return (
     <main className="aeternum-bg min-h-screen px-6 py-10 text-text">
       <div className="mx-auto max-w-4xl">
-        <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Product detail</p>
+        <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Produk digital</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight md:text-5xl">{product.name}</h1>
         <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted">
           {product.categoryName ? <span className="rounded-full border-[2px] border-border bg-white px-3 py-1 font-black">{product.categoryName}</span> : null}
-          <span className="rounded-full border-[2px] border-border bg-white px-3 py-1 font-black">{product.fulfillmentType === "auto" ? "Auto Kirim" : "Manual Seller"}</span>
+          <span className="rounded-full border-[2px] border-border bg-white px-3 py-1 font-black">{product.fulfillmentType === "auto" ? "Instan" : "Manual Seller"}</span>
+          <span className="rounded-full border-[2px] border-border bg-white px-3 py-1 font-black">Garansi Support</span>
           {product.isCustomPackage ? <span className="rounded-full border-[2px] border-border bg-white px-3 py-1 font-black">Custom Package</span> : null}
+        </div>
+        <div className="mt-6 grid gap-3 md:grid-cols-3">
+          <div className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Delivery</p>
+            <p className="mt-2 text-sm text-muted">{product.fulfillmentType === "auto" ? "Otomatis ke dashboard setelah paid." : "Diproses seller setelah paid."}</p>
+          </div>
+          <div className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Transaksi</p>
+            <p className="mt-2 text-sm text-muted">Pembayaran via Pakasir.</p>
+          </div>
+          <div className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Support</p>
+            <p className="mt-2 text-sm text-muted">Ticket tersedia dari dashboard.</p>
+          </div>
         </div>
         <p className="mt-6 max-w-2xl text-sm leading-7 text-muted">{product.description}</p>
         <div className="mt-6 rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">
@@ -33,7 +48,7 @@ export default async function ProductDetailPage({
         <form className="mt-6 rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft" method="post" action="/api/checkout">
           <input type="hidden" name="productId" value={product.id} />
           <input type="hidden" name="quantity" value={1} />
-          <button className="rounded-xl border-[3px] border-border bg-primary px-4 py-3 text-sm font-black text-white shadow-soft">Checkout Pakasir</button>
+          <button className="rounded-xl border-[3px] border-border bg-primary px-4 py-3 text-sm font-black text-white shadow-soft">Lanjut ke Pembayaran</button>
         </form>
       </div>
     </main>
