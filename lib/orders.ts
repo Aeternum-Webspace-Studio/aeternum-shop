@@ -32,6 +32,44 @@ export async function listOrdersByBuyerId(buyerId: string) {
   return db.select().from(orders).where(eq(orders.buyerId, buyerId)).orderBy(desc(orders.createdAt));
 }
 
+export async function listOrderItemsBySellerId(sellerId: string | null) {
+  const db = getDb();
+  const base = db
+    .select({
+      itemId: orderItems.id,
+      orderId: orders.id,
+      orderNumber: orders.orderNumber,
+      orderStatus: orders.status,
+      paymentAmount: orders.totalAmount,
+      productName: products.name,
+      fulfillmentType: orderItems.fulfillmentType,
+      deliveryStatus: orderItems.deliveryStatus,
+      createdAt: orderItems.createdAt
+    })
+    .from(orderItems)
+    .innerJoin(orders, eq(orderItems.orderId, orders.id))
+    .innerJoin(products, eq(orderItems.productId, products.id));
+
+  return sellerId ? base.where(eq(orderItems.sellerId, sellerId)).orderBy(desc(orderItems.createdAt)) : base.orderBy(desc(orderItems.createdAt));
+}
+
+export async function getOrderItemForSeller(itemId: string, sellerId: string | null) {
+  const db = getDb();
+  const [item] = await db.select().from(orderItems).where(eq(orderItems.id, itemId)).limit(1);
+  if (!item) return null;
+  if (sellerId && item.sellerId !== sellerId) return null;
+  return item;
+}
+
+export async function submitManualDelivery(itemId: string, deliveryContent: Record<string, unknown>) {
+  const db = getDb();
+  const [item] = await db.update(orderItems).set({ deliveryContent, deliveryStatus: "delivered", deliveredAt: new Date() }).where(eq(orderItems.id, itemId)).returning();
+  if (!item) return null;
+
+  await db.update(orders).set({ status: "delivered", deliveredAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, item.orderId));
+  return item;
+}
+
 export async function fulfillAutoDelivery(orderId: string) {
   const db = getDb();
 
