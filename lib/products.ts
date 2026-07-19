@@ -1,9 +1,10 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, ilike, or } from "drizzle-orm";
 import { getDb } from "@/db";
 import { categories, productStocks, products } from "@/db/schema";
 
-export async function listMarketplaceProducts() {
+export async function listMarketplaceProducts(search = "") {
   const db = getDb();
+  const query = search.trim();
 
   return db
     .select({
@@ -20,7 +21,11 @@ export async function listMarketplaceProducts() {
     })
     .from(products)
     .leftJoin(categories, eq(products.categoryId, categories.id))
-    .where(eq(products.status, "active"))
+    .where(
+      query
+        ? and(eq(products.status, "active"), or(ilike(products.name, `%${query}%`), ilike(products.description, `%${query}%`), ilike(categories.name, `%${query}%`)))
+        : eq(products.status, "active")
+    )
     .orderBy(desc(products.createdAt));
 }
 

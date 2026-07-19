@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Aeternum Shop - Produk Digital Serba Otomatis",
-  description: "Marketplace produk digital. Bayar, cek dashboard, produk dikirim otomatis atau diproses seller.",
+  title: "Aeternum Shop - Toko Produk Digital Terpercaya",
+  description: "Temukan akun premium, tools, lisensi, dan produk digital dengan harga jelas, pembayaran aman, ulasan pembeli, dan bantuan order.",
   icons: {
     icon: "/icon.svg"
   }

@@ -28,10 +28,12 @@ a {
   position: relative;
   overflow: hidden;
   background:
+    radial-gradient(circle at 42% 26%, rgba(255, 255, 255, 0.9), transparent 18%),
     radial-gradient(circle at 12% 12%, rgba(249, 115, 22, 0.22), transparent 28%),
     radial-gradient(circle at 88% 6%, rgba(14, 165, 233, 0.16), transparent 26%),
     radial-gradient(circle at 70% 84%, rgba(245, 158, 11, 0.18), transparent 30%),
     linear-gradient(180deg, #fff7ed 0%, #ffedd5 48%, #fff7ed 100%);
+  isolation: isolate;
 }
 
 .aeternum-bg::before {
@@ -44,6 +46,7 @@ a {
     linear-gradient(90deg, rgba(17, 24, 39, 0.05) 1px, transparent 1px);
   background-size: 42px 42px;
   mask-image: linear-gradient(to bottom, black, transparent 72%);
+  animation: grid-drift 18s linear infinite;
 }
 
 .aeternum-bg::after {
@@ -59,9 +62,126 @@ a {
   background: rgba(255, 255, 255, 0.55);
   box-shadow: 10px 10px 0 #111827;
   transform: rotate(-10deg);
+  animation: blob-wobble 9s ease-in-out infinite;
 }
 
 .aeternum-bg > * {
   position: relative;
   z-index: 1;
+}
+
+.hero-card {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 247, 237, 0.95)),
+    radial-gradient(circle at 95% 8%, rgba(249, 115, 22, 0.28), transparent 24%);
+}
+
+.lift {
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.lift:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 11px 11px 0 #111827;
+}
+
+.reveal-up {
+  animation: reveal-up 520ms ease both;
+}
+
+.floaty {
+  animation: floaty 4.5s ease-in-out infinite;
+}
+
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: -80% auto -80% -35%;
+  width: 34%;
+  transform: rotate(18deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: shine-sweep 5s ease-in-out infinite;
+}
+
+.ticker-track {
+  animation: ticker-drift 22s linear infinite;
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floaty {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-1deg);
+  }
+}
+
+@keyframes grid-drift {
+  from {
+    background-position: 0 0, 0 0;
+  }
+  to {
+    background-position: 42px 42px, 42px 42px;
+  }
+}
+
+@keyframes blob-wobble {
+  0%, 100% {
+    border-radius: 42% 58% 62% 38% / 38% 36% 64% 62%;
+    transform: rotate(-10deg) translateY(0);
+  }
+  50% {
+    border-radius: 58% 42% 40% 60% / 54% 46% 54% 46%;
+    transform: rotate(-6deg) translateY(12px);
+  }
+}
+
+@keyframes shine-sweep {
+  0%, 35% {
+    left: -45%;
+  }
+  60%, 100% {
+    left: 125%;
+  }
+}
+
+@keyframes ticker-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-260px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aeternum-bg::before,
+  .aeternum-bg::after,
+  .reveal-up,
+  .floaty,
+  .shine::after,
+  .ticker-track {
+    animation: none;
+  }
+
+  .lift,
+  .lift:hover {
+    transform: none;
+  }
 }
