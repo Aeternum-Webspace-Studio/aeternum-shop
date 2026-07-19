@@ -22,23 +22,23 @@ const products = [
 
 const services = [
   {
-    title: "Produk instan",
-    text: "Cocok untuk akun siap pakai. Setelah pembayaran sukses, data produk masuk ke dashboard.",
+    title: "Langsung ke dashboard",
+    text: "Produk instan muncul di order setelah payment sukses.",
     accent: "from-orange-500 to-amber-400"
   },
   {
-    title: "Produk manual",
-    text: "Cocok untuk produk yang perlu dicek seller dulu, seperti akun custom atau paket request.",
+    title: "Dikerjakan seller",
+    text: "Produk manual diproses seller sampai statusnya jelas.",
     accent: "from-slate-900 to-slate-700"
   },
   {
     title: "Harga reseller",
-    text: "Buyer yang disetujui sebagai reseller bisa mendapat harga khusus dari seller atau admin.",
+    text: "Akun reseller dapat harga khusus bila disetujui.",
     accent: "from-sky-500 to-cyan-400"
   },
   {
-    title: "Bantuan order",
-    text: "Jika produk bermasalah, buyer bisa buka ticket dari dashboard order.",
+    title: "Support order",
+    text: "Buka ticket langsung dari order kalau butuh bantuan.",
     accent: "from-amber-500 to-orange-500"
   }
 ];
@@ -173,9 +173,9 @@ export default function HomePage() {
       <section className="mx-auto max-w-7xl px-6 pb-16">
         <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-xl2 border-[3px] border-border bg-white p-6 shadow-soft">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Fitur inti</p>
-            <h2 className="mt-2 text-2xl font-black md:text-3xl">Yang penting untuk toko produk digital.</h2>
-            <p className="mt-4 text-sm leading-7 text-muted">Fokusnya sederhana: produk jelas, pembayaran jelas, delivery jelas, dan support order tersedia.</p>
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Info penting</p>
+            <h2 className="mt-2 text-2xl font-black md:text-3xl">Empat hal yang paling dicari buyer.</h2>
+            <p className="mt-4 text-sm leading-7 text-muted">Biar tidak muter-muter, landing page cuma tampilkan hal yang benar-benar dipakai buat ambil keputusan beli.</p>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {services.map((service) => (
