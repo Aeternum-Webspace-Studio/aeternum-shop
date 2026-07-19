@@ -10,5 +10,5 @@ export async function getCurrentUser() {
   const user = await findUserById(session.userId);
   if (!user) return null;
 
-  return { session, user };
+  return { session: { ...session, role: user.role }, user };
 }

@@ -17,14 +17,6 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (pathname.startsWith("/seller") && session.role === "buyer") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  if (pathname.startsWith("/admin") && session.role !== "admin") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
   return NextResponse.next();
 }
 
