@@ -9,6 +9,12 @@ const loginSchema = z.object({
   password: z.string().min(1)
 });
 
+function dashboardPath(role: "buyer" | "seller" | "admin") {
+  if (role === "admin") return "/admin";
+  if (role === "seller") return "/seller";
+  return "/dashboard";
+}
+
 export async function POST(request: Request) {
   const form = await request.formData();
   const payload = loginSchema.parse({
@@ -21,7 +27,7 @@ export async function POST(request: Request) {
     return NextResponse.redirect(new URL("/login?error=invalid", request.url));
   }
 
-  const response = NextResponse.redirect(new URL("/dashboard", request.url));
+  const response = NextResponse.redirect(new URL(dashboardPath(user.role), request.url));
   response.cookies.set(getSessionCookieName(), createSessionToken({ userId: user.id, role: user.role }), {
     httpOnly: true,
     sameSite: "lax",

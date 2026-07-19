@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     .values({ name: payload.name, email: payload.email.toLowerCase(), passwordHash })
     .returning();
 
-  const response = NextResponse.redirect(new URL("/dashboard", request.url));
+  const response = NextResponse.redirect(new URL(user.role === "seller" ? "/seller" : user.role === "admin" ? "/admin" : "/dashboard", request.url));
   response.cookies.set(getSessionCookieName(), createSessionToken({ userId: user.id, role: user.role }), {
     httpOnly: true,
     sameSite: "lax",

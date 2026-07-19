@@ -25,12 +25,12 @@ const featuredProducts = [
     name: "ChatGPT Plus Private 1 Bulan",
     slug: "chatgpt-plus-private-1-bulan",
     price: 35000,
-    description: "Akses ChatGPT Plus private untuk kebutuhan kerja, belajar, riset, dan produktivitas harian. Cocok untuk pembeli yang ingin pengalaman lebih stabil tanpa alur pembelian ribet.",
-    instructions: "Setelah pembayaran berhasil, detail akses akan tampil di halaman pesanan. Simpan invoice untuk pengecekan status order.",
+    description: "ChatGPT Plus private untuk kerja cepat, riset, coding ringan, ide konten, dan belajar harian. Cocok untuk pembeli yang ingin akses AI premium dengan harga jelas, invoice tersimpan, dan proses order yang tidak perlu bolak-balik chat.",
+    instructions: "Yang kamu dapat:\n- Detail akses private sesuai stok aktif.\n- Panduan login singkat di halaman order.\n- Invoice untuk cek status pembayaran dan delivery.\n\nCocok untuk:\n- Freelancer, pelajar, admin konten, dan tim kecil.\n- Riset cepat, copywriting, brainstorming, dan produktivitas harian.\n\nCatatan:\n- Simpan invoice setelah checkout.\n- Jika akses belum tampil setelah pembayaran sukses, buka ticket dari halaman order.",
     reviews: [
-      ["Raka Pratama", "raka.review@aeternum.biz.id", 5, "Akses cepat masuk dan instruksinya jelas. Cocok buat kerja harian."],
-      ["Dina Maharani", "dina.review@aeternum.biz.id", 5, "Harga masuk akal, proses order rapi, dan statusnya mudah dipantau."],
-      ["Fajar Nugroho", "fajar.review@aeternum.biz.id", 4, "Produk sesuai deskripsi. Support juga responsif saat saya tanya invoice."]
+      ["Raka Pratama", "raka.review@aeternum.biz.id", 5, "Akses cepat masuk. Saya pakai buat riset kerja dan instruksinya jelas, tidak perlu tanya ulang."],
+      ["Dina Maharani", "dina.review@aeternum.biz.id", 5, "Harga masuk akal, checkout rapi, invoice bisa dicek. Buat kebutuhan konten harian ini worth it."],
+      ["Fajar Nugroho", "fajar.review@aeternum.biz.id", 4, "Produk sesuai deskripsi. Support responsif waktu saya tanya status invoice setelah bayar."]
     ]
   },
   {
@@ -38,12 +38,12 @@ const featuredProducts = [
     name: "Gemini Pro 18 Bulan",
     slug: "gemini-pro-18-bulan",
     price: 56000,
-    description: "Paket Gemini Pro durasi panjang untuk eksplorasi AI, penulisan, analisis, dan workflow kreatif. Pilihan hemat untuk pembeli yang ingin masa aktif lebih lama.",
-    instructions: "Gunakan detail akses sesuai instruksi pada halaman pesanan. Jika ada kendala, buka ticket dari akun pembeli.",
+    description: "Gemini Pro durasi panjang untuk pembeli yang butuh AI premium lebih hemat. Pas untuk penulisan, rangkum dokumen, ide kreatif, analisis ringan, dan workflow belajar tanpa harus memperpanjang tiap bulan.",
+    instructions: "Yang kamu dapat:\n- Akses Gemini Pro dengan masa aktif panjang.\n- Instruksi penggunaan dan catatan akses setelah order sukses.\n- Riwayat order, payment, dan ticket dalam satu dashboard.\n\nCocok untuk:\n- Pembeli yang ingin paket AI jangka panjang.\n- Pekerja konten, mahasiswa, riset ringan, dan workflow produktivitas.\n\nCatatan:\n- Ikuti instruksi akses di detail pesanan.\n- Buka ticket jika ada kendala login atau masa aktif.",
     reviews: [
-      ["Nabila Putri", "nabila.review@aeternum.biz.id", 5, "Durasi panjang dan harganya worth it. Pembelian terasa aman karena ada invoice tracker."],
-      ["Yoga Saputra", "yoga.review@aeternum.biz.id", 5, "Aktif sesuai keterangan. Saya suka detail pesanan tersimpan di akun."],
-      ["Mira Lestari", "mira.review@aeternum.biz.id", 4, "Bagus untuk kerja konten. Prosesnya jelas dari bayar sampai akses diterima."]
+      ["Nabila Putri", "nabila.review@aeternum.biz.id", 5, "Durasi panjang dan harganya worth it. Saya suka karena status order bisa dilacak dari invoice."],
+      ["Yoga Saputra", "yoga.review@aeternum.biz.id", 5, "Aktif sesuai keterangan. Detail pesanan tersimpan di akun, jadi gampang cek ulang."],
+      ["Mira Lestari", "mira.review@aeternum.biz.id", 4, "Bagus untuk kerja konten. Alur dari bayar sampai akses diterima cukup jelas."]
     ]
   },
   {
@@ -51,12 +51,12 @@ const featuredProducts = [
     name: "Canva Pro Team 1 Bulan",
     slug: "canva-pro-team-1-bulan",
     price: 35000,
-    description: "Canva Pro Team untuk desain konten, presentasi, banner, dan kebutuhan brand harian. Cocok untuk kreator, admin sosial media, pelajar, dan tim kecil.",
-    instructions: "Ikuti instruksi undangan team yang muncul setelah order diproses. Pastikan email Canva aktif dan bisa menerima undangan.",
+    description: "Canva Pro Team 1 bulan untuk desain konten, presentasi, banner promo, CV, dan kebutuhan brand harian. Pilihan praktis untuk kreator, admin sosial media, pelajar, dan tim kecil yang butuh fitur Pro tanpa ribet.",
+    instructions: "Yang kamu dapat:\n- Akses Canva Pro Team sesuai periode produk.\n- Instruksi undangan team setelah order diproses.\n- Bantuan order jika undangan belum masuk.\n\nCocok untuk:\n- Desain konten sosial media, poster, presentasi, dan materi promosi.\n- Creator, UMKM, pelajar, admin online shop, dan tim kecil.\n\nCatatan:\n- Pastikan email Canva aktif dan bisa menerima undangan.\n- Jangan keluar dari team sebelum masa aktif selesai.",
     reviews: [
-      ["Salsa Amalia", "salsa.review@aeternum.biz.id", 5, "Undangan team masuk dan Canva Pro langsung bisa dipakai."],
-      ["Ardi Wijaya", "ardi.review@aeternum.biz.id", 5, "Murah untuk kebutuhan desain bulanan. Penjelasan produknya jelas."],
-      ["Citra Dewi", "citra.review@aeternum.biz.id", 4, "Order diproses rapi dan saya bisa cek statusnya tanpa chat berulang." ]
+      ["Salsa Amalia", "salsa.review@aeternum.biz.id", 5, "Undangan team masuk dan Canva Pro langsung bisa dipakai buat desain konten toko."],
+      ["Ardi Wijaya", "ardi.review@aeternum.biz.id", 5, "Murah untuk kebutuhan desain bulanan. Penjelasan produk dan catatannya jelas."],
+      ["Citra Dewi", "citra.review@aeternum.biz.id", 4, "Order diproses rapi. Saya bisa cek status tanpa chat berulang, tinggal pantau invoice." ]
     ]
   }
 ];

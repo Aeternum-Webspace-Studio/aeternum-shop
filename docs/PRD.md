@@ -254,6 +254,28 @@ Aturan:
 - Satu order item hanya boleh punya satu review.
 - Review bisa berisi rating 1 sampai 5 dan komentar.
 - Admin bisa menyembunyikan review bermasalah.
+- Marketplace dan detail produk menampilkan rating rata-rata, jumlah review, dan komentar pembeli terverifikasi.
+- Form review di order detail harus membantu buyer menulis pengalaman yang berguna untuk pembeli lain.
+
+Status implementasi:
+
+- Buyer bisa memberi rating dan komentar setelah item delivered.
+- Review tampil di landing, marketplace, dan detail produk.
+- Admin bisa hide/unhide review.
+
+## 12A. Detail Produk Dan Checkout
+
+Detail produk publik wajib memuat:
+
+- Nama produk, kategori, harga, harga reseller jika ada.
+- Deskripsi yang menjual tapi tetap jelas.
+- Manfaat produk dan target pengguna.
+- Cara akses setelah pembayaran.
+- Cara checkout ringkas.
+- Informasi invoice, dashboard order, dan support ticket.
+- Rating rata-rata dan komentar pembeli.
+
+Checkout MVP tetap sederhana: tombol detail produk membuat order, payment, lalu redirect ke Pakasir. Halaman checkout terpisah ditunda sampai dibutuhkan untuk cart atau multi-item.
 
 ## 13. Ticket Support
 

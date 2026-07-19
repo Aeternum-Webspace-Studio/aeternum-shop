@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { listMarketplaceProducts } from "@/lib/products";
+import { getReviewSummaryByProductId } from "@/lib/reviews";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,12 @@ export default async function MarketplacePage({
 }) {
   const q = (await searchParams).q ?? "";
   const products = await listMarketplaceProducts(q);
+  const productsWithReviews = await Promise.all(
+    products.map(async (product) => ({
+      ...product,
+      reviewSummary: await getReviewSummaryByProductId(product.id)
+    }))
+  );
   const categories = [...new Set(products.map((product) => product.categoryName).filter((category): category is string => Boolean(category)))];
 
   return (
@@ -41,20 +48,23 @@ export default async function MarketplacePage({
         </form>
 
         <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {products.length === 0 ? (
+          {productsWithReviews.length === 0 ? (
             <div className="rounded-xl2 border-[3px] border-border bg-white p-6 text-sm text-muted shadow-soft">{q ? "Produk tidak ditemukan." : "Belum ada produk aktif."}</div>
           ) : (
-            products.map((product) => (
+            productsWithReviews.map((product) => (
               <article key={product.id} className="lift hero-card rounded-xl2 border-[3px] border-border p-5 shadow-soft">
                 <div className="flex items-start justify-between gap-3">
                   <p className="rounded-full border-[2px] border-border bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-primary">{product.fulfillmentType === "auto" ? "Akses cepat" : "Diproses"}</p>
-                  <p className="rounded-full border-[2px] border-border bg-primary px-3 py-1 text-[11px] font-black uppercase tracking-[0.14em] text-white">Terpercaya</p>
+                  <p className="rounded-full border-[2px] border-border bg-primary px-3 py-1 text-[11px] font-black uppercase tracking-[0.14em] text-white">
+                    {product.reviewSummary.count === 0 ? "Baru" : `${product.reviewSummary.average.toFixed(1)}/5`}
+                  </p>
                 </div>
                 <h2 className="mt-4 text-xl font-black leading-tight">{product.name}</h2>
                 <p className="mt-3 line-clamp-3 text-sm leading-6 text-muted">{product.description}</p>
                 <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted">
                   {product.categoryName ? <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">{product.categoryName}</span> : null}
                   <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">Status aktif</span>
+                  <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">{product.reviewSummary.count} review</span>
                   {product.resellerPrice ? <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">Harga khusus tersedia</span> : null}
                 </div>
                 <div className="mt-5 flex items-center justify-between border-t-[2px] border-border pt-4">

@@ -85,41 +85,32 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
 
       {children}
 
-      <footer className="border-t-[3px] border-border bg-white px-6 py-10">
-        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
-          <div className="hero-card rounded-xl2 border-[3px] border-border p-5 shadow-soft">
-            <div className="flex items-center gap-3">
-              <img className="h-10 w-10 rounded-lg shadow-soft" src="/icon.svg" alt="Aeternum Shop" />
+      <footer className="border-t-[3px] border-border bg-[#111827] px-6 py-10 text-white">
+        <div className="mx-auto max-w-7xl">
+          <div className="shine rounded-xl2 border-[3px] border-white bg-primary p-6 shadow-[8px_8px_0_#ffffff] md:p-8">
+            <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
               <div>
-                <p className="text-sm font-black uppercase tracking-[0.2em] text-primary">Aeternum Shop</p>
-                <p className="text-xs text-muted">Aeternum Webspace Studio by PT Aeternum Kreasikan Bersama.</p>
+                <div className="flex items-center gap-3">
+                  <img className="h-12 w-12 rounded-xl border-[2px] border-white bg-white shadow-soft" src="/icon.svg" alt="Aeternum Shop" />
+                  <div>
+                    <p className="text-sm font-black uppercase tracking-[0.24em] text-white/80">Aeternum Shop</p>
+                    <p className="text-2xl font-black leading-tight">Produk digital, checkout jelas, support tercatat.</p>
+                  </div>
+                </div>
+                <p className="mt-5 max-w-2xl text-sm leading-7 text-white/85">Marketplace produk digital dari Aeternum Webspace Studio by PT Aeternum Kreasikan Bersama. Simpan invoice, pantau pesanan, dan buka ticket kalau butuh bantuan.</p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <a className="lift rounded-xl border-[2px] border-white bg-white px-4 py-3 text-sm font-black text-primary" href="/marketplace">Belanja produk</a>
+                <a className="lift rounded-xl border-[2px] border-white bg-[#111827] px-4 py-3 text-sm font-black text-white" href="/invoice-tracker">Cek invoice</a>
+                <a className="lift inline-flex items-center gap-2 rounded-xl border-[2px] border-white bg-white/10 px-4 py-3 text-sm font-black text-white" href="https://instagram.com/aeternum.webspace" target="_blank" rel="noreferrer">IG aeternum.webspace</a>
+                <a className="lift inline-flex items-center gap-2 rounded-xl border-[2px] border-white bg-white/10 px-4 py-3 text-sm font-black text-white" href="https://t.me/aettera_hunter" target="_blank" rel="noreferrer">TG aettera_hunter</a>
               </div>
             </div>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-muted">Cari produk, bayar aman, pantau pesanan, dan hubungi support kalau butuh bantuan.</p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <a className="lift inline-flex items-center gap-2 rounded-full border-[2px] border-border bg-white px-4 py-2 text-sm font-black" href="https://instagram.com/aeternum.webspace" target="_blank" rel="noreferrer">
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-primary text-xs text-white">IG</span>
-                aeternum.webspace
-              </a>
-              <a className="lift inline-flex items-center gap-2 rounded-full border-[2px] border-border bg-white px-4 py-2 text-sm font-black" href="https://t.me/aettera_hunter" target="_blank" rel="noreferrer">
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-accent text-xs text-white">TG</span>
-                aettera_hunter
-              </a>
-            </div>
           </div>
-          <div className="rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Navigasi</p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <a className="lift rounded-full border-[2px] border-border bg-surfaceSoft px-4 py-2 text-sm font-black" href="/marketplace">Marketplace</a>
-              <a className="lift rounded-full border-[2px] border-border bg-surfaceSoft px-4 py-2 text-sm font-black" href="/blog">Artikel</a>
-              <a className="lift rounded-full border-[2px] border-border bg-surfaceSoft px-4 py-2 text-sm font-black" href="/invoice-tracker">Invoice</a>
-              <a className="lift rounded-full border-[2px] border-border bg-surfaceSoft px-4 py-2 text-sm font-black" href="/dashboard/tickets">Support</a>
-            </div>
+          <div className="mt-6 flex flex-col gap-2 text-xs font-black uppercase tracking-[0.16em] text-white/65 md:flex-row md:items-center md:justify-between">
+            <p>Aeternum Webspace Studio</p>
+            <p>PT Aeternum Kreasikan Bersama</p>
           </div>
-        </div>
-        <div className="mx-auto mt-6 flex max-w-7xl flex-col gap-2 border-t-[2px] border-border pt-5 text-xs font-black uppercase tracking-[0.16em] text-muted md:flex-row md:items-center md:justify-between">
-          <p>Aeternum Webspace Studio</p>
-          <p>PT Aeternum Kreasikan Bersama</p>
         </div>
       </footer>
     </>
