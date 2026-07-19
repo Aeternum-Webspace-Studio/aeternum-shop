@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSessionCookieName, createSessionToken, verifyPassword } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { findUserByEmail } from "@/lib/users";
 
 const loginSchema = z.object({
@@ -28,5 +29,6 @@ export async function POST(request: Request) {
     path: "/",
     maxAge: 60 * 60 * 24 * 7
   });
+  await logActivity({ actorId: user.id, action: "auth.login", entityType: "user", entityId: user.id, metadata: { email: user.email, role: user.role } });
   return response;
 }

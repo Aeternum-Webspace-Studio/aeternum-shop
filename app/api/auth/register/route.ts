@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getDb } from "@/db";
 import { users } from "@/db/schema";
 import { createSessionToken, hashPassword, getSessionCookieName } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 
 const registerSchema = z.object({
   name: z.string().min(2),
@@ -33,5 +34,6 @@ export async function POST(request: Request) {
     path: "/",
     maxAge: 60 * 60 * 24 * 7
   });
+  await logActivity({ actorId: user.id, action: "auth.register", entityType: "user", entityId: user.id, metadata: { email: user.email, role: user.role } });
   return response;
 }

@@ -240,6 +240,24 @@ export const blogPosts = pgTable(
   })
 );
 
+export const activityLogs = pgTable(
+  "activity_logs",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    actorId: uuid("actor_id").references(() => users.id, { onDelete: "set null" }),
+    action: text("action").notNull(),
+    entityType: text("entity_type"),
+    entityId: text("entity_id"),
+    metadata: jsonb("metadata").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+  },
+  (table) => ({
+    actorIdx: index("activity_logs_actor_idx").on(table.actorId),
+    actionIdx: index("activity_logs_action_idx").on(table.action),
+    createdIdx: index("activity_logs_created_idx").on(table.createdAt)
+  })
+);
+
 export const faqItems = pgTable("faq_items", {
   id: uuid("id").defaultRandom().primaryKey(),
   question: text("question").notNull(),

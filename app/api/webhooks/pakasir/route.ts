@@ -5,6 +5,7 @@ import { getDb } from "@/db";
 import { orders, paymentEvents, payments } from "@/db/schema";
 import { fetchPakasirTransactionDetail } from "@/lib/pakasir";
 import { fulfillAutoDelivery } from "@/lib/orders";
+import { logActivity } from "@/lib/activity";
 
 const webhookSchema = z.object({
   amount: z.number(),
@@ -64,7 +65,14 @@ export async function POST(request: Request) {
   await db.update(payments).set({ status: "paid", paidAt: new Date(), rawPayload: body, updatedAt: new Date() }).where(eq(payments.id, payment.id));
   await db.update(orders).set({ status: "paid", paidAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, order.id));
 
-  await fulfillAutoDelivery(order.id);
+  const deliveryState = await fulfillAutoDelivery(order.id);
+  await logActivity({
+    actorId: null,
+    action: "payment.paid",
+    entityType: "order",
+    entityId: order.id,
+    metadata: { orderNumber: order.orderNumber, amount: body.amount, deliveryState }
+  });
 
   return NextResponse.json({ ok: true });
 }

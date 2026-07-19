@@ -5,6 +5,7 @@ import { getDb } from "@/db";
 import { orderItems, orders, reviews } from "@/db/schema";
 import { getCurrentUser } from "@/lib/session-server";
 import { createReview } from "@/lib/reviews";
+import { logActivity } from "@/lib/activity";
 
 const reviewSchema = z.object({
   orderItemId: z.string().uuid(),
@@ -58,6 +59,14 @@ export async function POST(request: NextRequest) {
     buyerId: current.user.id,
     rating: payload.rating,
     comment: payload.comment ?? null
+  });
+
+  await logActivity({
+    actorId: current.user.id,
+    action: "review.created",
+    entityType: "review",
+    entityId: item.id,
+    metadata: { productId: item.productId, rating: payload.rating }
   });
 
   return NextResponse.redirect(new URL(`/dashboard/orders/${order.orderNumber}`, request.url), { status: 303 });

@@ -4,6 +4,7 @@ import { getDb } from "@/db";
 import { blogPosts } from "@/db/schema";
 import { getCurrentUser } from "@/lib/session-server";
 import { slugify } from "@/lib/slug";
+import { logActivity } from "@/lib/activity";
 
 const articleSchema = z.object({
   title: z.string().min(5),
@@ -37,6 +38,7 @@ export async function POST(request: Request) {
     status: payload.status,
     publishedAt: payload.status === "published" ? new Date() : null
   });
+  await logActivity({ actorId: current.user.id, action: "article.created", entityType: "blog_post", entityId: slug, metadata: { status: payload.status } });
 
   return NextResponse.redirect(new URL("/admin/blog", request.url), { status: 303 });
 }

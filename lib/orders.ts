@@ -136,14 +136,14 @@ export async function submitManualDelivery(itemId: string, deliveryContent: Reco
 export async function fulfillAutoDelivery(orderId: string) {
   const db = getDb();
 
-  await db.transaction(async (tx) => {
+  return db.transaction(async (tx) => {
     const [item] = await tx.select().from(orderItems).where(eq(orderItems.orderId, orderId)).limit(1);
-    if (!item) return;
+    if (!item) return "missing" as const;
 
     const [product] = await tx.select().from(products).where(eq(products.id, item.productId)).limit(1);
     if (!product || product.fulfillmentType !== "auto") {
       await tx.update(orders).set({ status: "processing", paidAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, orderId));
-      return;
+      return "processing" as const;
     }
 
     const [stock] = await tx
@@ -156,7 +156,7 @@ export async function fulfillAutoDelivery(orderId: string) {
     if (!stock) {
       await tx.update(orders).set({ status: "processing", paidAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, orderId));
       await tx.update(orderItems).set({ deliveryStatus: "failed" }).where(eq(orderItems.id, item.id));
-      return;
+      return "failed" as const;
     }
 
     const [updatedStock] = await tx
@@ -165,9 +165,10 @@ export async function fulfillAutoDelivery(orderId: string) {
       .where(and(eq(productStocks.id, stock.id), eq(productStocks.status, "available")))
       .returning();
 
-    if (!updatedStock) return;
+    if (!updatedStock) return "processing" as const;
 
     await tx.update(orderItems).set({ deliveryContent: updatedStock.content, deliveryStatus: "delivered", deliveredAt: new Date() }).where(eq(orderItems.id, item.id));
     await tx.update(orders).set({ status: "delivered", paidAt: new Date(), deliveredAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, orderId));
+    return "delivered" as const;
   });
 }

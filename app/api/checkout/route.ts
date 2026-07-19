@@ -5,6 +5,7 @@ import { orderItems, orders, payments, products } from "@/db/schema";
 import { getCurrentUser } from "@/lib/session-server";
 import { buildPakasirPaymentUrl } from "@/lib/pakasir";
 import { createOrderNumber } from "@/lib/orders";
+import { logActivity } from "@/lib/activity";
 import { eq } from "drizzle-orm";
 
 const checkoutSchema = z.object({
@@ -70,6 +71,14 @@ export async function POST(request: Request) {
     paymentUrl,
     amount,
     status: "pending"
+  });
+
+  await logActivity({
+    actorId: current.user.id,
+    action: "order.created",
+    entityType: "order",
+    entityId: order.id,
+    metadata: { orderNumber, productId: product.id, quantity: payload.quantity, amount }
   });
 
   return NextResponse.redirect(paymentUrl, { status: 303 });

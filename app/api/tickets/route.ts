@@ -5,6 +5,7 @@ import { getDb } from "@/db";
 import { orders } from "@/db/schema";
 import { createTicket, getSellerIdForOrder } from "@/lib/tickets";
 import { getCurrentUser } from "@/lib/session-server";
+import { logActivity } from "@/lib/activity";
 
 const ticketSchema = z.object({
   subject: z.string().min(3).max(200),
@@ -40,6 +41,14 @@ export async function POST(request: NextRequest) {
     subject: payload.subject,
     orderId: payload.orderId ?? null,
     sellerId
+  });
+
+  await logActivity({
+    actorId: current.user.id,
+    action: "ticket.created",
+    entityType: "ticket",
+    entityId: payload.orderId ?? current.user.id,
+    metadata: { subject: payload.subject, orderId: payload.orderId ?? null, sellerId }
   });
 
   return NextResponse.redirect(new URL("/dashboard/tickets", request.url), { status: 303 });
