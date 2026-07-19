@@ -14,7 +14,7 @@ export default async function ProductDetailPage({
   if (!product) notFound();
 
   return (
-    <main className="min-h-screen bg-background px-6 py-10 text-text">
+    <main className="aeternum-bg min-h-screen px-6 py-10 text-text">
       <div className="mx-auto max-w-4xl">
         <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Product detail</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight md:text-5xl">{product.name}</h1>

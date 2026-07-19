@@ -19,7 +19,7 @@ export function AppShell({
   footer?: React.ReactNode;
 }) {
   return (
-    <main className="min-h-screen bg-background text-text">
+    <main className="aeternum-bg min-h-screen text-text">
       <div className="border-b-[3px] border-border bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div>

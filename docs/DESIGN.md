@@ -76,6 +76,7 @@ Aturan:
 ## 06. Visual Signature
 
 - Light background.
+- Hosting-style warm background with radial blobs and subtle grid.
 - Solid white cards.
 - Border hitam atau sangat gelap.
 - Shadow offset tegas, bukan blur.

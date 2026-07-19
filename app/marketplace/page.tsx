@@ -9,7 +9,7 @@ export default async function MarketplacePage() {
   const products = await listMarketplaceProducts();
 
   return (
-    <main className="min-h-screen bg-background px-6 py-10 text-text">
+    <main className="aeternum-bg min-h-screen px-6 py-10 text-text">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
           <div>

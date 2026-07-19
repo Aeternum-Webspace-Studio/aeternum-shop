@@ -13,7 +13,6 @@ html {
 body {
   background: #fff7ed;
   color: #111827;
-  background-image: linear-gradient(135deg, rgba(249, 115, 22, 0.06) 0%, transparent 40%), linear-gradient(315deg, rgba(17, 24, 39, 0.03) 0%, transparent 35%);
 }
 
 * {
@@ -23,4 +22,46 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.aeternum-bg {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(249, 115, 22, 0.22), transparent 28%),
+    radial-gradient(circle at 88% 6%, rgba(14, 165, 233, 0.16), transparent 26%),
+    radial-gradient(circle at 70% 84%, rgba(245, 158, 11, 0.18), transparent 30%),
+    linear-gradient(180deg, #fff7ed 0%, #ffedd5 48%, #fff7ed 100%);
+}
+
+.aeternum-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(17, 24, 39, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 24, 39, 0.05) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, black, transparent 72%);
+}
+
+.aeternum-bg::after {
+  content: "";
+  position: absolute;
+  right: -140px;
+  top: 130px;
+  width: 420px;
+  height: 420px;
+  pointer-events: none;
+  border: 3px solid #111827;
+  border-radius: 42% 58% 62% 38% / 38% 36% 64% 62%;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 10px 10px 0 #111827;
+  transform: rotate(-10deg);
+}
+
+.aeternum-bg > * {
+  position: relative;
+  z-index: 1;
 }
