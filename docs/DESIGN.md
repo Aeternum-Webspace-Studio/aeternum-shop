@@ -2,19 +2,19 @@
 
 ## 01. Ringkasan
 
-Frontend memakai tema light premium digital marketplace. `appverse.id` boleh dijadikan referensi struktur marketplace dan flow UX, tetapi visual tidak boleh meniru penuh.
+Frontend memakai tema light orange neurabrutalism digital marketplace. `aeternumwebspace.co.id` boleh dijadikan referensi struktur, ritme konten, dan rasa editorial, tetapi visual tidak boleh meniru penuh.
 
 Identitas produk:
 
 ```txt
-Nama rasa: Aeternum Digital Market
-Style: light premium, solid, editorial, compact, commerce-first
-Mood: bersih, terpercaya, aktif, cepat, modern
+Nama rasa: Aeternum Orange Market
+Style: light, brutal, editorial, compact, commerce-first
+Mood: tegas, premium, aktif, cepat, modern
 ```
 
 ## 02. Referensi
 
-Gunakan `appverse.id` sebagai referensi untuk:
+Gunakan `aeternumwebspace.co.id` sebagai referensi untuk:
 
 - Alur marketplace produk digital.
 - Penempatan kategori.
@@ -42,17 +42,17 @@ Jangan gunakan sebagai referensi untuk:
 ## 04. Palet Warna
 
 ```txt
-Background: #F8FAFC
+Background: #FFF7ED
 Surface: #FFFFFF
-Surface Soft: #F1F5F9
-Border: #E2E8F0
-Text: #0F172A
-Muted: #64748B
+Surface Soft: #FFEDD5
+Border: #1F2937
+Text: #111827
+Muted: #6B7280
 
-Primary: #4F46E5
-Primary Dark: #3730A3
-Accent Cyan: #0891B2
-Accent Amber: #D97706
+Primary: #F97316
+Primary Dark: #C2410C
+Accent Cyan: #0EA5E9
+Accent Amber: #F59E0B
 Success: #16A34A
 Warning: #F59E0B
 Danger: #DC2626
@@ -77,10 +77,10 @@ Aturan:
 
 - Light background.
 - Solid white cards.
-- Border halus.
-- Shadow kecil, bukan dramatic.
-- Rounded `16px` untuk card utama.
-- Button indigo solid.
+- Border hitam atau sangat gelap.
+- Shadow offset tegas, bukan blur.
+- Rounded `10px` untuk card utama.
+- Button orange solid.
 - Badge solid-soft.
 - Icon outline dari `lucide-react`.
 - Section separator pakai garis tipis atau label kecil.
@@ -169,12 +169,12 @@ Product detail harus menjawab pertanyaan buyer sebelum bayar:
 
 ## 11. Dashboard Style
 
-Dashboard memakai light admin style.
+Dashboard memakai light admin style dengan feel panel editorial yang tegas.
 
 Aturan:
 
-- Sidebar putih atau soft gray.
-- Active navigation indigo.
+- Sidebar putih atau soft peach.
+- Active navigation orange.
 - Table rapi.
 - Status badge mudah dibaca.
 - Card statistik sederhana.
