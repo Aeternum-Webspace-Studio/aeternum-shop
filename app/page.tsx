@@ -104,7 +104,7 @@ export default async function HomePage() {
             <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Trending sekarang</p>
             <h2 className="mt-2 text-2xl font-black md:text-3xl">Produk yang paling sering dicari pembeli</h2>
           </div>
-          <a className="hidden rounded-xl border-[3px] border-border bg-white px-4 py-2 text-sm font-black shadow-soft md:inline-flex" href="/marketplace">
+                <a className="hidden rounded-xl border-[3px] border-border bg-white px-4 py-2 text-sm font-black shadow-soft md:inline-flex" href="/trending">
             Lihat semua
           </a>
         </div>

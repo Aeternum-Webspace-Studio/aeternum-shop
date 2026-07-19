@@ -13,7 +13,7 @@ const productSchema = z.object({
   price: z.coerce.number().int().positive(),
   resellerPrice: z.coerce.number().int().nonnegative().optional(),
   fulfillmentType: z.enum(["auto", "manual"]),
-  status: z.enum(["draft", "active", "inactive", "blocked"]).default("draft"),
+  status: z.enum(["draft", "active", "inactive", "blocked"]).default("active"),
   categoryId: z.string().uuid().optional(),
   isCustomPackage: z.coerce.boolean().optional()
 });
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     price: form.get("price"),
     resellerPrice: form.get("resellerPrice") || undefined,
     fulfillmentType: form.get("fulfillmentType"),
-    status: form.get("status") || "draft",
+    status: form.get("status") || "active",
     categoryId: form.get("categoryId") || undefined,
     isCustomPackage: form.get("isCustomPackage") === "on"
   });

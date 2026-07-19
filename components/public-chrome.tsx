@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { ChatbotLauncher } from "@/components/chatbot-launcher";
 
 type BuyerStats = {
   rank: number | null;
@@ -84,6 +85,8 @@ export function PublicChrome({ children }: { children: React.ReactNode }) {
       </div>
 
       {children}
+
+      <ChatbotLauncher />
 
       <footer className="border-t-[3px] border-border bg-[#111827] px-6 py-10 text-white">
         <div className="mx-auto max-w-7xl">

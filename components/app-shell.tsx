@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChatbotLauncher } from "@/components/chatbot-launcher";
 
 type NavItem = {
   href: string;
@@ -30,6 +31,9 @@ export function AppShell({
             <Link href="/marketplace">Marketplace</Link>
             <Link href="/blog">Blog</Link>
             <Link href="/dashboard">Dashboard</Link>
+            <form method="post" action="/api/auth/logout" className="inline-flex">
+              <button className="font-black text-primary">Logout</button>
+            </form>
           </div>
         </div>
       </div>
@@ -50,6 +54,8 @@ export function AppShell({
 
         <section className="rounded-xl2 border-[3px] border-border bg-white p-6 shadow-soft">{children}</section>
       </div>
+
+      <ChatbotLauncher />
     </main>
   );
 }

@@ -25,7 +25,7 @@ export default async function AdminPackagesPage() {
             <option value="auto">Auto</option>
             <option value="manual">Manual</option>
           </select>
-          <select className="rounded-xl border border-border bg-surfaceSoft px-3 py-2 text-sm" name="status" defaultValue="draft">
+          <select className="rounded-xl border border-border bg-surfaceSoft px-3 py-2 text-sm" name="status" defaultValue="active">
             <option value="draft">Draft</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>

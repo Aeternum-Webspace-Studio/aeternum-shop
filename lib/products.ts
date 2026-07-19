@@ -15,6 +15,7 @@ export async function listMarketplaceProducts(search = "") {
       resellerPrice: products.resellerPrice,
       fulfillmentType: products.fulfillmentType,
       status: products.status,
+      isCustomPackage: products.isCustomPackage,
       description: products.description,
       categoryName: categories.name,
       categorySlug: categories.slug
@@ -65,6 +66,7 @@ export async function listProductsBySellerId(sellerId: string | null) {
       resellerPrice: products.resellerPrice,
       fulfillmentType: products.fulfillmentType,
       status: products.status,
+      isCustomPackage: products.isCustomPackage,
       createdAt: products.createdAt
     })
     .from(products);

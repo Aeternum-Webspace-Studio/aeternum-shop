@@ -17,7 +17,7 @@ export default function NewProductPage() {
             <option value="auto">Auto</option>
             <option value="manual">Manual</option>
           </select>
-          <select className="rounded-xl border border-border px-4 py-3" name="status" defaultValue="draft">
+          <select className="rounded-xl border border-border px-4 py-3" name="status" defaultValue="active">
             <option value="draft">Draft</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
