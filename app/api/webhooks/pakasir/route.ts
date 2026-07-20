@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { orders, paymentEvents, payments } from "@/db/schema";
 import { fetchPakasirTransactionDetail } from "@/lib/pakasir";
@@ -16,6 +16,12 @@ const webhookSchema = z.object({
   payment_method: z.string().optional(),
   completed_at: z.string().optional()
 });
+
+type PaidWebhookResult =
+  | { kind: "paid"; order: { id: string; orderNumber: string } }
+  | { kind: "duplicate" }
+  | { kind: "ignored" }
+  | { kind: "error"; message: string; status: number };
 
 export async function POST(request: Request) {
   const body = webhookSchema.parse(await request.json());
@@ -42,49 +48,59 @@ export async function POST(request: Request) {
   }
 
   const db = getDb();
-  const [order] = await db.select().from(orders).where(eq(orders.orderNumber, body.order_id)).limit(1);
-  if (!order) {
-    return NextResponse.json({ error: "Order not found" }, { status: 404 });
+  const result: PaidWebhookResult = await db.transaction(async (tx) => {
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${body.order_id}))`);
+
+    const [order] = await tx.select().from(orders).where(eq(orders.orderNumber, body.order_id)).limit(1);
+    if (!order) return { kind: "error", message: "Order not found", status: 404 };
+
+    const [payment] = await tx.select().from(payments).where(and(eq(payments.orderId, order.id), eq(payments.amount, body.amount))).limit(1);
+    if (!payment) return { kind: "error", message: "Payment not found", status: 404 };
+
+    if (order.status !== "pending_payment" && order.status !== "paid") return { kind: "ignored" };
+
+    await tx.insert(paymentEvents).values({
+      paymentId: payment.id,
+      provider: "pakasir",
+      eventType: body.status,
+      payload: body
+    });
+
+    if (payment.status === "paid") return { kind: "duplicate" };
+
+    await tx.update(payments).set({ status: "paid", paidAt: new Date(), rawPayload: body, updatedAt: new Date() }).where(eq(payments.id, payment.id));
+    await tx.update(orders).set({ status: "paid", paidAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, order.id));
+
+    return { kind: "paid", order: { id: order.id, orderNumber: order.orderNumber } };
+  });
+
+  if (result.kind === "error") {
+    return NextResponse.json({ error: result.message }, { status: result.status });
   }
 
-  const [payment] = await db.select().from(payments).where(and(eq(payments.orderId, order.id), eq(payments.amount, body.amount))).limit(1);
-  if (!payment) {
-    return NextResponse.json({ error: "Payment not found" }, { status: 404 });
-  }
-
-  if (order.status !== "pending_payment" && order.status !== "paid") {
+  if (result.kind === "ignored") {
     return NextResponse.json({ ok: true, ignored: true });
   }
 
-  await db.insert(paymentEvents).values({
-    paymentId: payment.id,
-    provider: "pakasir",
-    eventType: body.status,
-    payload: body
-  });
-
-  if (payment.status === "paid") {
+  if (result.kind === "duplicate") {
     return NextResponse.json({ ok: true, duplicate: true });
   }
 
-  await db.update(payments).set({ status: "paid", paidAt: new Date(), rawPayload: body, updatedAt: new Date() }).where(eq(payments.id, payment.id));
-  await db.update(orders).set({ status: "paid", paidAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, order.id));
-
-  const deliveryState = await fulfillAutoDelivery(order.id);
-  const recipient = await getOrderNotificationRecipient(order.id);
+  const deliveryState = await fulfillAutoDelivery(result.order.id);
+  const recipient = await getOrderNotificationRecipient(result.order.id);
   await sendNotificationEmail({
     to: recipient?.email,
-    subject: `Payment ${order.orderNumber} berhasil`,
+    subject: `Payment ${result.order.orderNumber} berhasil`,
     text: deliveryState === "delivered"
-      ? `Payment untuk invoice ${order.orderNumber} berhasil dan akses produk sudah tersedia di dashboard order.`
-      : `Payment untuk invoice ${order.orderNumber} berhasil. Pesanan sedang diproses seller, pantau statusnya di dashboard order.`
+      ? `Payment untuk invoice ${result.order.orderNumber} berhasil dan akses produk sudah tersedia di dashboard order.`
+      : `Payment untuk invoice ${result.order.orderNumber} berhasil. Pesanan sedang diproses seller, pantau statusnya di dashboard order.`
   });
   await logActivity({
     actorId: null,
     action: "payment.paid",
     entityType: "order",
-    entityId: order.id,
-    metadata: { orderNumber: order.orderNumber, amount: body.amount, deliveryState }
+    entityId: result.order.id,
+    metadata: { orderNumber: result.order.orderNumber, amount: body.amount, deliveryState }
   });
 
   return NextResponse.json({ ok: true });
