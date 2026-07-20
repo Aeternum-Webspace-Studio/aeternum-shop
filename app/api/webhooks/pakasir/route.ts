@@ -4,8 +4,9 @@ import { and, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { orders, paymentEvents, payments } from "@/db/schema";
 import { fetchPakasirTransactionDetail } from "@/lib/pakasir";
-import { fulfillAutoDelivery } from "@/lib/orders";
+import { fulfillAutoDelivery, getOrderNotificationRecipient } from "@/lib/orders";
 import { logActivity } from "@/lib/activity";
+import { sendNotificationEmail } from "@/lib/email";
 
 const webhookSchema = z.object({
   amount: z.number(),
@@ -66,6 +67,14 @@ export async function POST(request: Request) {
   await db.update(orders).set({ status: "paid", paidAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, order.id));
 
   const deliveryState = await fulfillAutoDelivery(order.id);
+  const recipient = await getOrderNotificationRecipient(order.id);
+  await sendNotificationEmail({
+    to: recipient?.email,
+    subject: `Payment ${order.orderNumber} berhasil`,
+    text: deliveryState === "delivered"
+      ? `Payment untuk invoice ${order.orderNumber} berhasil dan akses produk sudah tersedia di dashboard order.`
+      : `Payment untuk invoice ${order.orderNumber} berhasil. Pesanan sedang diproses seller, pantau statusnya di dashboard order.`
+  });
   await logActivity({
     actorId: null,
     action: "payment.paid",

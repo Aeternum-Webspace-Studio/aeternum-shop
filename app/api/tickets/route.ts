@@ -6,6 +6,7 @@ import { orders } from "@/db/schema";
 import { createTicket, getSellerIdForOrder } from "@/lib/tickets";
 import { getCurrentUser } from "@/lib/session-server";
 import { logActivity } from "@/lib/activity";
+import { sendNotificationEmail } from "@/lib/email";
 
 const ticketSchema = z.object({
   subject: z.string().min(3).max(200),
@@ -36,11 +37,16 @@ export async function POST(request: NextRequest) {
     sellerId = await getSellerIdForOrder(payload.orderId);
   }
 
-  await createTicket({
+  const ticket = await createTicket({
     buyerId: current.user.id,
     subject: payload.subject,
     orderId: payload.orderId ?? null,
     sellerId
+  });
+  await sendNotificationEmail({
+    to: process.env.SUPPORT_EMAIL,
+    subject: `Ticket baru: ${payload.subject}`,
+    text: `Ticket baru dibuat oleh ${current.user.name} (${current.user.email}). Ticket ID: ${ticket?.id ?? "unknown"}.`
   });
 
   await logActivity({

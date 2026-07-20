@@ -116,6 +116,17 @@ export async function listAdminOrders() {
     .orderBy(desc(orders.createdAt));
 }
 
+export async function getOrderNotificationRecipient(orderId: string) {
+  const db = getDb();
+  const [recipient] = await db
+    .select({ email: users.email, name: users.name, orderNumber: orders.orderNumber })
+    .from(orders)
+    .innerJoin(users, eq(orders.buyerId, users.id))
+    .where(eq(orders.id, orderId))
+    .limit(1);
+  return recipient ?? null;
+}
+
 export async function getOrderItemForSeller(itemId: string, sellerId: string | null) {
   const db = getDb();
   const [item] = await db.select().from(orderItems).where(eq(orderItems.id, itemId)).limit(1);

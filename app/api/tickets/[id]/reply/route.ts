@@ -4,6 +4,8 @@ import { addTicketMessage, getTicketDetail } from "@/lib/tickets";
 import { getCurrentUser } from "@/lib/session-server";
 import { findSellerProfileByUserId } from "@/lib/sellers";
 import { logActivity } from "@/lib/activity";
+import { sendNotificationEmail } from "@/lib/email";
+import { findUserById } from "@/lib/users";
 
 const replySchema = z.object({ message: z.string().min(1).max(2000) });
 
@@ -22,6 +24,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const form = await request.formData();
   const payload = replySchema.parse({ message: form.get("message") });
   await addTicketMessage(id, current.user.id, payload.message);
+  if (current.user.id !== detail.ticket.buyerId) {
+    const buyer = await findUserById(detail.ticket.buyerId);
+    await sendNotificationEmail({
+      to: buyer?.email,
+      subject: `Balasan ticket: ${detail.ticket.subject}`,
+      text: `Ticket kamu sudah dibalas. Login ke dashboard untuk melihat balasan dan melanjutkan percakapan.`
+    });
+  }
   await logActivity({ actorId: current.user.id, action: "ticket.replied", entityType: "ticket", entityId: id, metadata: { role: current.session.role } });
 
   const prefix = current.session.role === "admin" ? "/admin" : current.session.role === "seller" ? "/seller" : "/dashboard";

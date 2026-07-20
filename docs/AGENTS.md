@@ -173,4 +173,18 @@ Minimal test/check wajib untuk logic non-trivial:
 - `docs/ROADMAP.md`: urutan implementasi.
 - `docs/DATABASE.md`: schema awal.
 
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues di repo `Aeternum-Webspace-Studio/aeternum-shop`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Pakai label canonical `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, dan `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context. See `docs/agents/domain.md`.
+
 ponytail: dokumen ini sengaja singkat agar agent tidak membuat fitur spekulatif.
