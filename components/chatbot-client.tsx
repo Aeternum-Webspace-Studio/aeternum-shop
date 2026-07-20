@@ -61,7 +61,7 @@ export function ChatbotClient() {
           ))}
         </div>
 
-        <a className="mt-5 inline-flex rounded-xl border-[2px] border-border bg-primary px-4 py-3 text-sm font-black text-white" href="/dashboard/tickets">Buka Ticket Support</a>
+        <a className="mt-5 inline-flex rounded-xl border-[2px] border-border bg-primary px-4 py-3 text-sm font-black text-white" href="/account/tickets">Buka Ticket Support</a>
       </div>
 
       <div className="rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">

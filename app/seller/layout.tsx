@@ -1,8 +1,11 @@
 import { AppShell } from "@/components/app-shell";
 import { getCurrentUser } from "@/lib/session-server";
+import { redirect } from "next/navigation";
 
 export default async function SellerLayout({ children }: { children: React.ReactNode }) {
   const current = await getCurrentUser();
+  if (!current) redirect("/login");
+  if (current.session.role !== "seller") redirect(current.session.role === "admin" ? "/admin" : "/dashboard");
 
   return (
     <AppShell

@@ -62,7 +62,7 @@ export default async function HomePage() {
               <a className="lift shine rounded-xl border-[3px] border-border bg-primary px-5 py-3 text-sm font-black text-white shadow-soft" href="/marketplace">
                 Mulai Belanja
               </a>
-              <a className="lift rounded-xl border-[3px] border-border bg-surfaceSoft px-5 py-3 text-sm font-black text-text shadow-soft" href="/dashboard">
+              <a className="lift rounded-xl border-[3px] border-border bg-surfaceSoft px-5 py-3 text-sm font-black text-text shadow-soft" href="/account">
                 Cek Pesanan
               </a>
             </div>
@@ -142,9 +142,9 @@ export default async function HomePage() {
               <a className="lift rounded-xl border-[3px] border-white bg-white px-5 py-3 text-sm font-black text-primary" href="/marketplace">
                 Lihat Marketplace
               </a>
-              <a className="lift rounded-xl border-[3px] border-white bg-transparent px-5 py-3 text-sm font-black text-white" href="/dashboard/orders">
-                Pesanan Saya
-              </a>
+                <a className="lift rounded-xl border-[3px] border-white bg-transparent px-5 py-3 text-sm font-black text-white" href="/account/orders">
+                  Pesanan Saya
+                </a>
               <a className="lift rounded-xl border-[3px] border-white bg-white/15 px-5 py-3 text-sm font-black text-white" href="/help">
                 Coba Chatbot
               </a>
@@ -184,7 +184,7 @@ export default async function HomePage() {
             <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">FAQ cepat</p>
             <h2 className="mt-2 text-2xl font-black md:text-3xl">Jawaban singkat sebelum kamu chat support.</h2>
             <p className="mt-3 text-sm leading-6 text-muted">Kalau jawaban di bawah tidak cukup, buka ticket dari order atau halaman support.</p>
-            <a className="mt-5 inline-flex rounded-xl border-[2px] border-border bg-primary px-4 py-2 text-sm font-black text-white" href="/dashboard/tickets">Buka Ticket</a>
+            <a className="mt-5 inline-flex rounded-xl border-[2px] border-border bg-primary px-4 py-2 text-sm font-black text-white" href="/account/tickets">Buka Ticket</a>
           </div>
           <div className="space-y-3">
             {faqs.length === 0 ? (
