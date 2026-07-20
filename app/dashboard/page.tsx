@@ -43,6 +43,11 @@ export default function DashboardPage() {
           <h2 className="mt-2 text-xl font-black">Buka ticket jika ada kendala</h2>
           <p className="mt-2 text-sm text-muted">Cocok untuk akses belum masuk, invoice, atau pertanyaan pesanan.</p>
         </a>
+        <a href="/dashboard/profile" className="rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft hover:bg-surfaceSoft">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Seller</p>
+          <h2 className="mt-2 text-xl font-black">Ajukan akun seller</h2>
+          <p className="mt-2 text-sm text-muted">Isi toko dan tunggu approval admin sebelum akses seller aktif penuh.</p>
+        </a>
       </div>
     </div>
   );

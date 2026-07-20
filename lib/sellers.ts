@@ -66,6 +66,39 @@ export async function updateMarketplaceSettings(input: { appName: string; suppor
   return settings ?? null;
 }
 
+export async function applySellerProfile(userId: string, input: { storeName: string; storeSlug: string; description?: string | null }) {
+  const db = getDb();
+  const existing = await findSellerProfileByUserId(userId);
+
+  if (!existing) {
+    const [profile] = await db
+      .insert(sellerProfiles)
+      .values({
+        userId,
+        storeName: input.storeName,
+        storeSlug: input.storeSlug,
+        description: input.description ?? null,
+        status: "pending"
+      })
+      .returning();
+    return profile ?? null;
+  }
+
+  const [profile] = await db
+    .update(sellerProfiles)
+    .set({
+      storeName: input.storeName,
+      storeSlug: input.storeSlug,
+      description: input.description ?? null,
+      status: "pending",
+      updatedAt: new Date()
+    })
+    .where(eq(sellerProfiles.id, existing.id))
+    .returning();
+
+  return profile ?? null;
+}
+
 export async function updateSellerProfile(userId: string, input: { storeName: string; storeSlug: string; description?: string | null }) {
   const db = getDb();
   const existing = await findSellerProfileByUserId(userId);
