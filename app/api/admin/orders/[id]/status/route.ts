@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/session-server";
 import { getOrderDetailByNumber, getOrderNotificationRecipient, setAdminOrderStatus } from "@/lib/orders";
 import { logActivity } from "@/lib/activity";
 import { sendNotificationEmail } from "@/lib/email";
+import { canCancelOrder, canMarkFailed, canRefundOrder } from "@/lib/backend-guards.js";
 
 const statusSchema = z.object({ action: z.enum(["cancel", "refund", "fail"]) });
 
@@ -18,8 +19,16 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const detail = await getOrderDetailByNumber(id);
   if (!detail) return NextResponse.json({ error: "Order not found" }, { status: 404 });
 
-  if (payload.action === "cancel" && detail.order.status !== "pending_payment") {
+  if (payload.action === "cancel" && !canCancelOrder(detail.order.status)) {
     return NextResponse.json({ error: "Only pending orders can be cancelled" }, { status: 400 });
+  }
+
+  if (payload.action === "refund" && !canRefundOrder({ orderStatus: detail.order.status, paymentStatus: detail.payment?.status ?? null })) {
+    return NextResponse.json({ error: "Only paid orders can be refunded" }, { status: 400 });
+  }
+
+  if (payload.action === "fail" && !canMarkFailed(detail.order.status)) {
+    return NextResponse.json({ error: "Only paid or processing orders can be failed" }, { status: 400 });
   }
 
   const updated = await setAdminOrderStatus(detail.order.id, payload.action);

@@ -7,6 +7,7 @@ import { fetchPakasirTransactionDetail } from "@/lib/pakasir";
 import { fulfillAutoDelivery, getOrderNotificationRecipient } from "@/lib/orders";
 import { logActivity } from "@/lib/activity";
 import { sendNotificationEmail } from "@/lib/email";
+import { shouldProcessWebhookOrder } from "@/lib/backend-guards.js";
 
 const webhookSchema = z.object({
   amount: z.number(),
@@ -57,7 +58,7 @@ export async function POST(request: Request) {
     const [payment] = await tx.select().from(payments).where(and(eq(payments.orderId, order.id), eq(payments.amount, body.amount))).limit(1);
     if (!payment) return { kind: "error", message: "Payment not found", status: 404 };
 
-    if (order.status !== "pending_payment" && order.status !== "paid") return { kind: "ignored" };
+    if (!shouldProcessWebhookOrder(order.status)) return { kind: "ignored" };
 
     await tx.insert(paymentEvents).values({
       paymentId: payment.id,

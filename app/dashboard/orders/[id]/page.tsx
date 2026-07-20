@@ -2,6 +2,7 @@ import { getOrderDetailByNumber } from "@/lib/orders";
 import { getCurrentUser } from "@/lib/session-server";
 import { getReviewByOrderItemId } from "@/lib/reviews";
 import { notFound } from "next/navigation";
+import { canAccessOrder } from "@/lib/backend-guards.js";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +28,7 @@ export default async function DashboardOrderDetailPage({ params }: { params: Pro
     }))
   );
 
-  if (current.session.role !== "admin" && detail.order.buyerId !== current.user.id) {
+  if (!canAccessOrder({ isAdmin: current.session.role === "admin", buyerId: detail.order.buyerId, userId: current.user.id })) {
     notFound();
   }
 

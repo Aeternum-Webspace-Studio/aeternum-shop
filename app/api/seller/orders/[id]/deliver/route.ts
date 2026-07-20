@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/session-server";
 import { findApprovedSellerProfileByUserId } from "@/lib/sellers";
 import { logActivity } from "@/lib/activity";
 import { sendNotificationEmail } from "@/lib/email";
+import { canAccessSellerItem } from "@/lib/backend-guards.js";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const current = await getCurrentUser();
@@ -18,7 +19,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { id } = await params;
   const sellerId = current.session.role === "seller" ? (await findApprovedSellerProfileByUserId(current.user.id))?.id ?? null : null;
   const item = await getOrderItemForSeller(id, sellerId);
-  if (!item || item.fulfillmentType !== "manual") {
+  if (!item || item.fulfillmentType !== "manual" || !canAccessSellerItem({ isAdmin: current.session.role === "admin", sellerId: item.sellerId, userSellerId: sellerId })) {
     return NextResponse.json({ error: "Order item not found" }, { status: 404 });
   }
 

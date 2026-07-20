@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getOrderItemForSeller } from "@/lib/orders";
 import { getCurrentUser } from "@/lib/session-server";
 import { findSellerProfileByUserId } from "@/lib/sellers";
+import { canAccessSellerItem } from "@/lib/backend-guards.js";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,7 @@ export default async function SellerOrderDetailPage({ params }: { params: Promis
 
   const sellerId = current.session.role === "seller" ? (await findSellerProfileByUserId(current.user.id))?.id ?? null : null;
   const item = await getOrderItemForSeller(id, sellerId);
+  if (item && !canAccessSellerItem({ isAdmin: current.session.role === "admin", sellerId: item.sellerId, userSellerId: sellerId })) notFound();
   if (!item) notFound();
 
   return (

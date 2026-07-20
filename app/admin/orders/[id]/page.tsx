@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/session-server";
 import { getOrderDetailByNumber } from "@/lib/orders";
+import { canCancelOrder, canMarkFailed, canRefundOrder } from "@/lib/backend-guards.js";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
       </div>
 
       <div className="mt-6 grid gap-3 md:grid-cols-3">
-        {detail.order.status === "pending_payment" ? (
+        {canCancelOrder(detail.order.status) ? (
           <form className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft" method="post" action={`/api/admin/orders/${detail.order.orderNumber}/status`}>
             <input type="hidden" name="action" value="cancel" />
             <p className="text-sm font-black">Cancel unpaid order</p>
@@ -44,7 +45,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
           </form>
         ) : null}
 
-        {detail.payment?.status === "paid" || detail.order.status === "paid" || detail.order.status === "delivered" ? (
+        {canRefundOrder({ orderStatus: detail.order.status, paymentStatus: detail.payment?.status ?? null }) ? (
           <form className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft" method="post" action={`/api/admin/orders/${detail.order.orderNumber}/status`}>
             <input type="hidden" name="action" value="refund" />
             <p className="text-sm font-black">Refund paid order</p>
@@ -53,7 +54,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
           </form>
         ) : null}
 
-        {detail.order.status === "paid" || detail.order.status === "processing" ? (
+        {canMarkFailed(detail.order.status) ? (
           <form className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft" method="post" action={`/api/admin/orders/${detail.order.orderNumber}/status`}>
             <input type="hidden" name="action" value="fail" />
             <p className="text-sm font-black">Mark as failed</p>
