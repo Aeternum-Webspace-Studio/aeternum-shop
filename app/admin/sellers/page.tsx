@@ -14,6 +14,20 @@ export default async function AdminSellersPage() {
           <article key={seller.id} className="rounded-xl2 border border-border bg-white p-4 shadow-soft">
             <p className="font-semibold">{seller.storeName}</p>
             <p className="mt-1 text-sm text-muted">/{seller.storeSlug} · {seller.status}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <form method="post" action={`/api/admin/sellers/${seller.id}`}>
+                <input type="hidden" name="status" value="approved" />
+                <button className="rounded-xl border border-border bg-primary px-3 py-2 text-xs font-black text-white">Approve</button>
+              </form>
+              <form method="post" action={`/api/admin/sellers/${seller.id}`}>
+                <input type="hidden" name="status" value="suspended" />
+                <button className="rounded-xl border border-border bg-surfaceSoft px-3 py-2 text-xs font-black">Suspend</button>
+              </form>
+              <form method="post" action={`/api/admin/sellers/${seller.id}`}>
+                <input type="hidden" name="status" value="rejected" />
+                <button className="rounded-xl border border-border bg-white px-3 py-2 text-xs font-black">Reject</button>
+              </form>
+            </div>
           </article>
         ))}
       </div>

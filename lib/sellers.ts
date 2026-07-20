@@ -30,3 +30,8 @@ export async function listSellerProfiles() {
   const db = getDb();
   return db.select().from(sellerProfiles);
 }
+
+export async function findApprovedSellerProfileByUserId(userId: string) {
+  const profile = await findSellerProfileByUserId(userId);
+  return profile?.status === "approved" ? profile : null;
+}

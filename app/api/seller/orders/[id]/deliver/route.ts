@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOrderItemForSeller, getOrderNotificationRecipient, submitManualDelivery } from "@/lib/orders";
 import { getCurrentUser } from "@/lib/session-server";
-import { findSellerProfileByUserId } from "@/lib/sellers";
+import { findApprovedSellerProfileByUserId } from "@/lib/sellers";
 import { logActivity } from "@/lib/activity";
 import { sendNotificationEmail } from "@/lib/email";
 
@@ -11,8 +11,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  if (current.session.role === "seller" && !(await findApprovedSellerProfileByUserId(current.user.id))) {
+    return NextResponse.json({ error: "Seller not approved" }, { status: 403 });
+  }
+
   const { id } = await params;
-  const sellerId = current.session.role === "seller" ? (await findSellerProfileByUserId(current.user.id))?.id ?? null : null;
+  const sellerId = current.session.role === "seller" ? (await findApprovedSellerProfileByUserId(current.user.id))?.id ?? null : null;
   const item = await getOrderItemForSeller(id, sellerId);
   if (!item || item.fulfillmentType !== "manual") {
     return NextResponse.json({ error: "Order item not found" }, { status: 404 });

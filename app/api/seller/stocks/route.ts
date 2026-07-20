@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getDb } from "@/db";
 import { productStocks, products } from "@/db/schema";
 import { getCurrentUser } from "@/lib/session-server";
-import { ensureSellerProfile } from "@/lib/sellers";
+import { ensureSellerProfile, findApprovedSellerProfileByUserId } from "@/lib/sellers";
 import { eq } from "drizzle-orm";
 
 const stockSchema = z.object({
@@ -15,6 +15,10 @@ export async function POST(request: Request) {
   const current = await getCurrentUser();
   if (!current || (current.session.role !== "seller" && current.session.role !== "admin")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (current.session.role === "seller" && !(await findApprovedSellerProfileByUserId(current.user.id))) {
+    return NextResponse.json({ error: "Seller not approved" }, { status: 403 });
   }
 
   const form = await request.formData();

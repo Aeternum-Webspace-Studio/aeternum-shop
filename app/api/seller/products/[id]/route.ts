@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getDb } from "@/db";
 import { products } from "@/db/schema";
 import { getCurrentUser } from "@/lib/session-server";
-import { ensureSellerProfile } from "@/lib/sellers";
+import { ensureSellerProfile, findApprovedSellerProfileByUserId } from "@/lib/sellers";
 import { slugify } from "@/lib/slug";
 
 const productSchema = z.object({
@@ -23,6 +23,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const current = await getCurrentUser();
   if (!current || (current.session.role !== "seller" && current.session.role !== "admin")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (current.session.role === "seller" && !(await findApprovedSellerProfileByUserId(current.user.id))) {
+    return NextResponse.json({ error: "Seller not approved" }, { status: 403 });
   }
 
   const { id } = await params;
