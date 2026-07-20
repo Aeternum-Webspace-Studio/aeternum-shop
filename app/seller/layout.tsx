@@ -8,6 +8,8 @@ export default async function SellerLayout({ children }: { children: React.React
     <AppShell
       title="Seller Dashboard"
       description={current ? `${current.user.name} • ${current.session.role}` : "Akun seller"}
+      homeHref="/seller"
+      homeLabel="Seller"
       nav={[
         { href: "/seller", label: "Ringkasan" },
         { href: "/seller/products", label: "Produk" },

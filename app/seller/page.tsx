@@ -2,11 +2,14 @@ import { getCurrentUser } from "@/lib/session-server";
 import { findSellerProfileByUserId } from "@/lib/sellers";
 import { countAvailableStock, listProductsBySellerId } from "@/lib/products";
 import { listOrderItemsBySellerId } from "@/lib/orders";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default async function SellerPage() {
   const current = await getCurrentUser();
+  if (!current) redirect("/login");
+  if (current.session.role !== "seller") redirect(current.session.role === "admin" ? "/admin" : "/dashboard");
   const sellerId = current?.session.role === "seller" ? (await findSellerProfileByUserId(current.user.id))?.id ?? null : null;
   const products = await listProductsBySellerId(sellerId);
   const orderItems = await listOrderItemsBySellerId(sellerId);

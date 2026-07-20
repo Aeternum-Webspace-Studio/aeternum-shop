@@ -1,4 +1,11 @@
-export default function DashboardPage() {
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/session-server";
+
+export default async function DashboardPage() {
+  const current = await getCurrentUser();
+  if (!current) redirect("/login");
+  if (current.session.role !== "buyer") redirect(current.session.role === "admin" ? "/admin" : "/seller");
+
   return (
     <div>
       <div className="rounded-xl2 border-[3px] border-border bg-primary p-6 text-white shadow-soft">

@@ -11,13 +11,17 @@ export function AppShell({
   description,
   nav,
   children,
-  footer
+  footer,
+  homeHref,
+  homeLabel
 }: {
   title: string;
   description: string;
   nav: NavItem[];
   children: React.ReactNode;
   footer?: React.ReactNode;
+  homeHref: string;
+  homeLabel: string;
 }) {
   return (
     <main className="aeternum-bg relative min-h-screen text-text">
@@ -30,7 +34,7 @@ export function AppShell({
           <div className="flex flex-wrap gap-4 text-sm text-muted">
             <Link href="/marketplace">Marketplace</Link>
             <Link href="/blog">Blog</Link>
-            <Link href="/dashboard">Dashboard</Link>
+            <Link href={homeHref}>{homeLabel}</Link>
             <form method="post" action="/api/auth/logout" className="inline-flex">
               <button className="font-black text-primary">Logout</button>
             </form>

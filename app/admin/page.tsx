@@ -3,6 +3,8 @@ import { listAdminOrders } from "@/lib/orders";
 import { listAdminReviews } from "@/lib/reviews";
 import { listSellerProfiles } from "@/lib/sellers";
 import { listUsers } from "@/lib/users";
+import { getCurrentUser } from "@/lib/session-server";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +14,10 @@ const formatDate = new Intl.DateTimeFormat("id-ID", {
 });
 
 export default async function AdminPage() {
+  const current = await getCurrentUser();
+  if (!current) redirect("/login");
+  if (current.session.role !== "admin") redirect(current.session.role === "seller" ? "/seller" : "/dashboard");
+
   const [users, sellers, orders, reviews, activity] = await Promise.all([
     listUsers(),
     listSellerProfiles(),

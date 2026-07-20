@@ -8,6 +8,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <AppShell
       title="Buyer Dashboard"
       description={current ? `${current.user.name} • ${current.session.role}` : "Akun buyer"}
+      homeHref="/dashboard"
+      homeLabel="Dashboard"
       nav={[
         { href: "/dashboard", label: "Ringkasan" },
         { href: "/dashboard/orders", label: "Pesanan" },
