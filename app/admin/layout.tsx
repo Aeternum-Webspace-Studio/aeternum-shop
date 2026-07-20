@@ -18,7 +18,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         { href: "/admin/tickets", label: "Ticket" },
         { href: "/admin/reviews", label: "Review" },
         { href: "/admin/blog", label: "Blog" },
-        { href: "/admin/packages", label: "Paket" }
+        { href: "/admin/packages", label: "Paket" },
+        { href: "/admin/settings", label: "Settings" }
       ]}
       footer={<p className="text-xs text-muted">Admin punya akses penuh.</p>}
     >

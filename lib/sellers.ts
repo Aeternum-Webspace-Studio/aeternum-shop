@@ -1,6 +1,6 @@
 import { and, eq, ne } from "drizzle-orm";
 import { getDb } from "@/db";
-import { sellerProfiles } from "@/db/schema";
+import { marketplaceSettings, sellerProfiles } from "@/db/schema";
 
 export async function findSellerProfileByUserId(userId: string) {
   const db = getDb();
@@ -34,6 +34,36 @@ export async function listSellerProfiles() {
 export async function findApprovedSellerProfileByUserId(userId: string) {
   const profile = await findSellerProfileByUserId(userId);
   return profile?.status === "approved" ? profile : null;
+}
+
+export async function getMarketplaceSettings() {
+  const db = getDb();
+  const [settings] = await db.select().from(marketplaceSettings).limit(1);
+  return settings ?? null;
+}
+
+export async function updateMarketplaceSettings(input: { appName: string; supportEmail?: string | null; announcement?: string | null; checkoutEnabled: boolean }) {
+  const db = getDb();
+  const existing = await getMarketplaceSettings();
+
+  if (!existing) {
+    const [settings] = await db.insert(marketplaceSettings).values(input).returning();
+    return settings ?? null;
+  }
+
+  const [settings] = await db
+    .update(marketplaceSettings)
+    .set({
+      appName: input.appName,
+      supportEmail: input.supportEmail ?? null,
+      announcement: input.announcement ?? null,
+      checkoutEnabled: input.checkoutEnabled,
+      updatedAt: new Date()
+    })
+    .where(eq(marketplaceSettings.id, existing.id))
+    .returning();
+
+  return settings ?? null;
 }
 
 export async function updateSellerProfile(userId: string, input: { storeName: string; storeSlug: string; description?: string | null }) {

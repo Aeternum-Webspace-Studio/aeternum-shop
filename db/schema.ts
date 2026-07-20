@@ -48,6 +48,15 @@ export const sellerProfiles = pgTable(
   })
 );
 
+export const marketplaceSettings = pgTable("marketplace_settings", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  appName: text("app_name").notNull().default("Aeternum Shop"),
+  supportEmail: text("support_email"),
+  announcement: text("announcement"),
+  checkoutEnabled: boolean("checkout_enabled").notNull().default(true),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+});
+
 export const categories = pgTable(
   "categories",
   {
