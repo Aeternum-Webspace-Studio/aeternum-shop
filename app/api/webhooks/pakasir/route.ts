@@ -52,6 +52,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Payment not found" }, { status: 404 });
   }
 
+  if (order.status !== "pending_payment" && order.status !== "paid") {
+    return NextResponse.json({ ok: true, ignored: true });
+  }
+
   await db.insert(paymentEvents).values({
     paymentId: payment.id,
     provider: "pakasir",

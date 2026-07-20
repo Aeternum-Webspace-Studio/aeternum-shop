@@ -33,6 +33,36 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
           <p className="mt-2 text-sm text-muted">{formatMoney.format(detail.order.totalAmount)}</p>
         </div>
       </div>
+
+      <div className="mt-6 grid gap-3 md:grid-cols-3">
+        {detail.order.status === "pending_payment" ? (
+          <form className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft" method="post" action={`/api/admin/orders/${detail.order.orderNumber}/status`}>
+            <input type="hidden" name="action" value="cancel" />
+            <p className="text-sm font-black">Cancel unpaid order</p>
+            <p className="mt-1 text-xs text-muted">Dipakai untuk order pending payment yang tidak jadi dibayar.</p>
+            <button className="mt-4 rounded-xl border-[3px] border-border bg-surfaceSoft px-4 py-2 text-sm font-black">Cancel</button>
+          </form>
+        ) : null}
+
+        {detail.payment?.status === "paid" || detail.order.status === "paid" || detail.order.status === "delivered" ? (
+          <form className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft" method="post" action={`/api/admin/orders/${detail.order.orderNumber}/status`}>
+            <input type="hidden" name="action" value="refund" />
+            <p className="text-sm font-black">Refund paid order</p>
+            <p className="mt-1 text-xs text-muted">Pakai setelah payment sukses bila order perlu dibatalkan dan dikembalikan.</p>
+            <button className="mt-4 rounded-xl border-[3px] border-border bg-primary px-4 py-2 text-sm font-black text-white">Refund</button>
+          </form>
+        ) : null}
+
+        {detail.order.status === "paid" || detail.order.status === "processing" ? (
+          <form className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft" method="post" action={`/api/admin/orders/${detail.order.orderNumber}/status`}>
+            <input type="hidden" name="action" value="fail" />
+            <p className="text-sm font-black">Mark as failed</p>
+            <p className="mt-1 text-xs text-muted">Untuk status order/payment yang gagal diproses.</p>
+            <button className="mt-4 rounded-xl border-[3px] border-border bg-white px-4 py-2 text-sm font-black">Fail</button>
+          </form>
+        ) : null}
+      </div>
+
       <div className="mt-6 space-y-3">
         {detail.items.map((item) => (
           <article key={item.id} className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft">

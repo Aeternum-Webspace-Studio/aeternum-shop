@@ -127,6 +127,40 @@ export async function getOrderNotificationRecipient(orderId: string) {
   return recipient ?? null;
 }
 
+export async function setAdminOrderStatus(orderId: string, action: "cancel" | "refund" | "fail") {
+  const db = getDb();
+
+  return db.transaction(async (tx) => {
+    const [order] = await tx.select().from(orders).where(eq(orders.id, orderId)).limit(1);
+    if (!order) return null;
+
+    const [payment] = await tx.select().from(payments).where(eq(payments.orderId, orderId)).limit(1);
+
+    if (action === "cancel") {
+      await tx.update(orders).set({ status: "cancelled", updatedAt: new Date() }).where(eq(orders.id, orderId));
+      if (payment?.status === "pending") {
+        await tx.update(payments).set({ status: "expired", updatedAt: new Date() }).where(eq(payments.id, payment.id));
+      }
+    }
+
+    if (action === "refund") {
+      await tx.update(orders).set({ status: "refunded", updatedAt: new Date() }).where(eq(orders.id, orderId));
+      if (payment) {
+        await tx.update(payments).set({ status: "refunded", updatedAt: new Date() }).where(eq(payments.id, payment.id));
+      }
+    }
+
+    if (action === "fail") {
+      await tx.update(orders).set({ status: "failed", updatedAt: new Date() }).where(eq(orders.id, orderId));
+      if (payment) {
+        await tx.update(payments).set({ status: "failed", updatedAt: new Date() }).where(eq(payments.id, payment.id));
+      }
+    }
+
+    return { order, payment: payment ?? null };
+  });
+}
+
 export async function getOrderItemForSeller(itemId: string, sellerId: string | null) {
   const db = getDb();
   const [item] = await db.select().from(orderItems).where(eq(orderItems.id, itemId)).limit(1);
