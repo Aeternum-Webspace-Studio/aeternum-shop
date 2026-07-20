@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { getDb } from "@/db";
 import { sellerProfiles } from "@/db/schema";
 
@@ -34,4 +34,31 @@ export async function listSellerProfiles() {
 export async function findApprovedSellerProfileByUserId(userId: string) {
   const profile = await findSellerProfileByUserId(userId);
   return profile?.status === "approved" ? profile : null;
+}
+
+export async function updateSellerProfile(userId: string, input: { storeName: string; storeSlug: string; description?: string | null }) {
+  const db = getDb();
+  const existing = await findSellerProfileByUserId(userId);
+  if (!existing) return { error: "missing" as const };
+
+  const [slugOwner] = await db
+    .select({ id: sellerProfiles.id })
+    .from(sellerProfiles)
+    .where(and(eq(sellerProfiles.storeSlug, input.storeSlug), ne(sellerProfiles.id, existing.id)))
+    .limit(1);
+
+  if (slugOwner) return { error: "slug_taken" as const };
+
+  const [profile] = await db
+    .update(sellerProfiles)
+    .set({
+      storeName: input.storeName,
+      storeSlug: input.storeSlug,
+      description: input.description ?? null,
+      updatedAt: new Date()
+    })
+    .where(eq(sellerProfiles.id, existing.id))
+    .returning();
+
+  return { profile };
 }
