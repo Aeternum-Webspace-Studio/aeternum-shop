@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { listMarketplaceProducts } from "@/lib/products";
+import { listCategories, listMarketplaceProducts } from "@/lib/products";
+import { productPriceForUser } from "@/lib/pricing.js";
 import { getReviewSummaryByProductId } from "@/lib/reviews";
+import { getCurrentUser } from "@/lib/session-server";
 
 export const dynamic = "force-dynamic";
 
@@ -9,17 +11,19 @@ const formatMoney = new Intl.NumberFormat("id-ID", { style: "currency", currency
 export default async function MarketplacePage({
   searchParams
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; category?: string }>;
 }) {
-  const q = (await searchParams).q ?? "";
-  const products = await listMarketplaceProducts(q);
+  const params = await searchParams;
+  const q = params.q ?? "";
+  const category = params.category ?? "";
+  const current = await getCurrentUser();
+  const [products, categories] = await Promise.all([listMarketplaceProducts(q, category), listCategories()]);
   const productsWithReviews = await Promise.all(
     products.map(async (product) => ({
       ...product,
       reviewSummary: await getReviewSummaryByProductId(product.id)
     }))
   );
-  const categories = [...new Set(products.map((product) => product.categoryName).filter((category): category is string => Boolean(category)))];
 
   return (
     <main className="aeternum-bg min-h-screen px-6 py-10 text-text">
@@ -34,22 +38,23 @@ export default async function MarketplacePage({
         </div>
 
         <div className="mt-6 flex flex-wrap gap-2">
-          {categories.slice(0, 4).map((category) => (
-            <span key={category} className="lift rounded-full border-[2px] border-border bg-white px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-text shadow-soft">
-              {category}
-            </span>
+          {categories.slice(0, 6).map((item) => (
+            <Link key={item.slug} href={`/marketplace?category=${item.slug}`} className={`lift rounded-full border-[2px] border-border px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] shadow-soft ${category === item.slug ? "bg-primary text-white" : "bg-white text-text"}`}>
+              {item.name}
+            </Link>
           ))}
         </div>
 
         <form className="reveal-up mt-6 flex flex-col gap-3 rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft md:flex-row" action="/marketplace">
           <input name="q" defaultValue={q} className="min-h-12 flex-1 rounded-xl border-[2px] border-border bg-surfaceSoft px-4 text-sm font-semibold outline-none" placeholder="Cari ChatGPT, Netflix, Canva, lisensi..." />
+          {category ? <input type="hidden" name="category" value={category} /> : null}
           <button className="lift shine rounded-xl border-[2px] border-border bg-primary px-5 py-3 text-sm font-black text-white shadow-soft">Cari Produk</button>
-          {q ? <Link className="lift rounded-xl border-[2px] border-border bg-white px-5 py-3 text-center text-sm font-black" href="/marketplace">Reset</Link> : null}
+          {q || category ? <Link className="lift rounded-xl border-[2px] border-border bg-white px-5 py-3 text-center text-sm font-black" href="/marketplace">Reset</Link> : null}
         </form>
 
         <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {productsWithReviews.length === 0 ? (
-            <div className="rounded-xl2 border-[3px] border-border bg-white p-6 text-sm text-muted shadow-soft">{q ? "Produk tidak ditemukan." : "Belum ada produk aktif."}</div>
+            <div className="rounded-xl2 border-[3px] border-border bg-white p-6 text-sm text-muted shadow-soft">{q || category ? "Produk tidak ditemukan." : "Belum ada produk aktif."}</div>
           ) : (
             productsWithReviews.map((product) => (
               <article key={product.id} className="lift hero-card rounded-xl2 border-[3px] border-border p-5 shadow-soft">
@@ -65,12 +70,12 @@ export default async function MarketplacePage({
                   {product.categoryName ? <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">{product.categoryName}</span> : null}
                   <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">Status aktif</span>
                   <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">{product.reviewSummary.count} review</span>
-                  {product.resellerPrice ? <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">Harga khusus tersedia</span> : null}
+                  {productPriceForUser(product, current?.user) !== product.price ? <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">Harga reseller aktif</span> : product.resellerPrice ? <span className="rounded-full border-[2px] border-border bg-surfaceSoft px-3 py-1 font-black">Harga khusus tersedia</span> : null}
                 </div>
                 <div className="mt-5 flex items-center justify-between border-t-[2px] border-border pt-4">
                   <div>
                     <p className="text-[11px] font-black uppercase tracking-[0.16em] text-muted">Mulai dari</p>
-                    <span className="text-xl font-black">{formatMoney.format(product.price)}</span>
+                    <span className="text-xl font-black">{formatMoney.format(productPriceForUser(product, current?.user))}</span>
                   </div>
                   <Link className="lift rounded-full border-[2px] border-border bg-primary px-4 py-2 text-sm font-black text-white" href={`/products/${product.slug}`}>
                     Lihat detail

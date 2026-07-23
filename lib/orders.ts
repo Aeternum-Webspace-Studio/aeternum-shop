@@ -75,6 +75,26 @@ export async function listOrdersByBuyerId(buyerId: string) {
   return db.select().from(orders).where(eq(orders.buyerId, buyerId)).orderBy(desc(orders.createdAt));
 }
 
+export async function listPaymentsByBuyerId(buyerId: string) {
+  const db = getDb();
+  return db
+    .select({
+      id: payments.id,
+      status: payments.status,
+      amount: payments.amount,
+      providerReference: payments.providerReference,
+      paymentUrl: payments.paymentUrl,
+      createdAt: payments.createdAt,
+      paidAt: payments.paidAt,
+      orderNumber: orders.orderNumber,
+      orderStatus: orders.status
+    })
+    .from(payments)
+    .innerJoin(orders, eq(payments.orderId, orders.id))
+    .where(eq(orders.buyerId, buyerId))
+    .orderBy(desc(payments.createdAt));
+}
+
 export async function listOrderItemsBySellerId(sellerId: string | null) {
   const db = getDb();
   const base = db

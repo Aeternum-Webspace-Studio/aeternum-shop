@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { getProductBySlug } from "@/lib/products";
+import { productPriceForUser } from "@/lib/pricing.js";
 import { getReviewSummaryByProductId, listReviewsByProductId } from "@/lib/reviews";
+import { getCurrentUser } from "@/lib/session-server";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +33,9 @@ export default async function ProductDetailPage({
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) notFound();
+  const current = await getCurrentUser();
+  const price = productPriceForUser(product, current?.user);
+  const hasResellerPrice = price !== product.price;
   const reviewSummary = await getReviewSummaryByProductId(product.id);
   const reviews = await listReviewsByProductId(product.id, 3);
   const deliveryCopy = product.fulfillmentType === "auto"
@@ -64,8 +69,8 @@ export default async function ProductDetailPage({
             <input type="hidden" name="productId" value={product.id} />
             <input type="hidden" name="quantity" value={1} />
             <p className="text-xs font-black uppercase tracking-[0.18em] text-muted">Checkout</p>
-            <p className="mt-2 text-3xl font-black">{formatMoney.format(product.price)}</p>
-            {product.resellerPrice ? <p className="mt-1 text-sm font-semibold text-muted">Harga reseller tersedia: {formatMoney.format(product.resellerPrice)}</p> : null}
+            <p className="mt-2 text-3xl font-black">{formatMoney.format(price)}</p>
+            {hasResellerPrice ? <p className="mt-1 text-sm font-semibold text-primary">Harga reseller aktif</p> : product.resellerPrice ? <p className="mt-1 text-sm font-semibold text-muted">Harga reseller tersedia: {formatMoney.format(product.resellerPrice)}</p> : null}
             <div className="mt-4 rounded-xl border-[2px] border-border bg-surfaceSoft p-4">
               <p className="text-sm font-black">Yang terjadi setelah bayar</p>
               <p className="mt-2 text-sm leading-6 text-muted">{deliveryCopy}</p>

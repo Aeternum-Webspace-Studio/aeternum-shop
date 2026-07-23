@@ -277,6 +277,17 @@ Detail produk publik wajib memuat:
 
 Checkout MVP tetap sederhana: tombol detail produk membuat order, payment, lalu redirect ke Pakasir. Halaman checkout terpisah ditunda sampai dibutuhkan untuk cart atau multi-item.
 
+## 12B. Role-Aware Account Routing
+
+Route publik `\/account` dipakai sebagai pintu role-aware agar buyer, seller, dan admin masuk ke area yang tepat tanpa hardcode link publik ke dashboard tertentu.
+
+Status implementasi:
+
+- `/account` mengarah ke home sesuai role.
+- `/account/orders` dan `/account/tickets` mengarah ke route yang sesuai role.
+- Login dan register mengarahkan user ke area role masing-masing.
+- Role gate server-side aktif di dashboard admin, seller, dan buyer.
+
 ## 13. Ticket Support
 
 Fitur MVP:
@@ -378,6 +389,33 @@ Aturan:
 - Menampilkan nomor invoice, status order, status pembayaran, total, dan nama produk.
 - Tidak boleh menampilkan data akses produk atau `delivery_content`.
 - Jika buyer butuh data akses, arahkan ke dashboard order setelah login.
+
+## 15B. Checkout, Webhook, Dan Delivery
+
+Status implementasi:
+
+- Checkout Pakasir sudah membuat order dan payment record.
+- Webhook Pakasir sudah idempotent dengan advisory lock agar delivery tidak dobel.
+- Auto delivery berjalan untuk stok digital setelah payment paid.
+- Manual delivery tersedia untuk seller pada order miliknya.
+- Admin punya aksi cancel, refund, dan failed untuk lifecycle order.
+
+## 15C. Seller Dan Admin Settings
+
+Status implementasi:
+
+- Seller bisa mengubah nama toko, slug, dan deskripsi dari `/seller/settings`.
+- Seller onboarding tersedia dari `/dashboard/profile`.
+- Admin bisa mengubah app settings dari `/admin/settings`.
+- Setting marketplace disimpan sebagai singleton agar mudah dipakai di UI.
+
+## 15D. Backend Regression Checks
+
+Status implementasi:
+
+- `npm run check` memeriksa route utama dan chatbot.
+- `npm run check:backend` memeriksa guard backend dan route sensitif.
+- `npm run check:auth-role` tersedia untuk validasi routing role.
 
 ## 16. Paket Custom
 

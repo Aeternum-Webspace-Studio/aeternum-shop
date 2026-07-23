@@ -4,3 +4,6 @@ export function canCancelOrder(status: "pending_payment" | "paid" | "processing"
 export function canRefundOrder(input: { orderStatus: "pending_payment" | "paid" | "processing" | "delivered" | "cancelled" | "refunded" | "failed"; paymentStatus: "pending" | "paid" | "failed" | "expired" | "refunded" | null }): boolean;
 export function canMarkFailed(status: "pending_payment" | "paid" | "processing" | "delivered" | "cancelled" | "refunded" | "failed"): boolean;
 export function shouldProcessWebhookOrder(status: "pending_payment" | "paid" | "processing" | "delivered" | "cancelled" | "refunded" | "failed"): boolean;
+export function canClaimAutoStock(status: "available" | "reserved" | "sold" | "disabled"): boolean;
+export function isWebhookAmountMatch(paymentAmount: number, webhookAmount: number): boolean;
+export function isDuplicatePaidWebhook(paymentStatus: "pending" | "paid" | "failed" | "expired" | "refunded"): boolean;

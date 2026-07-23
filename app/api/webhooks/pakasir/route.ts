@@ -7,7 +7,7 @@ import { fetchPakasirTransactionDetail } from "@/lib/pakasir";
 import { fulfillAutoDelivery, getOrderNotificationRecipient } from "@/lib/orders";
 import { logActivity } from "@/lib/activity";
 import { sendNotificationEmail } from "@/lib/email";
-import { shouldProcessWebhookOrder } from "@/lib/backend-guards.js";
+import { isDuplicatePaidWebhook, isWebhookAmountMatch, shouldProcessWebhookOrder } from "@/lib/backend-guards.js";
 
 const webhookSchema = z.object({
   amount: z.number(),
@@ -55,8 +55,9 @@ export async function POST(request: Request) {
     const [order] = await tx.select().from(orders).where(eq(orders.orderNumber, body.order_id)).limit(1);
     if (!order) return { kind: "error", message: "Order not found", status: 404 };
 
-    const [payment] = await tx.select().from(payments).where(and(eq(payments.orderId, order.id), eq(payments.amount, body.amount))).limit(1);
+    const [payment] = await tx.select().from(payments).where(eq(payments.orderId, order.id)).limit(1);
     if (!payment) return { kind: "error", message: "Payment not found", status: 404 };
+    if (!isWebhookAmountMatch(payment.amount, body.amount)) return { kind: "error", message: "Payment amount mismatch", status: 400 };
 
     if (!shouldProcessWebhookOrder(order.status)) return { kind: "ignored" };
 
@@ -67,7 +68,7 @@ export async function POST(request: Request) {
       payload: body
     });
 
-    if (payment.status === "paid") return { kind: "duplicate" };
+    if (isDuplicatePaidWebhook(payment.status)) return { kind: "duplicate" };
 
     await tx.update(payments).set({ status: "paid", paidAt: new Date(), rawPayload: body, updatedAt: new Date() }).where(eq(payments.id, payment.id));
     await tx.update(orders).set({ status: "paid", paidAt: new Date(), updatedAt: new Date() }).where(eq(orders.id, order.id));

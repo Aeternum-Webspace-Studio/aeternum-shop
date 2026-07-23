@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { canAccessOrder, canAccessSellerItem, canCancelOrder, canMarkFailed, canRefundOrder, shouldProcessWebhookOrder } from "../lib/backend-guards.js";
+import { canAccessOrder, canAccessSellerItem, canCancelOrder, canClaimAutoStock, canMarkFailed, canRefundOrder, isDuplicatePaidWebhook, isWebhookAmountMatch, shouldProcessWebhookOrder } from "../lib/backend-guards.js";
+import { productPriceForUser } from "../lib/pricing.js";
 
 assert.equal(canAccessOrder({ isAdmin: true, buyerId: "buyer-1", userId: "any" }), true);
 assert.equal(canAccessOrder({ isAdmin: false, buyerId: "buyer-1", userId: "buyer-1" }), true);
@@ -21,5 +22,18 @@ assert.equal(canMarkFailed("cancelled"), false);
 assert.equal(shouldProcessWebhookOrder("pending_payment"), true);
 assert.equal(shouldProcessWebhookOrder("paid"), true);
 assert.equal(shouldProcessWebhookOrder("refunded"), false);
+
+assert.equal(canClaimAutoStock("available"), true);
+assert.equal(canClaimAutoStock("sold"), false);
+assert.equal(canClaimAutoStock("disabled"), false);
+
+assert.equal(isWebhookAmountMatch(35000, 35000), true);
+assert.equal(isWebhookAmountMatch(35000, 34000), false);
+assert.equal(isDuplicatePaidWebhook("paid"), true);
+assert.equal(isDuplicatePaidWebhook("pending"), false);
+
+assert.equal(productPriceForUser({ price: 10000, resellerPrice: 8000 }, { resellerStatus: "approved" }), 8000);
+assert.equal(productPriceForUser({ price: 10000, resellerPrice: 8000 }, { resellerStatus: "pending" }), 10000);
+assert.equal(productPriceForUser({ price: 10000, resellerPrice: null }, { resellerStatus: "approved" }), 10000);
 
 console.log("[check-backend] ok");

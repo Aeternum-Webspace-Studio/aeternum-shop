@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/session-server";
 import { buildPakasirPaymentUrl } from "@/lib/pakasir";
 import { createOrderNumber } from "@/lib/orders";
 import { logActivity } from "@/lib/activity";
+import { productPriceForUser } from "@/lib/pricing.js";
 import { eq } from "drizzle-orm";
 
 const checkoutSchema = z.object({
@@ -32,7 +33,8 @@ export async function POST(request: Request) {
   }
 
   const orderNumber = createOrderNumber();
-  const amount = product.price * payload.quantity;
+  const unitPrice = productPriceForUser(product, current.user);
+  const amount = unitPrice * payload.quantity;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
   const projectSlug = process.env.PAKASIR_PROJECT_SLUG;
   if (!projectSlug) {
@@ -59,7 +61,7 @@ export async function POST(request: Request) {
     productId: product.id,
     sellerId: product.sellerId,
     quantity: payload.quantity,
-    unitPrice: product.price,
+    unitPrice,
     fulfillmentType: product.fulfillmentType,
     deliveryStatus: "pending"
   });

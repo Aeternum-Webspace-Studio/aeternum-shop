@@ -2,9 +2,19 @@ import { and, desc, eq, ilike, or } from "drizzle-orm";
 import { getDb } from "@/db";
 import { categories, productStocks, products } from "@/db/schema";
 
-export async function listMarketplaceProducts(search = "") {
+export async function listMarketplaceProducts(search = "", category = "") {
   const db = getDb();
   const query = search.trim();
+  const categorySlug = category.trim();
+  const filters = [eq(products.status, "active")];
+
+  if (query) {
+    filters.push(or(ilike(products.name, `%${query}%`), ilike(products.description, `%${query}%`), ilike(categories.name, `%${query}%`))!);
+  }
+
+  if (categorySlug) {
+    filters.push(eq(categories.slug, categorySlug));
+  }
 
   return db
     .select({
@@ -22,12 +32,13 @@ export async function listMarketplaceProducts(search = "") {
     })
     .from(products)
     .leftJoin(categories, eq(products.categoryId, categories.id))
-    .where(
-      query
-        ? and(eq(products.status, "active"), or(ilike(products.name, `%${query}%`), ilike(products.description, `%${query}%`), ilike(categories.name, `%${query}%`)))
-        : eq(products.status, "active")
-    )
+    .where(and(...filters))
     .orderBy(desc(products.createdAt));
+}
+
+export async function listCategories() {
+  const db = getDb();
+  return db.select({ name: categories.name, slug: categories.slug }).from(categories).orderBy(categories.name);
 }
 
 export async function getProductBySlug(slug: string) {
@@ -97,7 +108,25 @@ export async function countAvailableStock(productId: string) {
   const rows = await db
     .select({ id: productStocks.id })
     .from(productStocks)
-    .where(eq(productStocks.productId, productId));
+    .where(and(eq(productStocks.productId, productId), eq(productStocks.status, "available")));
 
   return rows.length;
+}
+
+export async function listStocksBySellerId(sellerId: string | null) {
+  const db = getDb();
+  const base = db
+    .select({
+      id: productStocks.id,
+      productId: productStocks.productId,
+      productName: products.name,
+      content: productStocks.content,
+      status: productStocks.status,
+      createdAt: productStocks.createdAt,
+      soldAt: productStocks.soldAt
+    })
+    .from(productStocks)
+    .innerJoin(products, eq(productStocks.productId, products.id));
+
+  return sellerId ? base.where(eq(products.sellerId, sellerId)).orderBy(desc(productStocks.createdAt)) : base.orderBy(desc(productStocks.createdAt));
 }
