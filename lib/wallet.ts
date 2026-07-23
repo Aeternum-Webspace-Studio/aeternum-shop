@@ -1,8 +1,39 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { sellerProfiles, sellerWithdrawalRequests, users } from "@/db/schema";
 
+let sellerWithdrawalRequestsReady: Promise<void> | null = null;
+
+async function ensureSellerWithdrawalRequestsTable() {
+  if (!sellerWithdrawalRequestsReady) {
+    sellerWithdrawalRequestsReady = (async () => {
+      const db = getDb();
+      await db.execute(sql`
+        create table if not exists "seller_withdrawal_requests" (
+          "id" uuid primary key default gen_random_uuid(),
+          "seller_id" uuid not null references "seller_profiles"("id") on delete cascade,
+          "user_id" uuid not null references "users"("id") on delete cascade,
+          "ticket_id" uuid references "tickets"("id") on delete set null,
+          "amount" integer not null,
+          "status" "withdrawal_status" not null default 'requested',
+          "created_at" timestamp with time zone not null default now(),
+          "updated_at" timestamp with time zone not null default now(),
+          "paid_at" timestamp with time zone
+        )
+      `);
+      await db.execute(sql`create index if not exists "seller_withdrawal_requests_seller_idx" on "seller_withdrawal_requests" ("seller_id")`);
+      await db.execute(sql`create index if not exists "seller_withdrawal_requests_status_idx" on "seller_withdrawal_requests" ("status")`);
+    })().catch((error) => {
+      sellerWithdrawalRequestsReady = null;
+      throw error;
+    });
+  }
+
+  return sellerWithdrawalRequestsReady;
+}
+
 export async function createSellerWithdrawalRequest(input: { sellerId: string; userId: string; ticketId?: string | null; amount: number }) {
+  await ensureSellerWithdrawalRequestsTable();
   const db = getDb();
   const [request] = await db.insert(sellerWithdrawalRequests).values({
     sellerId: input.sellerId,
@@ -15,6 +46,7 @@ export async function createSellerWithdrawalRequest(input: { sellerId: string; u
 }
 
 export async function listWithdrawalRequests() {
+  await ensureSellerWithdrawalRequestsTable();
   const db = getDb();
   return db
     .select({
