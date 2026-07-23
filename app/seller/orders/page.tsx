@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { listOrderItemsBySellerId } from "@/lib/orders";
+import { calculateMarketplaceCommission } from "@/lib/pricing.js";
 import { getCurrentUser } from "@/lib/session-server";
 import { findSellerProfileByUserId } from "@/lib/sellers";
 
@@ -20,20 +21,23 @@ export default async function SellerOrdersPage() {
         {items.length === 0 ? (
           <div className="rounded-xl2 border-[3px] border-border p-4 text-sm text-muted">Belum ada pesanan.</div>
         ) : (
-          items.map((item) => (
-            <Link key={item.itemId} href={`/seller/orders/${item.itemId}`} className="block rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft hover:bg-surfaceSoft">
-              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <p className="font-black">{item.productName}</p>
-                  <p className="text-sm text-muted">{item.orderNumber} · {item.fulfillmentType} · {item.deliveryStatus}</p>
+          items.map((item) => {
+            const commission = calculateMarketplaceCommission(item.unitPrice * item.quantity);
+            return (
+              <Link key={item.itemId} href={`/seller/orders/${item.itemId}`} className="block rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft hover:bg-surfaceSoft">
+                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <p className="font-black">{item.productName}</p>
+                    <p className="text-sm text-muted">{item.orderNumber} · {item.fulfillmentType} · {item.deliveryStatus}</p>
+                  </div>
+                  <div className="text-left md:text-right">
+                    <p className="font-black">Net seller {formatMoney.format(commission.sellerNetAmount)}</p>
+                    <p className="text-xs text-muted">Fee platform {formatMoney.format(commission.platformFee)} · {item.orderStatus}</p>
+                  </div>
                 </div>
-                <div className="text-left md:text-right">
-                  <p className="font-black">{formatMoney.format(item.paymentAmount)}</p>
-                  <p className="text-xs uppercase tracking-[0.18em] text-muted">{item.orderStatus}</p>
-                </div>
-              </div>
-            </Link>
-          ))
+              </Link>
+            );
+          })
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { canAccessOrder, canAccessSellerItem, canCancelOrder, canClaimAutoStock, canMarkFailed, canRefundOrder, isDuplicatePaidWebhook, isWebhookAmountMatch, resolveWebhookPaymentOutcome, shouldProcessWebhookOrder } from "../lib/backend-guards.js";
-import { productPriceForUser } from "../lib/pricing.js";
+import { calculateMarketplaceCommission, productPriceForUser } from "../lib/pricing.js";
 
 assert.equal(canAccessOrder({ isAdmin: true, buyerId: "buyer-1", userId: "any" }), true);
 assert.equal(canAccessOrder({ isAdmin: false, buyerId: "buyer-1", userId: "buyer-1" }), true);
@@ -40,5 +40,6 @@ assert.equal(resolveWebhookPaymentOutcome({ orderStatus: "cancelled", paymentSta
 assert.equal(productPriceForUser({ price: 10000, resellerPrice: 8000 }, { resellerStatus: "approved" }), 8000);
 assert.equal(productPriceForUser({ price: 10000, resellerPrice: 8000 }, { resellerStatus: "pending" }), 10000);
 assert.equal(productPriceForUser({ price: 10000, resellerPrice: null }, { resellerStatus: "approved" }), 10000);
+assert.deepEqual(calculateMarketplaceCommission(9999, 1000), { grossAmount: 9999, platformFee: 999, sellerNetAmount: 9000, commissionBps: 1000 });
 
 console.log("[check-backend] ok");

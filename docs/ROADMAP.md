@@ -297,7 +297,7 @@ Checklist:
 Prioritas lanjutan:
 
 1. Seller wallet dan withdrawal: GitHub issue #5.
-2. Komisi marketplace: GitHub issue #6.
+2. Komisi marketplace dasar selesai via kalkulasi gross/fee/net tanpa migrasi; env `MARKETPLACE_COMMISSION_BPS` bisa dipakai kalau rate berubah: GitHub issue #6.
 3. Ticket live thread selesai dengan polling pendek; realtime provider penuh tetap non-MVP jika traffic membesar: GitHub issue #7.
 4. AI chatbot knowledge base: GitHub issue #8.
 5. Multi payment gateway: GitHub issue #9.

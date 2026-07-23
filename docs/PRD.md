@@ -299,6 +299,7 @@ Fitur MVP:
 - Email dikirim saat ada balasan.
 - Halaman help bisa membuat live-support ticket dengan pesan awal.
 - Detail ticket memakai live refresh pendek agar percakapan terlihat tanpa refresh manual.
+- Komisi marketplace dasar dihitung dari item order agar seller dan admin melihat gross, fee platform, dan net seller.
 
 Live chat realtime ditunda sampai traffic terbukti membutuhkan.
 

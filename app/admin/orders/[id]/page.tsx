@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/session-server";
 import { getOrderDetailByNumber } from "@/lib/orders";
+import { calculateMarketplaceCommission } from "@/lib/pricing.js";
 import { canCancelOrder, canMarkFailed, canRefundOrder } from "@/lib/backend-guards.js";
 
 export const dynamic = "force-dynamic";
@@ -69,6 +70,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
           <article key={item.id} className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft">
             <p className="text-sm font-black">{item.productName}</p>
             <p className="mt-1 text-sm text-muted">{item.fulfillmentType} · {item.deliveryStatus}</p>
+            <p className="mt-2 text-xs text-muted">Fee platform {formatMoney.format(calculateMarketplaceCommission(item.unitPrice * item.quantity).platformFee)} · net seller {formatMoney.format(calculateMarketplaceCommission(item.unitPrice * item.quantity).sellerNetAmount)}</p>
             {item.deliveryContent ? <pre className="mt-3 overflow-auto rounded-xl border-[2px] border-border bg-surfaceSoft p-3 text-xs">{JSON.stringify(item.deliveryContent, null, 2)}</pre> : null}
           </article>
         ))}

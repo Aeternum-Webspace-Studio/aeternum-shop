@@ -104,6 +104,8 @@ export async function listOrderItemsBySellerId(sellerId: string | null) {
       orderNumber: orders.orderNumber,
       orderStatus: orders.status,
       paymentAmount: orders.totalAmount,
+      quantity: orderItems.quantity,
+      unitPrice: orderItems.unitPrice,
       productName: products.name,
       fulfillmentType: orderItems.fulfillmentType,
       deliveryStatus: orderItems.deliveryStatus,
