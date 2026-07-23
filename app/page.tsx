@@ -1,5 +1,6 @@
 import { listPublishedArticles } from "@/lib/articles";
 import { listActiveFaqItems } from "@/lib/faq";
+import { countSoldOrderItems } from "@/lib/orders";
 import { listCategories, listMarketplaceProducts } from "@/lib/products";
 import { getGlobalReviewSummary, listTopRatedProducts } from "@/lib/reviews";
 
@@ -26,10 +27,12 @@ export default async function HomePage() {
   const products = await listMarketplaceProducts();
   const featuredProducts = products.slice(0, 3);
   const categories = await listCategories();
+  const soldItems = await countSoldOrderItems();
   const articles = (await listPublishedArticles()).slice(0, 3);
   const faqs = await listActiveFaqItems(4);
   const stats = [
     { label: "Produk aktif", value: products.length.toLocaleString("id-ID") },
+    { label: "Produk terjual", value: soldItems.toLocaleString("id-ID") },
     { label: "Kategori", value: categories.length.toLocaleString("id-ID") },
     { label: "Review buyer", value: reviewSummary.count.toLocaleString("id-ID") },
     { label: "Rating rata-rata", value: reviewSummary.count === 0 ? "-" : reviewSummary.average.toFixed(1) }
@@ -74,7 +77,7 @@ export default async function HomePage() {
                 Cek Pesanan
               </a>
             </div>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
               {stats.map((stat) => (
                 <div key={stat.label} className="rounded-xl border-[2px] border-border bg-white p-4 shadow-soft">
                   <p className="text-2xl font-black text-primary">{stat.value}</p>

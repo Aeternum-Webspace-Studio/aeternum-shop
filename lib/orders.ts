@@ -1,4 +1,4 @@
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, or } from "drizzle-orm";
 import { getDb } from "@/db";
 import { orderItems, orders, productStocks, products, payments, users } from "@/db/schema";
 
@@ -73,6 +73,17 @@ export async function getOrderDetailByNumber(orderNumber: string) {
 export async function listOrdersByBuyerId(buyerId: string) {
   const db = getDb();
   return db.select().from(orders).where(eq(orders.buyerId, buyerId)).orderBy(desc(orders.createdAt));
+}
+
+export async function countSoldOrderItems() {
+  const db = getDb();
+  const rows = await db
+    .select({ quantity: orderItems.quantity })
+    .from(orderItems)
+    .innerJoin(orders, eq(orderItems.orderId, orders.id))
+    .where(or(eq(orders.status, "paid"), eq(orders.status, "processing"), eq(orders.status, "delivered"))!);
+
+  return rows.reduce((sum, row) => sum + row.quantity, 0);
 }
 
 export async function listPaymentsByBuyerId(buyerId: string) {
