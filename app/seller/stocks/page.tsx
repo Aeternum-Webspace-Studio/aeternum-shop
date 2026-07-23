@@ -4,8 +4,13 @@ import { findSellerProfileByUserId } from "@/lib/sellers";
 
 export const dynamic = "force-dynamic";
 
-export default async function SellerStocksPage() {
+export default async function SellerStocksPage({
+  searchParams
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
   const current = await getCurrentUser();
+  const status = (await searchParams).status ?? "";
   const sellerId = current?.session.role === "seller" ? (await findSellerProfileByUserId(current.user.id))?.id ?? null : null;
   const products = await listProductsBySellerId(sellerId);
   const productsWithStock = await Promise.all(
@@ -14,12 +19,25 @@ export default async function SellerStocksPage() {
       available: await countAvailableStock(product.id)
     }))
   );
-  const stocks = await listStocksBySellerId(sellerId);
+  const stocks = (await listStocksBySellerId(sellerId)).filter((stock) => !status || stock.status === status);
+  const stockCounts = (await listStocksBySellerId(sellerId)).reduce(
+    (acc, stock) => {
+      acc[stock.status] += 1;
+      return acc;
+    },
+    { available: 0, sold: 0, disabled: 0, reserved: 0 }
+  );
 
   return (
     <div>
       <h1 className="text-3xl font-semibold tracking-tight">Stok</h1>
       <p className="mt-2 text-sm text-muted">Tambah stok digital untuk produk auto delivery. Bisa satu JSON, atau banyak JSON per baris.</p>
+      <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+        <a className={`rounded-full border border-border px-3 py-1 ${!status ? "bg-primary text-white" : "bg-white text-muted"}`} href="/seller/stocks">Semua ({productsWithStock.reduce((sum, product) => sum + product.available, 0)})</a>
+        <a className={`rounded-full border border-border px-3 py-1 ${status === "available" ? "bg-primary text-white" : "bg-white text-muted"}`} href="/seller/stocks?status=available">Available ({stockCounts.available})</a>
+        <a className={`rounded-full border border-border px-3 py-1 ${status === "sold" ? "bg-primary text-white" : "bg-white text-muted"}`} href="/seller/stocks?status=sold">Sold ({stockCounts.sold})</a>
+        <a className={`rounded-full border border-border px-3 py-1 ${status === "disabled" ? "bg-primary text-white" : "bg-white text-muted"}`} href="/seller/stocks?status=disabled">Disabled ({stockCounts.disabled})</a>
+      </div>
 
       <div className="mt-6 space-y-4">
         {productsWithStock.length === 0 ? (

@@ -7,3 +7,4 @@ export function shouldProcessWebhookOrder(status: "pending_payment" | "paid" | "
 export function canClaimAutoStock(status: "available" | "reserved" | "sold" | "disabled"): boolean;
 export function isWebhookAmountMatch(paymentAmount: number, webhookAmount: number): boolean;
 export function isDuplicatePaidWebhook(paymentStatus: "pending" | "paid" | "failed" | "expired" | "refunded"): boolean;
+export function resolveWebhookPaymentOutcome(input: { orderStatus: "pending_payment" | "paid" | "processing" | "delivered" | "cancelled" | "refunded" | "failed"; paymentStatus: "pending" | "paid" | "failed" | "expired" | "refunded"; paymentAmount: number; webhookAmount: number }): "paid" | "duplicate" | "ignored" | "mismatch";

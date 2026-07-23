@@ -306,3 +306,26 @@ Prioritas lanjutan:
 8. Affiliate/referral.
 
 ponytail: fitur lanjutan ditunda sampai transaksi nyata membuktikan kebutuhan.
+
+## Status Saat Ini
+
+Sudah selesai:
+
+- Auth, role gate, dan route public/account/dashboard/admin/seller.
+- Marketplace, detail produk, search, dan filter kategori.
+- Checkout Pakasir, webhook idempotent, auto/manual delivery.
+- Dashboard buyer, seller, admin.
+- Rating, ticket, blog, FAQ/chatbot, invoice tracker.
+- Seller onboarding, seller settings, admin settings.
+- Admin payment logs, seller stock management, buyer payments.
+- Backend checks dan smoke check production.
+
+Masih non-MVP:
+
+- Wallet seller.
+- Withdraw otomatis.
+- Komisi marketplace.
+- Live chat realtime.
+- AI chatbot penuh.
+- Multi payment gateway.
+- Affiliate/referral.

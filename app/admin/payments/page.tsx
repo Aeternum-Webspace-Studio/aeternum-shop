@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { orders, paymentEvents, payments, users } from "@/db/schema";
@@ -51,6 +52,7 @@ export default async function AdminPaymentsPage({
     <div>
       <h1 className="text-3xl font-semibold tracking-tight">Payment</h1>
       <p className="mt-2 text-sm text-muted">Log payment Pakasir.</p>
+      <p className="mt-2 text-xs text-muted">{rows.length} payment · {events.length} callback</p>
       <form className="mt-6 grid gap-3 rounded-xl2 border border-border bg-white p-4 shadow-soft md:grid-cols-[1fr_180px_180px_auto]" action="/admin/payments">
         <input className="rounded-xl border border-border px-4 py-3 text-sm" name="q" defaultValue={params.q ?? ""} placeholder="Cari invoice, buyer, reference" />
         <select className="rounded-xl border border-border px-4 py-3 text-sm" name="status" defaultValue={status}>
@@ -66,10 +68,15 @@ export default async function AdminPaymentsPage({
       </form>
       <div className="mt-6 space-y-3">
         {rows.length === 0 ? <div className="rounded-xl2 border border-border p-4 text-sm text-muted">Belum ada payment.</div> : rows.map((payment) => (
-          <article key={payment.id} className="rounded-xl2 border border-border bg-white p-4 shadow-soft">
-            <p className="font-semibold">{payment.orderNumber}</p>
-            <p className="mt-1 text-sm text-muted">{payment.buyerName} · {payment.status} · {formatMoney.format(payment.amount)}</p>
-            <p className="mt-1 text-xs text-muted">{payment.providerReference}</p>
+            <article key={payment.id} className="rounded-xl2 border border-border bg-white p-4 shadow-soft">
+            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="font-semibold">{payment.orderNumber}</p>
+                <p className="mt-1 text-sm text-muted">{payment.buyerName} · {payment.status} · {formatMoney.format(payment.amount)}</p>
+                <p className="mt-1 text-xs text-muted">{payment.providerReference}</p>
+              </div>
+              <Link className="rounded-xl border border-border bg-white px-4 py-2 text-sm font-medium" href={`/admin/orders/${payment.orderNumber}`}>Buka order</Link>
+            </div>
           </article>
         ))}
       </div>
@@ -85,7 +92,10 @@ export default async function AdminPaymentsPage({
                 <p className="text-xs text-muted">{event.createdAt.toLocaleString("id-ID")}</p>
               </div>
               <p className="mt-1 text-sm text-muted">{event.provider} · {event.eventType ?? "unknown"} · payment {event.paymentStatus ?? "unknown"}</p>
-              <pre className="mt-3 max-h-72 overflow-auto rounded-xl border border-border bg-surfaceSoft p-3 text-xs leading-5 text-muted">{JSON.stringify(event.payload, null, 2)}</pre>
+              <details className="mt-3 rounded-xl border border-border bg-surfaceSoft p-3">
+                <summary className="cursor-pointer text-xs font-medium text-muted">Raw payload</summary>
+                <pre className="mt-3 max-h-72 overflow-auto text-xs leading-5 text-muted">{JSON.stringify(event.payload, null, 2)}</pre>
+              </details>
             </article>
           ))}
         </div>

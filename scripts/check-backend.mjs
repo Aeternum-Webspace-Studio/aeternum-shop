@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { canAccessOrder, canAccessSellerItem, canCancelOrder, canClaimAutoStock, canMarkFailed, canRefundOrder, isDuplicatePaidWebhook, isWebhookAmountMatch, shouldProcessWebhookOrder } from "../lib/backend-guards.js";
+import { canAccessOrder, canAccessSellerItem, canCancelOrder, canClaimAutoStock, canMarkFailed, canRefundOrder, isDuplicatePaidWebhook, isWebhookAmountMatch, resolveWebhookPaymentOutcome, shouldProcessWebhookOrder } from "../lib/backend-guards.js";
 import { productPriceForUser } from "../lib/pricing.js";
 
 assert.equal(canAccessOrder({ isAdmin: true, buyerId: "buyer-1", userId: "any" }), true);
@@ -31,6 +31,11 @@ assert.equal(isWebhookAmountMatch(35000, 35000), true);
 assert.equal(isWebhookAmountMatch(35000, 34000), false);
 assert.equal(isDuplicatePaidWebhook("paid"), true);
 assert.equal(isDuplicatePaidWebhook("pending"), false);
+
+assert.equal(resolveWebhookPaymentOutcome({ orderStatus: "pending_payment", paymentStatus: "pending", paymentAmount: 35000, webhookAmount: 35000 }), "paid");
+assert.equal(resolveWebhookPaymentOutcome({ orderStatus: "pending_payment", paymentStatus: "paid", paymentAmount: 35000, webhookAmount: 35000 }), "duplicate");
+assert.equal(resolveWebhookPaymentOutcome({ orderStatus: "pending_payment", paymentStatus: "pending", paymentAmount: 35000, webhookAmount: 34000 }), "mismatch");
+assert.equal(resolveWebhookPaymentOutcome({ orderStatus: "cancelled", paymentStatus: "pending", paymentAmount: 35000, webhookAmount: 35000 }), "ignored");
 
 assert.equal(productPriceForUser({ price: 10000, resellerPrice: 8000 }, { resellerStatus: "approved" }), 8000);
 assert.equal(productPriceForUser({ price: 10000, resellerPrice: 8000 }, { resellerStatus: "pending" }), 10000);
