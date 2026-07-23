@@ -50,8 +50,12 @@ export default async function SellerWalletPage() {
       </div>
 
       <div className="mt-6 rounded-xl2 border-[3px] border-border bg-surfaceSoft p-4 shadow-soft">
-        <p className="text-sm font-black">Withdraw manual belum aktif</p>
-        <p className="mt-1 text-sm text-muted">Saat ini saldo ditampilkan dulu dari order yang sudah settled. Flow penarikan akan dibuat setelah format payout final disepakati.</p>
+        <p className="text-sm font-black">Request withdraw manual</p>
+        <p className="mt-1 text-sm text-muted">Request akan masuk sebagai ticket agar admin bisa verifikasi saldo dan data payout sebelum pembayaran.</p>
+        <form className="mt-4" method="post" action="/api/seller/withdrawals">
+          <input type="hidden" name="amount" value={summary.net} />
+          <button className="rounded-xl border-[3px] border-border bg-primary px-4 py-3 text-sm font-black text-white shadow-soft" disabled={summary.net <= 0}>Request withdraw {formatMoney.format(summary.net)}</button>
+        </form>
       </div>
 
       <div className="mt-6 space-y-3">

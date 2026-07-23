@@ -303,6 +303,7 @@ Fitur MVP:
 - Halaman help bisa membuat live-support ticket dengan pesan awal.
 - Detail ticket memakai live refresh pendek agar percakapan terlihat tanpa refresh manual.
 - Komisi marketplace dasar dihitung dari item order agar seller dan admin melihat gross, fee platform, dan net seller.
+- Seller bisa membuat request withdraw manual sebagai ticket dari halaman wallet.
 
 Live chat realtime ditunda sampai traffic terbukti membutuhkan.
 
