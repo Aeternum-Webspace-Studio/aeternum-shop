@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/lib/session-server";
 import { buildReferralUrl, referralCodeForUser } from "@/lib/referrals.js";
+import { getReferralStatsForCode } from "@/lib/referrals-data";
 
 export const dynamic = "force-dynamic";
 
@@ -8,6 +9,7 @@ export default async function DashboardResellerPage() {
   const status = current?.user.resellerStatus ?? "none";
   const referralCode = current ? referralCodeForUser(current.user) : "";
   const referralUrl = referralCode ? buildReferralUrl(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000", referralCode) : "";
+  const referralStats = referralCode ? await getReferralStatsForCode(referralCode) : { count: 0, rows: [] };
 
   return (
     <div>
@@ -28,6 +30,19 @@ export default async function DashboardResellerPage() {
         <p className="mt-2 text-sm text-muted">Bagikan link ini untuk mengajak buyer baru. Tracking komisi affiliate belum aktif.</p>
         <input className="mt-3 w-full rounded-xl border border-border bg-surfaceSoft px-3 py-2 text-sm" readOnly value={referralUrl} />
         <p className="mt-2 text-xs text-muted">Kode: {referralCode}</p>
+        <p className="mt-3 text-sm font-semibold">Total signup referral: {referralStats.count}</p>
+        <div className="mt-3 space-y-2">
+          {referralStats.rows.length === 0 ? (
+            <p className="text-sm text-muted">Belum ada signup dari referral link ini.</p>
+          ) : (
+            referralStats.rows.map((row) => (
+              <div key={`${row.actorEmail}-${row.createdAt.toISOString()}`} className="rounded-xl border border-border bg-surfaceSoft px-3 py-2 text-sm">
+                <p className="font-semibold">{row.actorName}</p>
+                <p className="text-xs text-muted">{row.actorEmail}</p>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

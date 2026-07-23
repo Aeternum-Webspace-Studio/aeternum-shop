@@ -126,7 +126,7 @@ Fitur:
 - Rating dan komentar.
 - Ticket support per order.
 - Form pengajuan reseller.
-- Referral link dasar untuk invite user baru dan ditangkap saat register.
+- Referral link dasar untuk invite user baru, ditangkap saat register, dan ditampilkan sebagai statistik sederhana.
 
 ## 07. Dashboard Seller
 
