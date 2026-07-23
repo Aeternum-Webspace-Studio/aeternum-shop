@@ -1,3 +1,5 @@
+import { TicketLiveThread } from "@/components/ticket-live-thread";
+
 type TicketDetailProps = {
   ticket: {
     id: string;
@@ -24,18 +26,7 @@ export function TicketDetail({ ticket, messages, basePath }: TicketDetailProps) 
       <h1 className="mt-2 text-3xl font-black tracking-tight">{ticket.subject}</h1>
       <p className="mt-2 text-sm text-muted">{ticket.buyerName}{ticket.orderNumber ? ` · ${ticket.orderNumber}` : ""}{ticket.sellerStoreName ? ` · ${ticket.sellerStoreName}` : ""}</p>
 
-      <div className="mt-6 space-y-3">
-        {messages.length === 0 ? (
-          <div className="rounded-xl2 border border-border p-4 text-sm text-muted">Belum ada balasan.</div>
-        ) : (
-          messages.map((message) => (
-            <article key={message.id} className="rounded-xl2 border border-border bg-white p-4 shadow-soft">
-              <p className="text-sm font-semibold">{message.senderName} · {message.senderRole}</p>
-              <p className="mt-2 whitespace-pre-line text-sm text-muted">{message.message}</p>
-            </article>
-          ))
-        )}
-      </div>
+      <TicketLiveThread ticketId={ticket.id} initialMessages={messages.map((message) => ({ ...message, createdAt: message.createdAt.toISOString() }))} />
 
       {ticket.status !== "closed" ? (
         <form className="mt-6 grid gap-3 rounded-xl2 border border-border bg-white p-4 shadow-soft" method="post" action={`/api/tickets/${ticket.id}/reply`}>

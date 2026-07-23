@@ -298,6 +298,7 @@ Fitur MVP:
 - Ticket memiliki pesan berurutan.
 - Email dikirim saat ada balasan.
 - Halaman help bisa membuat live-support ticket dengan pesan awal.
+- Detail ticket memakai live refresh pendek agar percakapan terlihat tanpa refresh manual.
 
 Live chat realtime ditunda sampai traffic terbukti membutuhkan.
 
