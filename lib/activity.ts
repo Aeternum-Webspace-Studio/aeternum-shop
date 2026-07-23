@@ -43,3 +43,20 @@ export async function listRecentActivity(limit = 10) {
     .orderBy(desc(activityLogs.createdAt))
     .limit(limit);
 }
+
+export async function listWithdrawalRequests() {
+  const db = getDb();
+
+  return db
+    .select({
+      id: activityLogs.id,
+      actorId: activityLogs.actorId,
+      actorName: users.name,
+      metadata: activityLogs.metadata,
+      createdAt: activityLogs.createdAt
+    })
+    .from(activityLogs)
+    .leftJoin(users, eq(activityLogs.actorId, users.id))
+    .where(eq(activityLogs.action, "seller.withdrawal_requested"))
+    .orderBy(desc(activityLogs.createdAt));
+}

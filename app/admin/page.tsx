@@ -1,4 +1,4 @@
-import { listRecentActivity } from "@/lib/activity";
+import { listRecentActivity, listWithdrawalRequests } from "@/lib/activity";
 import { listAdminOrders } from "@/lib/orders";
 import { listAdminReviews } from "@/lib/reviews";
 import { listSellerProfiles } from "@/lib/sellers";
@@ -20,12 +20,13 @@ export default async function AdminPage() {
   if (!current) redirect("/login");
   if (current.session.role !== "admin") redirect(current.session.role === "seller" ? "/seller" : "/dashboard");
 
-  const [users, sellers, orders, reviews, activity] = await Promise.all([
+  const [users, sellers, orders, reviews, activity, withdrawals] = await Promise.all([
     listUsers(),
     listSellerProfiles(),
     listAdminOrders(),
     listAdminReviews(),
-    listRecentActivity(8)
+    listRecentActivity(8),
+    listWithdrawalRequests()
   ]);
   const allOrderItems = await listOrderItemsBySellerId(null);
 
@@ -42,6 +43,7 @@ export default async function AdminPage() {
     { gross: 0, fee: 0, net: 0 }
   );
   const formatMoney = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
+  const requestedWithdrawalAmount = withdrawals.reduce((sum, item) => sum + Number((item.metadata as { amount?: unknown }).amount ?? 0), 0);
 
   return (
     <div>
@@ -105,7 +107,7 @@ export default async function AdminPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
+      <div className="mt-6 grid gap-4 md:grid-cols-4">
         <div className="rounded-xl2 border border-border bg-white p-4 shadow-soft">
           <p className="text-xs uppercase tracking-wide text-muted">Gross settled</p>
           <p className="mt-2 text-2xl font-semibold">{formatMoney.format(settlementSummary.gross)}</p>
@@ -117,6 +119,10 @@ export default async function AdminPage() {
         <div className="rounded-xl2 border border-border bg-white p-4 shadow-soft">
           <p className="text-xs uppercase tracking-wide text-muted">Net seller</p>
           <p className="mt-2 text-2xl font-semibold">{formatMoney.format(settlementSummary.net)}</p>
+        </div>
+        <div className="rounded-xl2 border border-border bg-white p-4 shadow-soft">
+          <p className="text-xs uppercase tracking-wide text-muted">Withdraw requested</p>
+          <p className="mt-2 text-2xl font-semibold">{formatMoney.format(requestedWithdrawalAmount)}</p>
         </div>
       </div>
     </div>
