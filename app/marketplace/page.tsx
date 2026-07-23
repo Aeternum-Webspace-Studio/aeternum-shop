@@ -3,6 +3,7 @@ import { listCategories, listMarketplaceProducts } from "@/lib/products";
 import { productPriceForUser } from "@/lib/pricing.js";
 import { getReviewSummaryByProductId } from "@/lib/reviews";
 import { getCurrentUser } from "@/lib/session-server";
+import { getMarketplaceSettings } from "@/lib/sellers";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,7 @@ export default async function MarketplacePage({
   const q = params.q ?? "";
   const category = params.category ?? "";
   const current = await getCurrentUser();
+  const settings = await getMarketplaceSettings();
   const [products, categories] = await Promise.all([listMarketplaceProducts(q, category), listCategories()]);
   const productsWithReviews = await Promise.all(
     products.map(async (product) => ({
@@ -36,6 +38,10 @@ export default async function MarketplacePage({
           </div>
           <div className="floaty rounded-xl2 border-[3px] border-border bg-white px-4 py-2 text-sm font-black shadow-soft">Akses Cepat · Order Jelas</div>
         </div>
+
+        {settings?.checkoutEnabled === false ? (
+          <div className="mt-4 rounded-xl2 border-[3px] border-border bg-surfaceSoft p-4 text-sm font-semibold text-muted shadow-soft">Checkout sedang dinonaktifkan admin untuk sementara.</div>
+        ) : null}
 
         <div className="mt-6 flex flex-wrap gap-2">
           {categories.slice(0, 6).map((item) => (

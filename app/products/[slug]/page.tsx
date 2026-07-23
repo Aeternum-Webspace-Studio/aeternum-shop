@@ -3,6 +3,7 @@ import { getProductBySlug } from "@/lib/products";
 import { productPriceForUser } from "@/lib/pricing.js";
 import { getReviewSummaryByProductId, listReviewsByProductId } from "@/lib/reviews";
 import { getCurrentUser } from "@/lib/session-server";
+import { getMarketplaceSettings } from "@/lib/sellers";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,7 @@ export default async function ProductDetailPage({
   const product = await getProductBySlug(slug);
   if (!product) notFound();
   const current = await getCurrentUser();
+  const settings = await getMarketplaceSettings();
   const price = productPriceForUser(product, current?.user);
   const hasResellerPrice = price !== product.price;
   const reviewSummary = await getReviewSummaryByProductId(product.id);
@@ -75,7 +77,11 @@ export default async function ProductDetailPage({
               <p className="text-sm font-black">Yang terjadi setelah bayar</p>
               <p className="mt-2 text-sm leading-6 text-muted">{deliveryCopy}</p>
             </div>
-            <button className="lift shine mt-4 w-full rounded-xl border-[3px] border-border bg-primary px-4 py-3 text-sm font-black text-white shadow-soft">Lanjut ke Pembayaran Pakasir</button>
+            {settings?.checkoutEnabled === false ? (
+              <div className="mt-4 rounded-xl border-[2px] border-border bg-surfaceSoft p-3 text-sm font-semibold text-muted">Checkout sedang dinonaktifkan admin.</div>
+            ) : (
+              <button className="lift shine mt-4 w-full rounded-xl border-[3px] border-border bg-primary px-4 py-3 text-sm font-black text-white shadow-soft">Lanjut ke Pembayaran Pakasir</button>
+            )}
             <p className="mt-3 text-center text-xs leading-5 text-muted">Belum login? Kamu akan diarahkan ke login agar invoice dan akses produk tersimpan di akun.</p>
           </form>
         </section>
