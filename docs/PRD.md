@@ -126,6 +126,7 @@ Fitur:
 - Rating dan komentar.
 - Ticket support per order.
 - Form pengajuan reseller.
+- Referral link dasar untuk invite user baru.
 
 ## 07. Dashboard Seller
 
@@ -511,7 +512,7 @@ refunded
 - Withdraw otomatis.
 - Wallet seller manual.
 - Komisi marketplace kompleks.
-- Affiliate.
+- Affiliate commission tracking.
 - Live chat realtime.
 - AI chatbot penuh.
 - Multi payment gateway.

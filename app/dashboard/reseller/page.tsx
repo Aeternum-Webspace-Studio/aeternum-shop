@@ -1,10 +1,13 @@
 import { getCurrentUser } from "@/lib/session-server";
+import { buildReferralUrl, referralCodeForUser } from "@/lib/referrals.js";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardResellerPage() {
   const current = await getCurrentUser();
   const status = current?.user.resellerStatus ?? "none";
+  const referralCode = current ? referralCodeForUser(current.user) : "";
+  const referralUrl = referralCode ? buildReferralUrl(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000", referralCode) : "";
 
   return (
     <div>
@@ -18,6 +21,13 @@ export default async function DashboardResellerPage() {
             <button className="rounded-xl border border-border bg-primary px-4 py-2 text-sm font-semibold text-white">Ajukan reseller</button>
           </form>
         ) : null}
+      </div>
+
+      <div className="mt-4 rounded-xl2 border border-border bg-white p-4 shadow-soft">
+        <p className="text-sm font-semibold">Referral link</p>
+        <p className="mt-2 text-sm text-muted">Bagikan link ini untuk mengajak buyer baru. Tracking komisi affiliate belum aktif.</p>
+        <input className="mt-3 w-full rounded-xl border border-border bg-surfaceSoft px-3 py-2 text-sm" readOnly value={referralUrl} />
+        <p className="mt-2 text-xs text-muted">Kode: {referralCode}</p>
       </div>
     </div>
   );
