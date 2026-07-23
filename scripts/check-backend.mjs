@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { canAccessOrder, canAccessSellerItem, canCancelOrder, canCheckout, canClaimAutoStock, canMarkFailed, canRefundOrder, isDuplicatePaidWebhook, isWebhookAmountMatch, resolveWebhookPaymentOutcome, shouldProcessWebhookOrder } from "../lib/backend-guards.js";
 import { calculateMarketplaceCommission, productPriceForUser } from "../lib/pricing.js";
 import { buildReferralUrl, referralCodeForUser } from "../lib/referrals.js";
+import { defaultPaymentProvider, isPaymentProviderConfigured } from "../lib/payment-providers.js";
 
 assert.equal(canAccessOrder({ isAdmin: true, buyerId: "buyer-1", userId: "any" }), true);
 assert.equal(canAccessOrder({ isAdmin: false, buyerId: "buyer-1", userId: "buyer-1" }), true);
@@ -47,5 +48,8 @@ assert.equal(productPriceForUser({ price: 10000, resellerPrice: null }, { resell
 assert.deepEqual(calculateMarketplaceCommission(9999, 1000), { grossAmount: 9999, platformFee: 999, sellerNetAmount: 9000, commissionBps: 1000 });
 assert.equal(referralCodeForUser({ id: "12345678-1234-1234-1234-123456789abc" }), "1234567812");
 assert.equal(buildReferralUrl("https://aeternumshop.biz.id", "ABC"), "https://aeternumshop.biz.id/register?ref=ABC");
+assert.equal(defaultPaymentProvider, "pakasir");
+assert.equal(isPaymentProviderConfigured("pakasir", { PAKASIR_PROJECT_SLUG: "demo" }), true);
+assert.equal(isPaymentProviderConfigured("pakasir", {}), false);
 
 console.log("[check-backend] ok");

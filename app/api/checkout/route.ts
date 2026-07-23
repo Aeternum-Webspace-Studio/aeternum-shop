@@ -7,6 +7,7 @@ import { buildPakasirPaymentUrl } from "@/lib/pakasir";
 import { createOrderNumber } from "@/lib/orders";
 import { logActivity } from "@/lib/activity";
 import { canCheckout } from "@/lib/backend-guards.js";
+import { defaultPaymentProvider } from "@/lib/payment-providers.js";
 import { productPriceForUser } from "@/lib/pricing.js";
 import { getMarketplaceSettings } from "@/lib/sellers";
 import { eq } from "drizzle-orm";
@@ -75,7 +76,7 @@ export async function POST(request: Request) {
 
   await db.insert(payments).values({
     orderId: order.id,
-    provider: "pakasir",
+    provider: defaultPaymentProvider,
     providerReference: orderNumber,
     paymentUrl,
     amount,
@@ -87,7 +88,7 @@ export async function POST(request: Request) {
     action: "order.created",
     entityType: "order",
     entityId: order.id,
-    metadata: { orderNumber, productId: product.id, quantity: payload.quantity, amount }
+    metadata: { orderNumber, productId: product.id, quantity: payload.quantity, amount, provider: defaultPaymentProvider }
   });
 
   return NextResponse.redirect(paymentUrl, { status: 303 });

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { orders, paymentEvents, payments, users } from "@/db/schema";
+import { isPaymentProviderConfigured, paymentProviders } from "@/lib/payment-providers.js";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +54,15 @@ export default async function AdminPaymentsPage({
       <h1 className="text-3xl font-semibold tracking-tight">Payment</h1>
       <p className="mt-2 text-sm text-muted">Log payment Pakasir.</p>
       <p className="mt-2 text-xs text-muted">{rows.length} payment · {events.length} callback</p>
+      <div className="mt-6 grid gap-3 md:grid-cols-3">
+        {paymentProviders.map((provider) => (
+          <div key={provider.id} className="rounded-xl2 border border-border bg-white p-4 shadow-soft">
+            <p className="text-xs uppercase tracking-wide text-muted">Provider</p>
+            <p className="mt-2 font-semibold">{provider.label}</p>
+            <p className="mt-1 text-sm text-muted">{isPaymentProviderConfigured(provider.id) ? "Configured" : `Missing ${provider.envKey}`}</p>
+          </div>
+        ))}
+      </div>
       <form className="mt-6 grid gap-3 rounded-xl2 border border-border bg-white p-4 shadow-soft md:grid-cols-[1fr_180px_180px_auto]" action="/admin/payments">
         <input className="rounded-xl border border-border px-4 py-3 text-sm" name="q" defaultValue={params.q ?? ""} placeholder="Cari invoice, buyer, reference" />
         <select className="rounded-xl border border-border px-4 py-3 text-sm" name="status" defaultValue={status}>
