@@ -4,7 +4,7 @@ const routes = [
   ["/", 200, "Aeternum Shop"],
   ["/marketplace", 200, "Marketplace"],
   ["/trending", 200, "Trending sekarang"],
-  ["/help", 200, "Aeternum Bot"],
+  ["/help", 200, "Tanya seputar marketplace"],
   ["/products/chatgpt-plus-private-1-bulan", 200, "ChatGPT Plus Private 1 Bulan"],
   ["/products/gemini-pro-18-bulan", 200, "Gemini Pro 18 Bulan"],
   ["/products/canva-pro-team-1-bulan", 200, "Canva Pro Team 1 Bulan"],
