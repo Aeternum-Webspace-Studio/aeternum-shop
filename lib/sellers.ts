@@ -4,6 +4,11 @@ import { marketplaceSettings, sellerProfiles } from "@/db/schema";
 
 let marketplaceSettingsReady: Promise<void> | null = null;
 
+function isMissingDatabaseObjectError(error: unknown) {
+  const code = typeof error === "object" && error !== null ? (error as { code?: string }).code : undefined;
+  return code === "42P01" || code === "42704";
+}
+
 async function ensureMarketplaceSettingsTable() {
   if (!marketplaceSettingsReady) {
     marketplaceSettingsReady = (async () => {
@@ -62,10 +67,15 @@ export async function findApprovedSellerProfileByUserId(userId: string) {
 }
 
 export async function getMarketplaceSettings() {
-  await ensureMarketplaceSettingsTable();
-  const db = getDb();
-  const [settings] = await db.select().from(marketplaceSettings).limit(1);
-  return settings ?? null;
+  try {
+    await ensureMarketplaceSettingsTable();
+    const db = getDb();
+    const [settings] = await db.select().from(marketplaceSettings).limit(1);
+    return settings ?? null;
+  } catch (error) {
+    if (isMissingDatabaseObjectError(error)) return null;
+    throw error;
+  }
 }
 
 export async function updateMarketplaceSettings(input: { appName: string; supportEmail?: string | null; announcement?: string | null; checkoutEnabled: boolean }) {

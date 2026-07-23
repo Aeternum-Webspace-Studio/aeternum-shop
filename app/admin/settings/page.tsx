@@ -8,7 +8,7 @@ export default async function AdminSettingsPage({ searchParams }: { searchParams
   const current = await getCurrentUser();
   if (!current || current.session.role !== "admin") notFound();
 
-  const settings = await getMarketplaceSettings();
+  const settings = await getMarketplaceSettings().catch(() => null);
   const params = await searchParams;
 
   return (

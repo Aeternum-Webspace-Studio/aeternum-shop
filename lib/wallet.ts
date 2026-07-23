@@ -4,6 +4,11 @@ import { sellerProfiles, sellerWithdrawalRequests, users } from "@/db/schema";
 
 let sellerWithdrawalRequestsReady: Promise<void> | null = null;
 
+function isMissingDatabaseObjectError(error: unknown) {
+  const code = typeof error === "object" && error !== null ? (error as { code?: string }).code : undefined;
+  return code === "42P01" || code === "42704";
+}
+
 async function ensureSellerWithdrawalRequestsTable() {
   if (!sellerWithdrawalRequestsReady) {
     sellerWithdrawalRequestsReady = (async () => {
@@ -60,20 +65,25 @@ export async function createSellerWithdrawalRequest(input: { sellerId: string; u
 }
 
 export async function listWithdrawalRequests() {
-  await ensureSellerWithdrawalRequestsTable();
-  const db = getDb();
-  return db
-    .select({
-      id: sellerWithdrawalRequests.id,
-      amount: sellerWithdrawalRequests.amount,
-      status: sellerWithdrawalRequests.status,
-      createdAt: sellerWithdrawalRequests.createdAt,
-      ticketId: sellerWithdrawalRequests.ticketId,
-      sellerStoreName: sellerProfiles.storeName,
-      userName: users.name
-    })
-    .from(sellerWithdrawalRequests)
-    .innerJoin(sellerProfiles, eq(sellerWithdrawalRequests.sellerId, sellerProfiles.id))
-    .innerJoin(users, eq(sellerWithdrawalRequests.userId, users.id))
-    .orderBy(desc(sellerWithdrawalRequests.createdAt));
+  try {
+    await ensureSellerWithdrawalRequestsTable();
+    const db = getDb();
+    return db
+      .select({
+        id: sellerWithdrawalRequests.id,
+        amount: sellerWithdrawalRequests.amount,
+        status: sellerWithdrawalRequests.status,
+        createdAt: sellerWithdrawalRequests.createdAt,
+        ticketId: sellerWithdrawalRequests.ticketId,
+        sellerStoreName: sellerProfiles.storeName,
+        userName: users.name
+      })
+      .from(sellerWithdrawalRequests)
+      .innerJoin(sellerProfiles, eq(sellerWithdrawalRequests.sellerId, sellerProfiles.id))
+      .innerJoin(users, eq(sellerWithdrawalRequests.userId, users.id))
+      .orderBy(desc(sellerWithdrawalRequests.createdAt));
+  } catch (error) {
+    if (isMissingDatabaseObjectError(error)) return [];
+    throw error;
+  }
 }

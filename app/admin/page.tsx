@@ -27,7 +27,7 @@ export default async function AdminPage() {
     listAdminOrders(),
     listAdminReviews(),
     listRecentActivity(8),
-    listWithdrawalRequests()
+    listWithdrawalRequests().catch(() => [])
   ]);
   const allOrderItems = await listOrderItemsBySellerId(null);
 

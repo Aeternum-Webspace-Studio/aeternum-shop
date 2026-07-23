@@ -35,7 +35,7 @@ export default async function ProductDetailPage({
   const product = await getProductBySlug(slug);
   if (!product) notFound();
   const current = await getCurrentUser();
-  const settings = await getMarketplaceSettings();
+  const settings = await getMarketplaceSettings().catch(() => null);
   const price = productPriceForUser(product, current?.user);
   const hasResellerPrice = price !== product.price;
   const reviewSummary = await getReviewSummaryByProductId(product.id);

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminTicketsPage() {
   const tickets = await listAdminTickets();
-  const withdrawals = await listWithdrawalRequests();
+  const withdrawals = await listWithdrawalRequests().catch(() => []);
 
   return (
     <div>

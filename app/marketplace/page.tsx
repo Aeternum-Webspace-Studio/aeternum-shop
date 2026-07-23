@@ -18,7 +18,7 @@ export default async function MarketplacePage({
   const q = params.q ?? "";
   const category = params.category ?? "";
   const current = await getCurrentUser();
-  const settings = await getMarketplaceSettings();
+  const settings = await getMarketplaceSettings().catch(() => null);
   const [products, categories] = await Promise.all([listMarketplaceProducts(q, category), listCategories()]);
   const productsWithReviews = await Promise.all(
     products.map(async (product) => ({
