@@ -17,6 +17,7 @@ export default async function SellerLayout({ children }: { children: React.React
         { href: "/seller", label: "Ringkasan" },
         { href: "/seller/products", label: "Produk" },
         { href: "/seller/orders", label: "Pesanan" },
+        { href: "/seller/wallet", label: "Wallet" },
         { href: "/seller/stocks", label: "Stok" },
         { href: "/seller/reviews", label: "Review" },
         { href: "/seller/tickets", label: "Ticket" },

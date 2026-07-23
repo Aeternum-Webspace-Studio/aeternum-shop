@@ -2,9 +2,12 @@ import { getCurrentUser } from "@/lib/session-server";
 import { findSellerProfileByUserId } from "@/lib/sellers";
 import { countAvailableStock, listProductsBySellerId } from "@/lib/products";
 import { listOrderItemsBySellerId } from "@/lib/orders";
+import { calculateMarketplaceCommission } from "@/lib/pricing.js";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
+
+const formatMoney = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
 
 export default async function SellerPage() {
   const current = await getCurrentUser();
@@ -14,6 +17,9 @@ export default async function SellerPage() {
   const products = await listProductsBySellerId(sellerId);
   const orderItems = await listOrderItemsBySellerId(sellerId);
   const stockRows = await Promise.all(products.map(async (product) => ({ ...product, available: await countAvailableStock(product.id) })));
+  const settledStatuses = new Set(["paid", "processing", "delivered"]);
+  const settledItems = orderItems.filter((item) => settledStatuses.has(item.orderStatus));
+  const walletNet = settledItems.reduce((sum, item) => sum + calculateMarketplaceCommission(item.unitPrice * item.quantity).sellerNetAmount, 0);
 
   return (
     <div>
@@ -30,7 +36,7 @@ export default async function SellerPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
+      <div className="mt-6 grid gap-4 md:grid-cols-4">
         <div className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft">
           <p className="text-xs uppercase tracking-wide text-muted">Produk aktif</p>
           <p className="mt-2 text-2xl font-black">{products.length}</p>
@@ -42,6 +48,10 @@ export default async function SellerPage() {
         <div className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft">
           <p className="text-xs uppercase tracking-wide text-muted">Stok tersedia</p>
           <p className="mt-2 text-2xl font-black">{stockRows.reduce((sum, item) => sum + item.available, 0)}</p>
+        </div>
+        <div className="rounded-xl2 border-[3px] border-border bg-white p-4 shadow-soft">
+          <p className="text-xs uppercase tracking-wide text-muted">Saldo wallet</p>
+          <p className="mt-2 text-2xl font-black">{formatMoney.format(walletNet)}</p>
         </div>
       </div>
 
@@ -55,6 +65,11 @@ export default async function SellerPage() {
           <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Pesanan</p>
           <h2 className="mt-2 text-xl font-black">Cek order dan manual delivery</h2>
           <p className="mt-2 text-sm text-muted">Masuk ke detail order untuk kirim akses manual atau cek status.</p>
+        </a>
+        <a href="/seller/wallet" className="rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft hover:bg-surfaceSoft">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-primary">Wallet</p>
+          <h2 className="mt-2 text-xl font-black">Lihat saldo seller</h2>
+          <p className="mt-2 text-sm text-muted">Pantau gross, fee platform, dan saldo yang siap ditarik.</p>
         </a>
       </div>
     </div>

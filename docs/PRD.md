@@ -152,6 +152,7 @@ Fitur:
 - Set tipe fulfillment: auto/manual.
 - Upload stok digital untuk auto delivery.
 - Melihat order masuk.
+- Melihat saldo wallet seller dari order settled.
 - Input manual delivery.
 - Melihat rating dan komentar.
 - Membalas ticket terkait order.
@@ -506,8 +507,8 @@ refunded
 
 ## 22. Non-MVP
 
-- Wallet seller.
 - Withdraw otomatis.
+- Wallet seller manual.
 - Komisi marketplace kompleks.
 - Affiliate.
 - Live chat realtime.
