@@ -5,20 +5,21 @@ import { ChatbotClient } from "@/components/chatbot-client";
 
 export function ChatbotLauncher({ docked = false }: { docked?: boolean } = {}) {
   const [open, setOpen] = useState(false);
+  void docked;
 
   return (
     <>
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className={`z-[60] rounded-full border-[3px] border-border bg-primary px-4 py-3 text-sm font-black text-white shadow-[6px_6px_0_#111827] ${docked ? "absolute bottom-5 right-5 md:bottom-6 md:right-6" : "fixed bottom-5 right-5"}`}
+        className="fixed bottom-5 right-6 z-[60] rounded-full border-[3px] border-border bg-primary px-4 py-3 text-sm font-black text-white shadow-[6px_6px_0_#111827]"
       >
         Chatbot
       </button>
 
       {open ? (
-        <div className="fixed inset-0 z-[70] flex items-end justify-end bg-black/40 p-4 md:items-end md:justify-end">
-          <div className="relative w-full max-w-4xl rounded-2xl border-[3px] border-border bg-[#fffaf2] p-4 shadow-[10px_10px_0_#111827] md:max-h-[85vh] md:overflow-auto md:p-5">
+        <div className="fixed inset-0 z-[70] flex items-stretch justify-end bg-black/40 p-2 sm:items-end sm:p-4">
+          <div className="relative h-[calc(100dvh-1rem)] w-full overflow-auto rounded-2xl border-[3px] border-border bg-[#fffaf2] p-4 shadow-[10px_10px_0_#111827] sm:h-auto sm:max-w-4xl sm:max-h-[90dvh] sm:p-5">
             <button
               type="button"
               onClick={() => setOpen(false)}
