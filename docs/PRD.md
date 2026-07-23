@@ -87,6 +87,7 @@ Detail desain ada di `docs/DESIGN.md`.
 - Dashboard seller.
 - Dashboard admin.
 - Checkout Pakasir.
+- Admin dapat mematikan checkout dari settings dan API checkout ikut memblokir order baru.
 - Payment webhook/callback.
 - Auto delivery stok digital.
 - Manual delivery oleh seller.

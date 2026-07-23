@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { canAccessOrder, canAccessSellerItem, canCancelOrder, canClaimAutoStock, canMarkFailed, canRefundOrder, isDuplicatePaidWebhook, isWebhookAmountMatch, resolveWebhookPaymentOutcome, shouldProcessWebhookOrder } from "../lib/backend-guards.js";
+import { canAccessOrder, canAccessSellerItem, canCancelOrder, canCheckout, canClaimAutoStock, canMarkFailed, canRefundOrder, isDuplicatePaidWebhook, isWebhookAmountMatch, resolveWebhookPaymentOutcome, shouldProcessWebhookOrder } from "../lib/backend-guards.js";
 import { calculateMarketplaceCommission, productPriceForUser } from "../lib/pricing.js";
 
 assert.equal(canAccessOrder({ isAdmin: true, buyerId: "buyer-1", userId: "any" }), true);
@@ -26,6 +26,9 @@ assert.equal(shouldProcessWebhookOrder("refunded"), false);
 assert.equal(canClaimAutoStock("available"), true);
 assert.equal(canClaimAutoStock("sold"), false);
 assert.equal(canClaimAutoStock("disabled"), false);
+assert.equal(canCheckout(null), true);
+assert.equal(canCheckout({ checkoutEnabled: true }), true);
+assert.equal(canCheckout({ checkoutEnabled: false }), false);
 
 assert.equal(isWebhookAmountMatch(35000, 35000), true);
 assert.equal(isWebhookAmountMatch(35000, 34000), false);

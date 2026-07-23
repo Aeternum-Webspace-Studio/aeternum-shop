@@ -6,7 +6,9 @@ import { getCurrentUser } from "@/lib/session-server";
 import { buildPakasirPaymentUrl } from "@/lib/pakasir";
 import { createOrderNumber } from "@/lib/orders";
 import { logActivity } from "@/lib/activity";
+import { canCheckout } from "@/lib/backend-guards.js";
 import { productPriceForUser } from "@/lib/pricing.js";
+import { getMarketplaceSettings } from "@/lib/sellers";
 import { eq } from "drizzle-orm";
 
 const checkoutSchema = z.object({
@@ -27,6 +29,11 @@ export async function POST(request: Request) {
   });
 
   const db = getDb();
+  const settings = await getMarketplaceSettings();
+  if (!canCheckout(settings)) {
+    return NextResponse.json({ error: "Checkout sedang dinonaktifkan" }, { status: 403 });
+  }
+
   const [product] = await db.select().from(products).where(eq(products.id, payload.productId)).limit(1);
   if (!product || product.status !== "active") {
     return NextResponse.json({ error: "Produk tidak tersedia" }, { status: 404 });
