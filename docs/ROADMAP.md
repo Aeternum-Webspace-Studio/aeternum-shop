@@ -296,14 +296,14 @@ Checklist:
 
 Prioritas lanjutan:
 
-1. Seller analytics.
-2. Coupon/discount.
-3. Live chat realtime.
-4. Wallet dan withdraw seller.
-5. Komisi marketplace.
-6. AI chatbot knowledge base.
-7. Multi payment gateway.
-8. Affiliate/referral.
+1. Seller wallet dan withdrawal: GitHub issue #5.
+2. Komisi marketplace: GitHub issue #6.
+3. Live chat realtime: GitHub issue #7.
+4. AI chatbot knowledge base: GitHub issue #8.
+5. Multi payment gateway: GitHub issue #9.
+6. Affiliate/referral: GitHub issue #10.
+
+Semua item non-MVP dilacak di milestone GitHub `Post-MVP`.
 
 ponytail: fitur lanjutan ditunda sampai transaksi nyata membuktikan kebutuhan.
 
