@@ -1,6 +1,6 @@
 import { listPublishedArticles } from "@/lib/articles";
 import { listActiveFaqItems } from "@/lib/faq";
-import { listMarketplaceProducts } from "@/lib/products";
+import { listCategories, listMarketplaceProducts } from "@/lib/products";
 import { getGlobalReviewSummary, listTopRatedProducts } from "@/lib/reviews";
 
 const formatMoney = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
@@ -23,9 +23,17 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const reviewSummary = await getGlobalReviewSummary();
   const topRatedProducts = await listTopRatedProducts(3);
-  const featuredProducts = (await listMarketplaceProducts()).slice(0, 3);
+  const products = await listMarketplaceProducts();
+  const featuredProducts = products.slice(0, 3);
+  const categories = await listCategories();
   const articles = (await listPublishedArticles()).slice(0, 3);
   const faqs = await listActiveFaqItems(4);
+  const stats = [
+    { label: "Produk aktif", value: products.length.toLocaleString("id-ID") },
+    { label: "Kategori", value: categories.length.toLocaleString("id-ID") },
+    { label: "Review buyer", value: reviewSummary.count.toLocaleString("id-ID") },
+    { label: "Rating rata-rata", value: reviewSummary.count === 0 ? "-" : reviewSummary.average.toFixed(1) }
+  ];
 
   return (
     <main className="aeternum-bg min-h-screen text-text">
@@ -65,6 +73,14 @@ export default async function HomePage() {
               <a className="lift rounded-xl border-[3px] border-border bg-surfaceSoft px-5 py-3 text-sm font-black text-text shadow-soft" href="/account">
                 Cek Pesanan
               </a>
+            </div>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {stats.map((stat) => (
+                <div key={stat.label} className="rounded-xl border-[2px] border-border bg-white p-4 shadow-soft">
+                  <p className="text-2xl font-black text-primary">{stat.value}</p>
+                  <p className="mt-1 text-xs font-black uppercase tracking-[0.16em] text-muted">{stat.label}</p>
+                </div>
+              ))}
             </div>
           </div>
 
