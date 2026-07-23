@@ -13,6 +13,10 @@ function pickReply(message: string) {
     return "Checkout dilakukan dari halaman produk. Sistem membuat order, redirect ke Pakasir, lalu status muncul di dashboard dan invoice tracker.";
   }
 
+  if (text.includes("pending") || text.includes("belum bayar") || text.includes("lanjut bayar")) {
+    return "Kalau payment masih pending, buka Dashboard > Pembayaran. Jika payment URL masih tersedia, klik Bayar untuk lanjut ke Pakasir.";
+  }
+
   if (text.includes("invoice") || text.includes("cek invoice")) {
     return "Masukkan nomor invoice di navbar atau halaman invoice tracker. Di sana kamu bisa lihat status order, payment, total, dan nama produk.";
   }
@@ -21,12 +25,28 @@ function pickReply(message: string) {
     return "Auto delivery mengirim stok otomatis setelah payment paid. Manual delivery diproses seller lalu buyer melihat detail di dashboard order.";
   }
 
+  if (text.includes("kategori") || text.includes("filter")) {
+    return "Di marketplace kamu bisa cari produk dengan search dan filter kategori seperti AI, Design, Streaming, Tools, Lisensi, atau Bundle.";
+  }
+
+  if (text.includes("harga reseller") || text.includes("harga khusus")) {
+    return "Harga reseller muncul untuk user yang status reseller-nya approved dan hanya pada produk yang punya harga reseller.";
+  }
+
+  if (text.includes("seller") || text.includes("jual") || text.includes("stok digital")) {
+    return "Seller bisa mengelola produk dan stok dari dashboard seller. Stok auto delivery bisa ditambah bulk dengan satu JSON per baris di halaman stok.";
+  }
+
   if (text.includes("reseller")) {
     return "Kamu bisa ajukan reseller dari dashboard buyer. Jika approved, harga reseller muncul pada produk yang mendukung.";
   }
 
   if (text.includes("support") || text.includes("ticket") || text.includes("bantuan")) {
     return "Kalau ada kendala, buka ticket dari order atau halaman support. Ticket dipakai untuk cek invoice, akses, atau masalah order.";
+  }
+
+  if (text.includes("paid") || text.includes("sudah bayar") || text.includes("belum masuk")) {
+    return "Jika payment sudah paid tapi akses belum masuk, cek dashboard order. Kalau status masih processing atau akses kosong, buka ticket dari order tersebut.";
   }
 
   if (text.includes("produk") || text.includes("chatgpt") || text.includes("gemini") || text.includes("canva")) {

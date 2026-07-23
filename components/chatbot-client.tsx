@@ -8,7 +8,9 @@ const quickQuestions = [
   "Bagaimana cara checkout?",
   "Apa beda auto dan manual delivery?",
   "Bagaimana cek invoice?",
-  "Kalau akses belum masuk harus bagaimana?"
+  "Kalau akses belum masuk harus bagaimana?",
+  "Bagaimana melihat harga reseller?",
+  "Bagaimana filter kategori produk?"
 ];
 
 export function ChatbotClient() {
@@ -51,7 +53,7 @@ export function ChatbotClient() {
       <div className="rounded-xl2 border-[3px] border-border bg-white p-5 shadow-soft">
         <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Chatbot</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight">Tanya seputar marketplace</h1>
-        <p className="mt-3 text-sm leading-6 text-muted">Chatbot ini dibekali ringkasan marketplace, produk seed, cara checkout, invoice, delivery, ticket, dan reseller.</p>
+        <p className="mt-3 text-sm leading-6 text-muted">Chatbot ini dibekali ringkasan marketplace, kategori produk, harga reseller, checkout, invoice, delivery, ticket, dan seller stock.</p>
 
         <div className="mt-5 space-y-2">
           {quickQuestions.map((question) => (

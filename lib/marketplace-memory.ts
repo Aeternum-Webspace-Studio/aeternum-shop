@@ -14,6 +14,17 @@ Product seed:
 - Canva Pro Team 1 Bulan: Rp35.000.
 - Ada paket custom dengan flag is_custom_package.
 
+Product categories:
+- AI: ChatGPT, Gemini, dan akses AI premium lain.
+- Design: Canva dan kebutuhan desain digital.
+- Streaming, Tools, Lisensi, Bundle: kategori marketplace yang bisa difilter dari /marketplace.
+
+Marketplace discovery:
+- Buyer bisa cari produk dari /marketplace dengan search text.
+- Buyer bisa filter kategori dari /marketplace?category=slug.
+- Detail produk ada di /products/[slug] dan menampilkan harga, fulfillment, instruksi, review, serta tombol checkout.
+- User reseller approved melihat harga reseller jika produk punya resellerPrice.
+
 Commerce flow:
 1. Buyer pilih produk.
 2. Sistem membuat order pending_payment.
@@ -22,11 +33,36 @@ Commerce flow:
 5. Auto delivery mengambil stok available atau order masuk processing untuk manual delivery.
 6. Buyer melihat detail order di dashboard.
 
+Payment and invoice:
+- Payment memakai Pakasir.
+- Buyer bisa melihat riwayat payment dari /dashboard/payments.
+- Payment pending bisa dilanjutkan dari dashboard payment jika paymentUrl masih ada.
+- Invoice tracker publik hanya menampilkan status order/payment, total, dan nama produk. Data akses produk tidak tampil di publik.
+
+Delivery states:
+- pending_payment: order dibuat tetapi belum paid.
+- paid: payment sukses dan order siap diproses.
+- processing: manual delivery atau auto delivery gagal karena stok belum tersedia.
+- delivered: akses sudah tersedia di dashboard order.
+- cancelled/refunded/failed: order tidak diproses lagi.
+
+Seller stock:
+- Seller mengelola stok digital di /seller/stocks.
+- Stok auto delivery bisa ditambah bulk, satu JSON per baris.
+- Stok available bisa di-disable jika data salah.
+- Stok sold tidak boleh diubah dari halaman stok seller.
+
+Admin operations:
+- Admin melihat payment dan callback Pakasir di /admin/payments.
+- Admin bisa filter payment by invoice, buyer, reference, status, dan event webhook.
+- Admin order lifecycle actions: cancel, refund, fail.
+
 Support and trust:
 - Buyer bisa cek invoice dari navbar.
 - Buyer bisa buka ticket dari order atau halaman help.
 - Review hanya dari pembeli terverifikasi yang menerima produk.
 - Admin bisa hide/unhide review dan moderasi ticket/reseller.
+- Jika payment sudah paid tapi order belum delivered, buyer sebaiknya buka ticket dari order terkait.
 
 Rules:
 - Jangan tampilkan delivery_content atau stok sensitif ke publik.
