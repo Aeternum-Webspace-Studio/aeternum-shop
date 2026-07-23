@@ -1,6 +1,31 @@
-import { and, eq, ne } from "drizzle-orm";
+import { and, eq, ne, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { marketplaceSettings, sellerProfiles } from "@/db/schema";
+
+let marketplaceSettingsReady: Promise<void> | null = null;
+
+async function ensureMarketplaceSettingsTable() {
+  if (!marketplaceSettingsReady) {
+    marketplaceSettingsReady = (async () => {
+      const db = getDb();
+      await db.execute(sql`
+        create table if not exists "marketplace_settings" (
+          "id" uuid primary key default gen_random_uuid(),
+          "app_name" text not null default 'Aeternum Shop',
+          "support_email" text,
+          "announcement" text,
+          "checkout_enabled" boolean not null default true,
+          "updated_at" timestamp with time zone not null default now()
+        )
+      `);
+    })().catch((error) => {
+      marketplaceSettingsReady = null;
+      throw error;
+    });
+  }
+
+  return marketplaceSettingsReady;
+}
 
 export async function findSellerProfileByUserId(userId: string) {
   const db = getDb();
@@ -37,12 +62,14 @@ export async function findApprovedSellerProfileByUserId(userId: string) {
 }
 
 export async function getMarketplaceSettings() {
+  await ensureMarketplaceSettingsTable();
   const db = getDb();
   const [settings] = await db.select().from(marketplaceSettings).limit(1);
   return settings ?? null;
 }
 
 export async function updateMarketplaceSettings(input: { appName: string; supportEmail?: string | null; announcement?: string | null; checkoutEnabled: boolean }) {
+  await ensureMarketplaceSettingsTable();
   const db = getDb();
   const existing = await getMarketplaceSettings();
 
