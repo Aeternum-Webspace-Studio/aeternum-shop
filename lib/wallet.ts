@@ -9,6 +9,20 @@ async function ensureSellerWithdrawalRequestsTable() {
     sellerWithdrawalRequestsReady = (async () => {
       const db = getDb();
       await db.execute(sql`
+        do $$ begin
+          create type "wallet_transaction_type" as enum ('credit', 'debit', 'adjustment');
+        exception
+          when duplicate_object then null;
+        end $$;
+      `);
+      await db.execute(sql`
+        do $$ begin
+          create type "withdrawal_status" as enum ('requested', 'approved', 'paid', 'rejected');
+        exception
+          when duplicate_object then null;
+        end $$;
+      `);
+      await db.execute(sql`
         create table if not exists "seller_withdrawal_requests" (
           "id" uuid primary key default gen_random_uuid(),
           "seller_id" uuid not null references "seller_profiles"("id") on delete cascade,
