@@ -11,10 +11,10 @@ export default async function DashboardPage() {
       <div className="rounded-xl2 border-[3px] border-border bg-primary p-6 text-white shadow-soft">
         <p className="text-xs font-black uppercase tracking-[0.2em] text-white/75">Buyer dashboard</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight md:text-4xl">Pantau order, review, dan support dari satu tempat.</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-white/85">Semua pesanan, invoice, ticket, dan status reseller ada di sini. Kalau butuh bantuan, pakai chatbot atau buka ticket dari order.</p>
+        <p className="mt-3 max-w-2xl text-sm leading-7 text-white/85">Semua pesanan, invoice, ticket, dan status reseller ada di sini. Kalau butuh bantuan, buka ticket dari order.</p>
         <div className="mt-5 flex flex-wrap gap-3">
           <a className="rounded-xl border-[2px] border-white bg-white px-4 py-2 text-sm font-black text-primary" href="/dashboard/orders">Lihat Order</a>
-          <a className="rounded-xl border-[2px] border-white bg-transparent px-4 py-2 text-sm font-black text-white" href="/help">Tanya Chatbot</a>
+          <a className="rounded-xl border-[2px] border-white bg-transparent px-4 py-2 text-sm font-black text-white" href="/dashboard/tickets">Buka Ticket</a>
           <form method="post" action="/api/auth/logout">
             <button className="rounded-xl border-[2px] border-white bg-white/10 px-4 py-2 text-sm font-black text-white">Logout</button>
           </form>

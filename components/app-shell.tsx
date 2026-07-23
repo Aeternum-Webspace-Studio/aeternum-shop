@@ -13,7 +13,8 @@ export function AppShell({
   children,
   footer,
   homeHref,
-  homeLabel
+  homeLabel,
+  showChatbot = true
 }: {
   title: string;
   description: string;
@@ -22,6 +23,7 @@ export function AppShell({
   footer?: React.ReactNode;
   homeHref: string;
   homeLabel: string;
+  showChatbot?: boolean;
 }) {
   return (
     <main className="aeternum-bg relative min-h-screen text-text">
@@ -59,7 +61,7 @@ export function AppShell({
         <section className="rounded-xl2 border-[3px] border-border bg-white p-6 shadow-soft">{children}</section>
       </div>
 
-      <ChatbotLauncher docked />
+      {showChatbot ? <ChatbotLauncher docked /> : null}
     </main>
   );
 }

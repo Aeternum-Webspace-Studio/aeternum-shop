@@ -13,6 +13,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       description={current ? `${current.user.name} • ${current.session.role}` : "Akun buyer"}
       homeHref="/dashboard"
       homeLabel="Dashboard"
+      showChatbot={false}
       nav={[
         { href: "/dashboard", label: "Ringkasan" },
         { href: "/dashboard/orders", label: "Pesanan" },
