@@ -396,6 +396,7 @@ Status implementasi:
 
 - Checkout Pakasir sudah membuat order dan payment record.
 - Webhook Pakasir sudah idempotent dengan advisory lock agar delivery tidak dobel.
+- Webhook payment outcome dites dengan guard untuk paid, duplicate, mismatch, dan ignored.
 - Auto delivery berjalan untuk stok digital setelah payment paid.
 - Manual delivery tersedia untuk seller pada order miliknya.
 - Admin punya aksi cancel, refund, dan failed untuk lifecycle order.
@@ -406,7 +407,10 @@ Status implementasi:
 
 - Seller bisa mengubah nama toko, slug, dan deskripsi dari `/seller/settings`.
 - Seller onboarding tersedia dari `/dashboard/profile`.
+- Seller bisa bulk add stok digital dari `/seller/stocks` dengan satu JSON per baris.
+- Seller bisa filter stok dan disable stok yang masih available.
 - Admin bisa mengubah app settings dari `/admin/settings`.
+- Admin bisa filter payment dan melihat callback Pakasir dari `/admin/payments`.
 - Setting marketplace disimpan sebagai singleton agar mudah dipakai di UI.
 
 ## 15D. Backend Regression Checks
@@ -416,6 +420,7 @@ Status implementasi:
 - `npm run check` memeriksa route utama dan chatbot.
 - `npm run check:backend` memeriksa guard backend dan route sensitif.
 - `npm run check:auth-role` tersedia untuk validasi routing role.
+- Production smoke check sudah lulus di `https://aeternumshop.biz.id`.
 
 ## 16. Paket Custom
 
