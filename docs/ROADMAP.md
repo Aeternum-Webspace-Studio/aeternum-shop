@@ -298,7 +298,7 @@ Prioritas lanjutan:
 
 1. Seller wallet dan withdrawal: GitHub issue #5.
 2. Komisi marketplace: GitHub issue #6.
-3. Live chat realtime: GitHub issue #7.
+3. Live support bridge selesai; live chat realtime penuh tetap non-MVP: GitHub issue #7.
 4. AI chatbot knowledge base: GitHub issue #8.
 5. Multi payment gateway: GitHub issue #9.
 6. Affiliate/referral: GitHub issue #10.

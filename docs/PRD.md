@@ -297,6 +297,7 @@ Fitur MVP:
 - Seller bisa melihat ticket terkait produknya.
 - Ticket memiliki pesan berurutan.
 - Email dikirim saat ada balasan.
+- Halaman help bisa membuat live-support ticket dengan pesan awal.
 
 Live chat realtime ditunda sampai traffic terbukti membutuhkan.
 

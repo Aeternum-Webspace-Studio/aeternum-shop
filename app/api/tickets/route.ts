@@ -10,6 +10,7 @@ import { sendNotificationEmail } from "@/lib/email";
 
 const ticketSchema = z.object({
   subject: z.string().min(3).max(200),
+  message: z.string().max(2000).optional(),
   orderId: z.string().uuid().optional()
 });
 
@@ -22,6 +23,7 @@ export async function POST(request: NextRequest) {
   const form = await request.formData();
   const payload = ticketSchema.parse({
     subject: form.get("subject"),
+    message: form.get("message") || undefined,
     orderId: form.get("orderId") || undefined
   });
 
@@ -40,6 +42,7 @@ export async function POST(request: NextRequest) {
   const ticket = await createTicket({
     buyerId: current.user.id,
     subject: payload.subject,
+    message: payload.message,
     orderId: payload.orderId ?? null,
     sellerId
   });
@@ -54,7 +57,7 @@ export async function POST(request: NextRequest) {
     action: "ticket.created",
     entityType: "ticket",
     entityId: payload.orderId ?? current.user.id,
-    metadata: { subject: payload.subject, orderId: payload.orderId ?? null, sellerId }
+    metadata: { subject: payload.subject, hasMessage: Boolean(payload.message), orderId: payload.orderId ?? null, sellerId }
   });
 
   return NextResponse.redirect(new URL("/dashboard/tickets", request.url), { status: 303 });

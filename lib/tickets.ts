@@ -109,17 +109,25 @@ export async function updateTicketStatus(ticketId: string, status: "open" | "pen
   await db.update(tickets).set({ status, closedAt: status === "closed" ? new Date() : null, updatedAt: new Date() }).where(eq(tickets.id, ticketId));
 }
 
-export async function createTicket(input: { buyerId: string; subject: string; orderId?: string | null; sellerId?: string | null }) {
+export async function createTicket(input: { buyerId: string; subject: string; message?: string | null; orderId?: string | null; sellerId?: string | null }) {
   const db = getDb();
-  const [ticket] = await db
-    .insert(tickets)
-    .values({
-      buyerId: input.buyerId,
-      orderId: input.orderId ?? null,
-      sellerId: input.sellerId ?? null,
-      subject: input.subject
-    })
-    .returning();
+  const [ticket] = await db.transaction(async (tx) => {
+    const rows = await tx
+      .insert(tickets)
+      .values({
+        buyerId: input.buyerId,
+        orderId: input.orderId ?? null,
+        sellerId: input.sellerId ?? null,
+        subject: input.subject
+      })
+      .returning();
+
+    if (rows[0] && input.message?.trim()) {
+      await tx.insert(ticketMessages).values({ ticketId: rows[0].id, senderId: input.buyerId, message: input.message.trim() });
+    }
+
+    return rows;
+  });
 
   return ticket ?? null;
 }
