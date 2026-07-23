@@ -10,9 +10,11 @@ export default async function AdminUsersPage() {
     users.map(async (user) => {
       const referralCode = referralCodeForUser(user);
       const referralStats = await getReferralStatsForCode(referralCode, 0);
-      return { ...user, referralCode, referralCount: referralStats.count };
+      return { ...user, referralCode, referralCount: referralStats.count, referralOrderCount: referralStats.orderCount, referralRevenue: referralStats.revenue };
     })
   );
+
+  const formatMoney = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
 
   return (
     <div>
@@ -25,7 +27,7 @@ export default async function AdminUsersPage() {
               <div>
                 <p className="font-semibold">{user.name}</p>
                 <p className="mt-1 text-sm text-muted">{user.email} · {user.role} · reseller {user.resellerStatus}</p>
-                <p className="mt-1 text-xs text-muted">Referral {user.referralCode} · {user.referralCount} signup</p>
+                <p className="mt-1 text-xs text-muted">Referral {user.referralCode} · {user.referralCount} signup · {user.referralOrderCount} order · {formatMoney.format(user.referralRevenue)}</p>
               </div>
               {user.resellerStatus === "pending" ? (
                 <form className="flex gap-2" method="post" action={`/api/admin/resellers/${user.id}`}>

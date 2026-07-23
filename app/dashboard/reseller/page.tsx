@@ -4,12 +4,14 @@ import { getReferralStatsForCode } from "@/lib/referrals-data";
 
 export const dynamic = "force-dynamic";
 
+const formatMoney = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
+
 export default async function DashboardResellerPage() {
   const current = await getCurrentUser();
   const status = current?.user.resellerStatus ?? "none";
   const referralCode = current ? referralCodeForUser(current.user) : "";
   const referralUrl = referralCode ? buildReferralUrl(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000", referralCode) : "";
-  const referralStats = referralCode ? await getReferralStatsForCode(referralCode) : { count: 0, rows: [] };
+  const referralStats = referralCode ? await getReferralStatsForCode(referralCode) : { count: 0, orderCount: 0, revenue: 0, rows: [] };
 
   return (
     <div>
@@ -31,6 +33,7 @@ export default async function DashboardResellerPage() {
         <input className="mt-3 w-full rounded-xl border border-border bg-surfaceSoft px-3 py-2 text-sm" readOnly value={referralUrl} />
         <p className="mt-2 text-xs text-muted">Kode: {referralCode}</p>
         <p className="mt-3 text-sm font-semibold">Total signup referral: {referralStats.count}</p>
+        <p className="mt-1 text-sm font-semibold">Order referral: {referralStats.orderCount} · {formatMoney.format(referralStats.revenue)}</p>
         <div className="mt-3 space-y-2">
           {referralStats.rows.length === 0 ? (
             <p className="text-sm text-muted">Belum ada signup dari referral link ini.</p>

@@ -9,6 +9,7 @@ import { logActivity } from "@/lib/activity";
 import { canCheckout } from "@/lib/backend-guards.js";
 import { defaultPaymentProvider } from "@/lib/payment-providers.js";
 import { productPriceForUser } from "@/lib/pricing.js";
+import { getReferralCodeForUserSignup } from "@/lib/referrals-data";
 import { getMarketplaceSettings } from "@/lib/sellers";
 import { eq } from "drizzle-orm";
 
@@ -43,6 +44,7 @@ export async function POST(request: Request) {
   const orderNumber = createOrderNumber();
   const unitPrice = productPriceForUser(product, current.user);
   const amount = unitPrice * payload.quantity;
+  const referralCode = await getReferralCodeForUserSignup(current.user.id);
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
   const projectSlug = process.env.PAKASIR_PROJECT_SLUG;
   if (!projectSlug) {
@@ -88,7 +90,7 @@ export async function POST(request: Request) {
     action: "order.created",
     entityType: "order",
     entityId: order.id,
-    metadata: { orderNumber, productId: product.id, quantity: payload.quantity, amount, provider: defaultPaymentProvider }
+    metadata: { orderNumber, productId: product.id, quantity: payload.quantity, amount, provider: defaultPaymentProvider, referralCode }
   });
 
   return NextResponse.redirect(paymentUrl, { status: 303 });

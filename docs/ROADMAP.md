@@ -301,7 +301,7 @@ Prioritas lanjutan:
 3. Ticket live thread selesai dengan polling pendek; realtime provider penuh tetap non-MVP jika traffic membesar: GitHub issue #7.
 4. AI chatbot knowledge base: GitHub issue #8.
 5. Payment provider registry dasar selesai; multi gateway nyata tetap menunggu kebutuhan produksi: GitHub issue #9.
-6. Referral link dasar, capture saat register, dan statistik sederhana selesai; affiliate commission tracking tetap lanjutan: GitHub issue #10.
+6. Referral link dasar, capture saat register, dan statistik signup/order sederhana selesai; affiliate commission payout tetap lanjutan: GitHub issue #10.
 
 Semua item non-MVP dilacak di milestone GitHub `Post-MVP`.
 
