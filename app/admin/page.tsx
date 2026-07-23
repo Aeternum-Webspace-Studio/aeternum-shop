@@ -1,4 +1,4 @@
-import { listRecentActivity, listWithdrawalRequests } from "@/lib/activity";
+import { listRecentActivity } from "@/lib/activity";
 import { listAdminOrders } from "@/lib/orders";
 import { listAdminReviews } from "@/lib/reviews";
 import { listSellerProfiles } from "@/lib/sellers";
@@ -6,6 +6,7 @@ import { listUsers } from "@/lib/users";
 import { listOrderItemsBySellerId } from "@/lib/orders";
 import { calculateMarketplaceCommission } from "@/lib/pricing.js";
 import { getCurrentUser } from "@/lib/session-server";
+import { listWithdrawalRequests } from "@/lib/wallet";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -43,7 +44,7 @@ export default async function AdminPage() {
     { gross: 0, fee: 0, net: 0 }
   );
   const formatMoney = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
-  const requestedWithdrawalAmount = withdrawals.reduce((sum, item) => sum + Number((item.metadata as { amount?: unknown }).amount ?? 0), 0);
+  const requestedWithdrawalAmount = withdrawals.reduce((sum, item) => sum + item.amount, 0);
 
   return (
     <div>

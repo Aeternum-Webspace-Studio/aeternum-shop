@@ -11,6 +11,8 @@ export const deliveryStatusEnum = pgEnum("delivery_status", ["pending", "process
 export const paymentStatusEnum = pgEnum("payment_status", ["pending", "paid", "failed", "expired", "refunded"]);
 export const ticketStatusEnum = pgEnum("ticket_status", ["open", "pending", "closed"]);
 export const blogStatusEnum = pgEnum("blog_status", ["draft", "published", "archived"]);
+export const walletTransactionTypeEnum = pgEnum("wallet_transaction_type", ["credit", "debit", "adjustment"]);
+export const withdrawalStatusEnum = pgEnum("withdrawal_status", ["requested", "approved", "paid", "rejected"]);
 
 export const users = pgTable(
   "users",
@@ -228,6 +230,45 @@ export const ticketMessages = pgTable("ticket_messages", {
   message: text("message").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
 });
+
+export const sellerWithdrawalRequests = pgTable(
+  "seller_withdrawal_requests",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    sellerId: uuid("seller_id").notNull().references(() => sellerProfiles.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    ticketId: uuid("ticket_id").references(() => tickets.id, { onDelete: "set null" }),
+    amount: integer("amount").notNull(),
+    status: withdrawalStatusEnum("status").notNull().default("requested"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    paidAt: timestamp("paid_at", { withTimezone: true })
+  },
+  (table) => ({
+    sellerIdx: index("seller_withdrawal_requests_seller_idx").on(table.sellerId),
+    statusIdx: index("seller_withdrawal_requests_status_idx").on(table.status)
+  })
+);
+
+export const sellerWalletTransactions = pgTable(
+  "seller_wallet_transactions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    sellerId: uuid("seller_id").notNull().references(() => sellerProfiles.id, { onDelete: "cascade" }),
+    orderItemId: uuid("order_item_id").references(() => orderItems.id, { onDelete: "set null" }),
+    withdrawalRequestId: uuid("withdrawal_request_id").references(() => sellerWithdrawalRequests.id, { onDelete: "set null" }),
+    type: walletTransactionTypeEnum("type").notNull(),
+    grossAmount: integer("gross_amount").notNull().default(0),
+    platformFee: integer("platform_fee").notNull().default(0),
+    netAmount: integer("net_amount").notNull(),
+    note: text("note"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+  },
+  (table) => ({
+    sellerIdx: index("seller_wallet_transactions_seller_idx").on(table.sellerId),
+    typeIdx: index("seller_wallet_transactions_type_idx").on(table.type)
+  })
+);
 
 export const blogPosts = pgTable(
   "blog_posts",

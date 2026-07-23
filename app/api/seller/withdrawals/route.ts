@@ -5,9 +5,10 @@ import { findSellerProfileByUserId } from "@/lib/sellers";
 import { getCurrentUser } from "@/lib/session-server";
 import { logActivity } from "@/lib/activity";
 import { sendNotificationEmail } from "@/lib/email";
+import { createSellerWithdrawalRequest } from "@/lib/wallet";
 
 const withdrawalSchema = z.object({
-  amount: z.coerce.number().int().nonnegative()
+  amount: z.coerce.number().int().positive()
 });
 
 const formatMoney = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
@@ -29,6 +30,7 @@ export async function POST(request: Request) {
     subject: "Withdrawal request",
     message: `Seller ${seller.storeName} mengajukan withdrawal manual sebesar ${amountText}. Admin perlu verifikasi saldo dan data payout sebelum pembayaran.`
   });
+  const withdrawal = await createSellerWithdrawalRequest({ sellerId: seller.id, userId: current.user.id, ticketId: ticket?.id ?? null, amount: payload.amount });
 
   await sendNotificationEmail({
     to: process.env.SUPPORT_EMAIL,
@@ -39,9 +41,9 @@ export async function POST(request: Request) {
   await logActivity({
     actorId: current.user.id,
     action: "seller.withdrawal_requested",
-    entityType: "ticket",
-    entityId: ticket?.id ?? current.user.id,
-    metadata: { sellerId: seller.id, amount: payload.amount }
+    entityType: "seller_withdrawal_request",
+    entityId: withdrawal?.id ?? ticket?.id ?? current.user.id,
+    metadata: { sellerId: seller.id, ticketId: ticket?.id ?? null, amount: payload.amount }
   });
 
   return NextResponse.redirect(new URL("/seller/tickets", request.url), { status: 303 });

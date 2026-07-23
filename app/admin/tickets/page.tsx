@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { listAdminTickets } from "@/lib/tickets";
+import { listWithdrawalRequests } from "@/lib/wallet";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminTicketsPage() {
   const tickets = await listAdminTickets();
-  const withdrawalTickets = tickets.filter((ticket) => ticket.subject.toLowerCase().includes("withdrawal"));
+  const withdrawals = await listWithdrawalRequests();
 
   return (
     <div>
@@ -13,7 +14,7 @@ export default async function AdminTicketsPage() {
       <p className="mt-2 text-sm text-muted">Semua ticket buyer dan seller.</p>
       <div className="mt-6 rounded-xl2 border border-border bg-surfaceSoft p-4 shadow-soft">
         <p className="text-xs uppercase tracking-wide text-muted">Withdrawal request</p>
-        <p className="mt-2 text-2xl font-semibold">{withdrawalTickets.length}</p>
+        <p className="mt-2 text-2xl font-semibold">{withdrawals.length}</p>
       </div>
       <div className="mt-6 space-y-3">
         {tickets.length === 0 ? <div className="rounded-xl2 border border-border p-4 text-sm text-muted">Belum ada ticket.</div> : tickets.map((ticket) => (

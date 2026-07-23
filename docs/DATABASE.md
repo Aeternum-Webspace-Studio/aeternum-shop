@@ -229,7 +229,60 @@ expired
 refunded
 ```
 
-## 09. payment_events
+## 09. seller_withdrawal_requests
+
+Withdrawal request permanen untuk seller payout manual.
+
+Kolom:
+
+```txt
+id uuid pk
+seller_id uuid fk seller_profiles.id
+user_id uuid fk users.id
+amount integer not null
+status text not null default 'requested'
+created_at timestamp not null
+updated_at timestamp not null
+paid_at timestamp
+```
+
+Status:
+
+```txt
+requested
+approved
+paid
+rejected
+```
+
+## 10. seller_wallet_transactions
+
+Ledger wallet seller untuk settlement/komisi permanen.
+
+Kolom:
+
+```txt
+id uuid pk
+seller_id uuid fk seller_profiles.id
+order_item_id uuid fk order_items.id
+withdrawal_request_id uuid fk seller_withdrawal_requests.id
+type text not null
+gross_amount integer not null default 0
+platform_fee integer not null default 0
+net_amount integer not null
+note text
+created_at timestamp not null
+```
+
+Type:
+
+```txt
+credit
+debit
+adjustment
+```
+
+## 11. payment_events
 
 Menyimpan semua callback agar debugging mudah.
 
