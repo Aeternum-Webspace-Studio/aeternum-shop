@@ -9,7 +9,8 @@ import { sendNotificationEmail } from "@/lib/email";
 const registerSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
-  password: z.string().min(8)
+  password: z.string().min(8),
+  referralCode: z.string().min(4).max(32).optional()
 });
 
 export async function POST(request: Request) {
@@ -17,7 +18,8 @@ export async function POST(request: Request) {
   const payload = registerSchema.parse({
     name: form.get("name"),
     email: form.get("email"),
-    password: form.get("password")
+    password: form.get("password"),
+    referralCode: form.get("referralCode") || undefined
   });
 
   const db = getDb();
@@ -35,7 +37,7 @@ export async function POST(request: Request) {
     path: "/",
     maxAge: 60 * 60 * 24 * 7
   });
-  await logActivity({ actorId: user.id, action: "auth.register", entityType: "user", entityId: user.id, metadata: { email: user.email, role: user.role } });
+  await logActivity({ actorId: user.id, action: "auth.register", entityType: "user", entityId: user.id, metadata: { email: user.email, role: user.role, referralCode: payload.referralCode ?? null } });
   await sendNotificationEmail({
     to: user.email,
     subject: "Akun Aeternum Shop berhasil dibuat",
